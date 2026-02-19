@@ -11,6 +11,7 @@ import ThemeTab from '@/builder/left-panel/theme/ThemeTab';
 import SectionsNav from '@/builder/left-panel/sections/SectionsNav';
 import SectionRenderer from '@/builder/left-panel/sections/SectionRenderer';
 import LayoutTab from '@/builder/left-panel/layout/LayoutTab';
+import type { SectionKey } from '@/builder/left-panel/sections/SectionsNav';
 
 const Wrapper = styled.div`
   height: 100%;
@@ -37,7 +38,7 @@ export default function LeftPanel() {
     'theme' | 'fonts' | 'layout' | 'sections'
   >('theme');
 
-  const [activeSection, setActiveSection] = useState<string>('hero');
+  const [activeSection, setActiveSection] = useState<SectionKey>('hero');
 
   return (
     <Wrapper>
