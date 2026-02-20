@@ -19,6 +19,7 @@ import type {
   NavigationSettings,
   PagesState,
   SectionId,
+  SectionSettingsState,
 } from '@/lib/types/builder';
 import { THEME_MAP, type ThemePresetName } from '@/lib/constants/themes';
 
