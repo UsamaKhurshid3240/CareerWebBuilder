@@ -23,7 +23,7 @@ import TestimonialsSectionSettingsModal from './TestimonialsSectionSettingsModal
 import TeamSectionSettingsModal from './TeamSectionSettingsModal';
 import AlertsSectionSettingsModal from './AlertsSectionSettingsModal';
 import TrashIcon from '@/builder/icons/TrashIcon';
-import { IconLayoutList, IconHouse, IconSettings2 } from '@/builder/icons';
+import { IconLayoutList, IconHouse, IconSettingsCog, IconPlus } from '@/builder/icons';
 
 /* ================= TYPES ================= */
 
@@ -744,7 +744,10 @@ export default function SectionOrderPages() {
               {activeSections.length === 0 && activePage !== 'home' && (
                 <DeletePageBtn
                   type="button"
-                  onClick={() => onDeletePage(activePage)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onDeletePage(activePage);
+                  }}
                   title="Delete page"
                   aria-label="Delete page"
                 >
@@ -779,7 +782,7 @@ export default function SectionOrderPages() {
                                 onClick={(e) => { e.stopPropagation(); openSectionSettings(id); }}
                                 aria-label="Section settings"
                               >
-                                <IconSettings2 size={14} />
+                                <IconSettingsCog size={14} />
                               </SPSettingsBtn>
                               {!sec?.required && (
                                 <SPRemoveBtn
@@ -808,7 +811,8 @@ export default function SectionOrderPages() {
           <PanelHeader>
             <PanelHeaderLeft>
               <PanelHeaderTitle>
-                <strong>＋ Available Sections</strong>
+                <IconPlus size={18} />
+                <strong>Available Sections</strong>
               </PanelHeaderTitle>
               <PanelHeaderSub>Click to add to Careers Home</PanelHeaderSub>
             </PanelHeaderLeft>
@@ -932,7 +936,7 @@ export default function SectionOrderPages() {
                                   )}
                                 </SPToggleWrap>
                                 <SPSettingsBtn type="button" title="Section settings" onClick={() => openSectionSettings(sectionId)} aria-label="Section settings">
-                                  <IconSettings2 size={14} />
+                                  <IconSettingsCog size={14} />
                                 </SPSettingsBtn>
                               </SPRow>
                             )}
@@ -963,7 +967,7 @@ export default function SectionOrderPages() {
                       )}
                     </SPToggleWrap>
                     <SPSettingsBtn type="button" title="Section settings" onClick={() => openSectionSettings(sectionId)} aria-label="Section settings">
-                      <IconSettings2 size={14} />
+                      <IconSettingsCog size={14} />
                     </SPSettingsBtn>
                   </SPRow>
                 );

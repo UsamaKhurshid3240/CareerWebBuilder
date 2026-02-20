@@ -1,8 +1,11 @@
 'use client';
 
+import { useState } from 'react';
 import styled from 'styled-components';
 import { BUILDER_UI } from '@/lib/constants/colors';
 import { GLASS, RADIUS, TRANSITION } from '@/lib/constants/glassUI';
+import { IconImage, IconFileText } from '@/builder/icons';
+import ImageLibraryModal from '@/builder/components/ImageLibraryModal';
 
 const Row = styled.div`
   padding: 14px 28px;
@@ -128,6 +131,8 @@ export default function HeaderTop({
   splitView,
   setSplitView,
 }: HeaderTopProps) {
+  const [imageLibraryOpen, setImageLibraryOpen] = useState(false);
+
   return (
     <Row>
       <Left>
@@ -140,8 +145,13 @@ export default function HeaderTop({
 
       <Right>
         <ProductName></ProductName>
-        <Btn type="button">📄 Content Templates</Btn>
-        <Btn type="button">🖼 Image Library</Btn>
+        <Btn type="button"><IconFileText size={16} /> Content Templates</Btn>
+        <Btn type="button" onClick={() => setImageLibraryOpen(true)}>
+          <IconImage size={16} /> Image Library
+        </Btn>
+        {imageLibraryOpen && (
+          <ImageLibraryModal onClose={() => setImageLibraryOpen(false)} />
+        )}
         <ToggleWrap>
           <ToggleLabel>Split View</ToggleLabel>
           <Toggle

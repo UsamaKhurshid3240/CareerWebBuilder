@@ -3,7 +3,7 @@
 import styled from 'styled-components';
 import { BUILDER_UI } from '@/lib/constants/colors';
 import { RADIUS, TRANSITION, SHADOW } from '@/lib/constants/glassUI';
-import { IconLayoutList, IconType, PaletteIcon } from '@/builder/icons';
+import { IconLayoutList, IconType, PaletteIcon, IconSettingsCog } from '@/builder/icons';
 
 type TabKey = 'theme' | 'fonts' | 'layout' | 'sections';
 
@@ -75,7 +75,8 @@ export default function Tabs({ activeTab, setActiveTab }: TabsProps) {
           active={activeTab === 'sections'}
           onClick={() => setActiveTab('sections')}
         >
-          ⚙️ Sections
+          <IconSettingsCog size={20} />
+          Sections
         </Tab>
       </TabsBar>
     </TabsWrapper>

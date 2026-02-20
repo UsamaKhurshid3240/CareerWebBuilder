@@ -41,6 +41,7 @@ type ApplyChangePayload = Partial<BuilderState>;
 
 type BuilderAction =
   | { type: 'APPLY_CHANGE'; payload: ApplyChangePayload }
+  | { type: 'APPLY_DIRECT'; payload: ApplyChangePayload }
   | { type: 'UNDO' }
   | { type: 'REDO' }
   | { type: 'SAVE' }
@@ -102,7 +103,7 @@ function mergeState(prev: BuilderState, payload: ApplyChangePayload): BuilderSta
       payload.singlePageSectionOrder !== undefined
         ? payload.singlePageSectionOrder
         : prev.singlePageSectionOrder,
-    pages: payload.pages ? { ...prev.pages, ...payload.pages } : prev.pages,
+    pages: payload.pages !== undefined ? payload.pages : prev.pages,
     pageLabels: payload.pageLabels !== undefined ? payload.pageLabels : prev.pageLabels,
     activePage: payload.activePage ?? prev.activePage,
     sectionSettings:
@@ -286,6 +287,10 @@ function historyReducer(state: HistoryState, action: BuilderAction): HistoryStat
         changeCountSinceSave: state.changeCountSinceSave + 1,
       };
     }
+    case 'APPLY_DIRECT': {
+      const next = mergeState(state.current, action.payload);
+      return { ...state, current: next };
+    }
     case 'SAVE':
     case 'PUBLISH': {
       return {
@@ -339,6 +344,8 @@ type BuilderContextType = {
   addPage: (id: string, label: string, sections: SectionId[]) => void;
   deletePage: (id: string) => void;
   setSectionSettings: (valueOrUpdater: React.SetStateAction<SectionSettingsState | undefined>) => void;
+  /** Apply a state change without pushing to undo stack or incrementing change count (e.g. Image Library). */
+  applyChangeDirect: (payload: ApplyChangePayload) => void;
   undo: () => void;
   redo: () => void;
   save: () => void;
@@ -533,6 +540,10 @@ export function BuilderProvider({
     [current.sectionSettings, applyChange]
   );
 
+  const applyChangeDirect = useCallback((payload: ApplyChangePayload) => {
+    dispatch({ type: 'APPLY_DIRECT', payload });
+  }, []);
+
   const undo = useCallback(() => dispatch({ type: 'UNDO' }), []);
   const redo = useCallback(() => dispatch({ type: 'REDO' }), []);
   const save = useCallback(() => {
@@ -572,6 +583,7 @@ export function BuilderProvider({
       addPage,
       deletePage,
       setSectionSettings,
+      applyChangeDirect,
       undo,
       redo,
       save,
@@ -608,6 +620,7 @@ export function BuilderProvider({
       addPage,
       deletePage,
       setSectionSettings,
+      applyChangeDirect,
       undo,
       redo,
       save,

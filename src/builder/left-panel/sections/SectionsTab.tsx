@@ -13,6 +13,7 @@ import type { SectionId } from '@/lib/types/builder';
 import { ALL_SECTIONS } from '@/lib/constants/sections';
 import { getPageLabel } from '@/builder/lib/navUtils';
 import AddPageModal from '@/builder/left-panel/layout/sections-order-pages/AddPageModal';
+import { IconSettingsCog } from '@/builder/icons';
 
 /* ─────────────────────────── Shared ─────────────────────────── */
 
@@ -995,7 +996,7 @@ export default function SectionsTab() {
                                   type="button"
                                   title="Section settings"
                                 >
-                                  ⚙
+                                  <IconSettingsCog size={14} />
                                 </SPSettingsBtn>
                               </SPRow>
                             )}
@@ -1034,7 +1035,9 @@ export default function SectionsTab() {
                         />
                       )}
                     </SPToggleWrap>
-                    <SPSettingsBtn type="button" title="Section settings">⚙</SPSettingsBtn>
+                    <SPSettingsBtn type="button" title="Section settings">
+                      <IconSettingsCog size={14} />
+                    </SPSettingsBtn>
                   </SPRow>
                 );
               })
