@@ -1,0 +1,12 @@
+export { default as IconSave } from './IconSave';
+export { default as IconGlobe } from './IconGlobe';
+export { default as IconLayoutList } from './IconLayoutList';
+export { default as IconHouse } from './IconHouse';
+export { default as IconSpace } from './IconSpace';
+export { default as IconSettings2 } from './IconSettings2';
+export { default as IconSparkles } from './IconSparkles';
+export { default as IconType } from './IconType';
+export { default as IconMousePointerClick } from './IconMousePointerClick';
+export { default as IconRotateCcw } from './IconRotateCcw';
+export { default as PaletteIcon } from './PaletteIcon';
+export { default as EyeIcon } from './EyeIcon';

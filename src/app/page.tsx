@@ -1,5 +1,5 @@
-import CareerPageBuilder from '@/builder';
+import BuilderLoader from '@/app/components/BuilderLoader';
 
 export default function Page() {
-  return <CareerPageBuilder />;
+  return <BuilderLoader />;
 }

@@ -2,6 +2,7 @@
 
 import styled from 'styled-components';
 import { useBuilder } from '@/builder/context/BuilderContext';
+import { IconMousePointerClick } from '@/builder/icons';
 import type { ButtonStyle } from '@/lib/types/builder';
 
 /* ================= STYLES ================= */
@@ -21,6 +22,9 @@ const Header = styled.div`
     margin: 0;
     font-size: 18px;
     font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 
   p {
@@ -102,6 +106,7 @@ const RadiusTop = styled.div`
 
 const Slider = styled.input`
   width: 100%;
+  accent-color: #1d3155;
 `;
 
 const RadiusLabels = styled.div`
@@ -172,7 +177,7 @@ export default function ButtonStylesSection() {
   return (
     <Section>
       <Header>
-        <h3>✨ Button Styles</h3>
+        <h3><IconMousePointerClick size={20} /> Button Styles</h3>
         <p>
           Customize how buttons appear throughout your careers page
         </p>

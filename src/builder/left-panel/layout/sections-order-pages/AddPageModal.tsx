@@ -1,7 +1,11 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import styled, { keyframes } from 'styled-components';
+import { BUILDER_UI, SHADES } from '@/lib/constants/colors';
+import { RADIUS, TRANSITION, SHADOW, BLUR } from '@/lib/constants/glassUI';
+import { MODAL_SPACING } from '@/builder/components/section-settings/SectionSettingsModal';
+import { ModalFooter, BtnPrimary, BtnSecondary } from '@/builder/components/section-settings/FormControls';
 
 /* ============ TYPES ============ */
 
@@ -16,122 +20,189 @@ interface AddPageModalProps {
   onAdd: (page: AddPagePayload) => void;
 }
 
+/* ============ ANIMATIONS (aligned with SectionSettingsModal) ============ */
+
+const overlayEnter = keyframes`
+  from { opacity: 0; }
+  to { opacity: 1; }
+`;
+
+const modalEnter = keyframes`
+  from {
+    opacity: 0;
+    transform: scale(0.97) translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+`;
+
 /* ============ STYLES ============ */
 
 const Overlay = styled.div`
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(13, 35, 73, 0.52);
+  backdrop-filter: blur(${BLUR.xl});
+  -webkit-backdrop-filter: blur(${BLUR.xl});
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
-  padding: 16px;
+  z-index: 1001;
+  padding: 24px;
   overflow-y: auto;
   box-sizing: border-box;
+  animation: ${overlayEnter} 0.22s ease-out forwards;
 `;
 
 const Modal = styled.div`
   width: 100%;
-  max-width: 440px;
+  max-width: 520px;
   min-width: 0;
-  max-height: calc(100vh - 32px);
-  overflow-y: auto;
-  background: #fff;
-  border-radius: 12px;
-  padding: 20px;
+  max-height: calc(100vh - 48px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, ${SHADES.white} 0%, rgba(248, 250, 252, 0.98) 100%);
+  border-radius: ${RADIUS.xl};
+  box-shadow: ${SHADOW.lg}, 0 0 0 1px rgba(0, 0, 0, 0.05);
+  border: 1px solid ${BUILDER_UI.panelBorder};
   box-sizing: border-box;
   margin: auto;
+  animation: ${modalEnter} 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 `;
 
 const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 12px;
+  gap: 16px;
+  padding: ${MODAL_SPACING.headerPadding}px ${MODAL_SPACING.bodyPadding}px 0;
+  flex-shrink: 0;
+`;
+
+const TitleBlock = styled.div`
+  min-width: 0;
 `;
 
 const Title = styled.h3`
   margin: 0;
-  font-size: 18px;
-  min-width: 0;
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: ${BUILDER_UI.heading};
+  line-height: 1.3;
 `;
 
 const Sub = styled.p`
-  margin: 4px 0 0;
-  font-size: 13px;
-  color: #6b7280;
+  margin: 8px 0 0;
+  font-size: 14px;
+  color: ${BUILDER_UI.muted};
+  line-height: 1.5;
 `;
 
-const Close = styled.span`
-  cursor: pointer;
+const Close = styled.button`
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: ${SHADES.bg};
+  color: ${BUILDER_UI.muted};
+  border-radius: ${RADIUS.md};
   font-size: 20px;
   line-height: 1;
-  flex-shrink: 0;
-  padding: 2px;
+  cursor: pointer;
+  transition: background ${TRANSITION.fast}, color ${TRANSITION.fast};
+
+  &:hover {
+    background: ${SHADES.border};
+    color: ${BUILDER_UI.heading};
+  }
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px ${BUILDER_UI.inputFocus};
+  }
+`;
+
+const Body = styled.div`
+  padding: ${MODAL_SPACING.sectionGap}px ${MODAL_SPACING.bodyPadding}px;
+  overflow-y: auto;
+  flex: 1;
+  min-height: 0;
 `;
 
 const Field = styled.div`
-  margin-bottom: 14px;
+  margin-bottom: 20px;
   min-width: 0;
+
+  &:last-of-type {
+    margin-bottom: 0;
+  }
 `;
 
 const Label = styled.label`
   display: block;
   font-size: 13px;
-  margin-bottom: 6px;
+  font-weight: 500;
+  color: ${BUILDER_UI.heading};
+  margin-bottom: 8px;
+  line-height: 1.4;
 `;
 
 const Input = styled.input`
   width: 100%;
   min-width: 0;
-  padding: 10px 12px;
-  border-radius: 10px;
-  border: 1px solid #e5e7eb;
+  padding: 12px 14px;
+  border-radius: ${RADIUS.md};
+  border: 1px solid ${BUILDER_UI.inputBorder};
   font-size: 14px;
+  color: ${BUILDER_UI.body};
+  background: ${SHADES.white};
   box-sizing: border-box;
+  transition: border-color ${TRANSITION.normal}, box-shadow ${TRANSITION.fast};
 
+  &::placeholder {
+    color: ${BUILDER_UI.muted};
+  }
   &:focus {
     outline: none;
-    border-color: #111827;
+    border-color: ${BUILDER_UI.inputFocus};
+    box-shadow: 0 0 0 3px ${BUILDER_UI.inputFocus}22;
+  }
+  &:focus-visible {
+    outline: none;
+    border-color: ${BUILDER_UI.inputFocus};
+    box-shadow: 0 0 0 3px ${BUILDER_UI.inputFocus}22;
   }
 `;
 
 const SlugRow = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   min-width: 0;
 `;
 
 const Prefix = styled.span`
   font-size: 14px;
-  color: #6b7280;
+  color: ${BUILDER_UI.muted};
   flex-shrink: 0;
 `;
 
-const Footer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 16px;
+const SlugInput = styled(Input)`
+  flex: 1;
+  min-width: 0;
 `;
 
-const Btn = styled.button<{ primary?: boolean }>`
-  padding: 8px 16px;
-  border-radius: 10px;
-  font-size: 14px;
-  cursor: pointer;
-  border: 1px solid ${({ primary }) => (primary ? '#111827' : '#e5e7eb')};
-  background: ${({ primary }) => (primary ? '#111827' : '#fff')};
-  color: ${({ primary }) => (primary ? '#fff' : '#111827')};
-
-  &:disabled {
-    background: #9ca3af;
-    border-color: #9ca3af;
-    cursor: not-allowed;
-  }
+const Footer = styled.div`
+  padding: ${MODAL_SPACING.fieldGap}px ${MODAL_SPACING.bodyPadding}px ${MODAL_SPACING.bodyPadding}px;
+  border-top: 1px solid ${SHADES.border};
+  background: rgba(248, 250, 252, 0.95);
+  flex-shrink: 0;
 `;
 
 /* ============ COMPONENT ============ */
@@ -143,58 +214,74 @@ export default function AddPageModal({
   const [name, setName] = useState<string>('');
   const [slug, setSlug] = useState<string>('');
 
+  const suggestedSlug = name
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+
   useEffect(() => {
-    setSlug(
-      name
-        .toLowerCase()
-        .trim()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-|-$|/g, '')
-    );
+    setSlug(suggestedSlug);
   }, [name]);
 
   const handleAdd = () => {
+    const finalSlug = (slug.trim() || suggestedSlug || 'page')
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '') || 'page';
     onAdd({
-      id: slug,
-      label: name,
+      id: finalSlug,
+      label: name.trim(),
       sections: []
     });
     onClose();
   };
 
   return (
-    <Overlay>
-      <Modal>
+    <Overlay onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <Modal onClick={(e) => e.stopPropagation()}>
         <Header>
-          <div>
+          <TitleBlock>
             <Title>Add Custom Page</Title>
-            <Sub>Create a new page for your careers site</Sub>
-          </div>
-          <Close onClick={onClose}>×</Close>
+            <Sub>Create a new page for your careers site. The URL slug is suggested from the page name; you can edit it.</Sub>
+          </TitleBlock>
+          <Close type="button" onClick={onClose} aria-label="Close">×</Close>
         </Header>
 
-        <Field>
-          <Label>Page Name</Label>
-          <Input
-            placeholder="e.g., Life at Company"
-            value={name}
-            onChange={e => setName(e.target.value)}
-          />
-        </Field>
+        <Body>
+          <Field>
+            <Label htmlFor="add-page-name">Page Name</Label>
+            <Input
+              id="add-page-name"
+              placeholder="e.g., Life at Company"
+              value={name}
+              onChange={e => setName(e.target.value)}
+              autoFocus
+            />
+          </Field>
 
-        <Field>
-          <Label>URL Slug (optional)</Label>
-          <SlugRow>
-            <Prefix>/careers/</Prefix>
-            <Input value={slug} readOnly style={{ flex: 1 }} />
-          </SlugRow>
-        </Field>
+          <Field>
+            <Label htmlFor="add-page-slug">URL Slug</Label>
+            <SlugRow>
+              <Prefix>/careers/</Prefix>
+              <SlugInput
+                id="add-page-slug"
+                type="text"
+                value={slug}
+                onChange={e => setSlug(e.target.value)}
+                placeholder="e.g., life-at-company"
+              />
+            </SlugRow>
+          </Field>
+        </Body>
 
         <Footer>
-          <Btn onClick={onClose}>Cancel</Btn>
-          <Btn primary disabled={!name} onClick={handleAdd}>
-            Add Page
-          </Btn>
+          <ModalFooter>
+            <BtnSecondary type="button" onClick={onClose}>Cancel</BtnSecondary>
+            <BtnPrimary type="button" disabled={!name.trim() || !(slug.trim() || suggestedSlug)} onClick={handleAdd}>
+              Add Page
+            </BtnPrimary>
+          </ModalFooter>
         </Footer>
       </Modal>
     </Overlay>

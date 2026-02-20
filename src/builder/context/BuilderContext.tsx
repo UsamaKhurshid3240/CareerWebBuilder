@@ -66,6 +66,20 @@ function cloneState(s: BuilderState): BuilderState {
     ),
     pageLabels: s.pageLabels ? { ...s.pageLabels } : undefined,
     activePage: s.activePage,
+    sectionSettings: s.sectionSettings
+      ? {
+          ...s.sectionSettings,
+          hero: s.sectionSettings.hero ? { ...s.sectionSettings.hero } : undefined,
+          about: s.sectionSettings.about ? { ...s.sectionSettings.about } : undefined,
+          benefits: s.sectionSettings.benefits
+            ? { ...s.sectionSettings.benefits, items: s.sectionSettings.benefits.items?.map((i) => ({ ...i })) ?? [] }
+            : undefined,
+          alerts: s.sectionSettings.alerts ? { ...s.sectionSettings.alerts } : undefined,
+          jobs: s.sectionSettings.jobs ? { ...s.sectionSettings.jobs } : undefined,
+          testimonials: s.sectionSettings.testimonials ? { ...s.sectionSettings.testimonials } : undefined,
+          team: s.sectionSettings.team ? { ...s.sectionSettings.team } : undefined,
+        }
+      : undefined,
   };
 }
 
@@ -90,10 +104,14 @@ function mergeState(prev: BuilderState, payload: ApplyChangePayload): BuilderSta
     pages: payload.pages ? { ...prev.pages, ...payload.pages } : prev.pages,
     pageLabels: payload.pageLabels !== undefined ? payload.pageLabels : prev.pageLabels,
     activePage: payload.activePage ?? prev.activePage,
+    sectionSettings:
+      payload.sectionSettings !== undefined
+        ? { ...(prev.sectionSettings ?? {}), ...payload.sectionSettings }
+        : prev.sectionSettings,
   };
 }
 
-const initialBuilderState: BuilderState = {
+export const initialBuilderState: BuilderState = {
   themeName: 'Professional',
   colors: THEME_MAP.Professional,
   logo: null,
@@ -147,6 +165,84 @@ const initialBuilderState: BuilderState = {
     home: ['hero', 'about', 'jobs', 'footer'],
   },
   activePage: 'home',
+  sectionSettings: {
+    hero: {
+      headline: 'Join Our Team',
+      subheadline: 'Discover amazing career opportunities.',
+      primaryCtaText: 'View Open Positions',
+      primaryCtaLink: '#jobs',
+      secondaryCtaText: 'Learn More',
+      secondaryCtaLink: '#about',
+      alignment: 'center',
+      showSubheadline: true,
+      showPrimaryCta: true,
+      showSecondaryCta: true,
+      backgroundType: 'gradient',
+      backgroundColor: '#111827',
+      backgroundImage: '',
+      overlayOpacity: 0.4,
+      textColor: '#ffffff',
+      sectionHeight: 'medium',
+      animationOnLoad: 'fade',
+      visibleDesktop: true,
+      visibleTablet: true,
+      visibleMobile: true,
+      scrollIndicator: false,
+      animateText: false,
+      parallaxEffect: false,
+    },
+    about: {
+      sectionTitle: 'About Us',
+      content: 'We are a forward-thinking company dedicated to innovation.',
+      layout: 'centered',
+      imageUrl: '',
+      showCompanyValues: true,
+      companyValues: ['Innovation', 'Integrity', 'Teamwork'],
+    },
+    benefits: {
+      sectionTitle: 'Why Work With Us',
+      subtitle: 'We offer competitive benefits to help you thrive at work and at home.',
+      layout: 'grid',
+      columns: 4,
+      items: [
+        { id: 'b1', title: 'Competitive Salary', description: 'We offer market-leading compensation packages.', icon: '💰' },
+        { id: 'b2', title: 'Health Insurance', description: 'Comprehensive health, dental, and vision coverage.', icon: '🏥' },
+        { id: 'b3', title: 'Flexible PTO', description: 'Take time off when you need it.', icon: '🏖️' },
+        { id: 'b4', title: 'Learning Budget', description: 'Annual budget for courses and conferences.', icon: '📚' },
+        { id: 'b5', title: 'Remote Work', description: 'Work from anywhere.', icon: '🏠' },
+        { id: 'b6', title: 'Parental Leave', description: 'Generous paid leave for new parents.', icon: '👶' },
+      ],
+    },
+    alerts: {
+      sectionTitle: 'Stay Updated',
+      subtitle: 'Get notified when new positions match you.',
+      buttonText: 'Subscribe',
+      layout: 'inline',
+      successMessage: "Thanks! We'll notify you about new opportunities.",
+      showNameField: false,
+      showPreferences: false,
+    },
+    jobs: {
+      layout: 'cards',
+      cardStyle: 'detailed',
+      showLocation: true,
+      showDepartment: true,
+      showSalary: false,
+      showJobType: true,
+      searchBar: true,
+      filters: true,
+    },
+    team: {
+      sectionTitle: 'Meet Our Team',
+      subtitle: 'The people behind our success.',
+      layout: 'grid',
+      columns: 4,
+      imageStyle: 'circle',
+      socialLinks: false,
+      departmentFilter: false,
+      bioOnHover: false,
+    },
+  },
 };
 
 function historyReducer(state: HistoryState, action: BuilderAction): HistoryState {
@@ -174,6 +270,7 @@ function historyReducer(state: HistoryState, action: BuilderAction): HistoryStat
         current: cloneState(prev),
         undoStack: newUndo,
         redoStack: [...state.redoStack, cloneState(state.current)],
+        changeCountSinceSave: Math.max(0, state.changeCountSinceSave - 1),
       };
     }
     case 'REDO': {
@@ -185,6 +282,7 @@ function historyReducer(state: HistoryState, action: BuilderAction): HistoryStat
         current: cloneState(next),
         undoStack: [...state.undoStack, cloneState(state.current)],
         redoStack: newRedo,
+        changeCountSinceSave: state.changeCountSinceSave + 1,
       };
     }
     case 'SAVE':
@@ -225,6 +323,7 @@ type BuilderContextType = {
   pages: PagesState;
   pageLabels?: Record<string, string>;
   activePage: string;
+  sectionSettings?: SectionSettingsState;
   applyTheme: (name: ThemePresetName) => void;
   setColors: React.Dispatch<React.SetStateAction<ThemeColors>>;
   setLogo: React.Dispatch<React.SetStateAction<string | null>>;
@@ -238,6 +337,7 @@ type BuilderContextType = {
   setActivePage: (page: string) => void;
   addPage: (id: string, label: string, sections: SectionId[]) => void;
   deletePage: (id: string) => void;
+  setSectionSettings: (valueOrUpdater: React.SetStateAction<SectionSettingsState | undefined>) => void;
   undo: () => void;
   redo: () => void;
   save: () => void;
@@ -421,6 +521,17 @@ export function BuilderProvider({
     [current.pages, current.pageLabels, current.activePage, applyChange]
   );
 
+  const setSectionSettings = useCallback(
+    (valueOrUpdater: React.SetStateAction<SectionSettingsState | undefined>) => {
+      const next =
+        typeof valueOrUpdater === 'function'
+          ? valueOrUpdater(current.sectionSettings)
+          : valueOrUpdater;
+      applyChange({ sectionSettings: next });
+    },
+    [current.sectionSettings, applyChange]
+  );
+
   const undo = useCallback(() => dispatch({ type: 'UNDO' }), []);
   const redo = useCallback(() => dispatch({ type: 'REDO' }), []);
   const save = useCallback(() => {
@@ -445,6 +556,7 @@ export function BuilderProvider({
       pages: current.pages,
       pageLabels: current.pageLabels,
       activePage: current.activePage,
+      sectionSettings: current.sectionSettings,
       applyTheme,
       setColors,
       setLogo,
@@ -458,6 +570,7 @@ export function BuilderProvider({
       setActivePage,
       addPage,
       deletePage,
+      setSectionSettings,
       undo,
       redo,
       save,
@@ -479,6 +592,7 @@ export function BuilderProvider({
       current.singlePageSectionOrder,
       current.pages,
       current.activePage,
+      current.sectionSettings,
       applyTheme,
       setColors,
       setLogo,
@@ -492,6 +606,7 @@ export function BuilderProvider({
       setActivePage,
       addPage,
       deletePage,
+      setSectionSettings,
       undo,
       redo,
       save,

@@ -2,6 +2,7 @@
 
 import styled from 'styled-components';
 import { useBuilder } from '@/builder/context/BuilderContext';
+import { IconSettings2 } from '@/builder/icons';
 import type { SectionRadius } from '@/lib/types/builder';
 
 /* ===== Layout ===== */
@@ -168,7 +169,7 @@ export default function GlobalStylesSection() {
   return (
     <Section>
       <Header>
-        <h3>🎛 Global Styles</h3>
+        <h3><IconSettings2 size={20} /> Global Styles</h3>
         <p>Control spacing, animations, and overall page feel</p>
       </Header>
 

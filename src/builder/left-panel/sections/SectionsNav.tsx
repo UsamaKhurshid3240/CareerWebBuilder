@@ -1,6 +1,8 @@
 'use client';
 
 import styled from 'styled-components';
+import { ALL_SECTIONS, getSectionMeta } from '@/lib/constants/sections';
+import type { SectionId } from '@/lib/types/builder';
 
 const Nav = styled.div`
   display: flex;
@@ -10,6 +12,9 @@ const Nav = styled.div`
 `;
 
 const Tab = styled.button<{ active?: boolean }>`
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   padding: 6px 12px;
   border-radius: 8px;
   border: 1px solid ${({ active }) => (active ? '#111827' : '#e5e7eb')};
@@ -18,45 +23,43 @@ const Tab = styled.button<{ active?: boolean }>`
   font-size: 13px;
   cursor: pointer;
   white-space: nowrap;
+  transition: all 0.2s ease;
+  &:hover {
+    border-color: ${({ active }) => (active ? '#111827' : '#9ca3af')};
+    background: ${({ active }) => (active ? '#111827' : '#f9fafb')};
+  }
+`;
+
+const TabIcon = styled.span`
+  font-size: 14px;
+  opacity: 0.95;
 `;
 
 export type SectionKey =
-  | 'hero'
-  | 'about'
-  | 'benefits'
-  | 'locations'
-  | 'hiring'
-  | 'faq'
-  | 'dei'
-  | 'videos'
-  | 'testimonials'
-  | 'team'
-  | 'jobs'
-  | 'alerts'
-  | 'apply'
+  | SectionId
   | 'seo'
-  | 'analytics'
-  | 'footer'
   | 'css';
 
-const SECTIONS: { id: SectionKey; label: string }[] = [
-  { id: 'hero', label: 'Hero' },
-  { id: 'about', label: 'About' },
-  { id: 'benefits', label: 'Benefits' },
-  { id: 'locations', label: 'Locations' },
-  { id: 'hiring', label: 'Hiring' },
-  { id: 'faq', label: 'FAQ' },
-  { id: 'dei', label: 'D&I' },
-  { id: 'videos', label: 'Videos' },
-  { id: 'testimonials', label: 'Testimonials' },
-  { id: 'team', label: 'Team' },
-  { id: 'jobs', label: 'Jobs' },
-  { id: 'alerts', label: 'Alerts' },
-  { id: 'apply', label: 'Apply Form' },
-  { id: 'seo', label: 'SEO' },
-  { id: 'analytics', label: 'Analytics' },
-  { id: 'footer', label: 'Footer' },
-  { id: 'css', label: 'CSS' }
+/** Section tabs from shared meta; extra tabs (seo, css) with fallback icon/label */
+const EXTRA_TABS: { id: 'seo' | 'css'; label: string; icon: string }[] = [
+  { id: 'seo', label: 'SEO', icon: '🔍' },
+  { id: 'css', label: 'CSS', icon: '🎨' },
+];
+
+function getTabLabel(id: SectionKey): string {
+  if (id === 'seo' || id === 'css') return EXTRA_TABS.find((t) => t.id === id)!.label;
+  return getSectionMeta(id as SectionId)?.label ?? id;
+}
+
+function getTabIcon(id: SectionKey): string {
+  if (id === 'seo' || id === 'css') return EXTRA_TABS.find((t) => t.id === id)!.icon;
+  return getSectionMeta(id as SectionId)?.icon ?? '📄';
+}
+
+const SECTIONS: { id: SectionKey }[] = [
+  ...ALL_SECTIONS.map((s) => ({ id: s.id as SectionKey })),
+  { id: 'seo' },
+  { id: 'css' },
 ];
 
 interface Props {
@@ -67,13 +70,14 @@ interface Props {
 export default function SectionsNav({ active, onChange }: Props) {
   return (
     <Nav>
-      {SECTIONS.map(s => (
+      {SECTIONS.map((s) => (
         <Tab
           key={s.id}
           active={active === s.id}
           onClick={() => onChange(s.id)}
         >
-          {s.label}
+          <TabIcon>{getTabIcon(s.id)}</TabIcon>
+          {getTabLabel(s.id)}
         </Tab>
       ))}
     </Nav>

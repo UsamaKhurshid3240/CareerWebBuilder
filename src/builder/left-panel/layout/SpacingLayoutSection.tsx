@@ -2,6 +2,7 @@
 
 import styled from 'styled-components';
 import { useBuilder } from '@/builder/context/BuilderContext';
+import { IconSpace } from '@/builder/icons';
 import type {
   SectionPadding,
   ContentWidth,
@@ -42,6 +43,9 @@ const Header = styled.div`
     font-size: 16px;
     font-weight: 600;
     margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
 
   p {
@@ -121,7 +125,7 @@ export default function SpacingLayoutSection(): JSX.Element {
     <Wrapper>
       <Header>
         <div>
-          <h3>🧩 Spacing & Layout</h3>
+          <h3><IconSpace size={20} /> Spacing & Layout</h3>
           <p>Fine-tune spacing, corners, and shadows</p>
         </div>
         <Reset onClick={resetAll}>Reset</Reset>

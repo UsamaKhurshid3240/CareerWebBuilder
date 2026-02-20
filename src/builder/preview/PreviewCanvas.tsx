@@ -29,6 +29,8 @@ const PreviewContainer = styled.div<{
   transform: scale(${({ zoom }) => zoom});
   transform-origin: top center;
   transition: all 0.2s ease;
+  position: relative;
+  z-index: 0;
   width: ${({ device }) =>
     device === 'mobile'
       ? '375px'

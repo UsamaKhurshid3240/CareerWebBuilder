@@ -2,6 +2,7 @@
 
 import styled from 'styled-components';
 import { useBuilder } from '@/builder/context/BuilderContext';
+import { IconType } from '@/builder/icons';
 import { FONT_SCALE_MAP, AVAILABLE_FONTS } from '@/lib/constants/typography';
 import type { FontScale } from '@/lib/types/builder';
 
@@ -144,7 +145,7 @@ export default function TypographySection() {
   return (
     <Section>
       <Header>
-        <Title>🅣 Typography</Title>
+        <Title><IconType size={20} /> Typography</Title>
         <Subtitle>
           Choose fonts and sizing for headings and body text
         </Subtitle>

@@ -1,54 +1,19 @@
 /**
- * Shared builder types for Careers Page Builder.
- * Keeps type contracts in one place for context, preview, and config.
+ * Builder and careers page shared types.
+ * Used by BuilderContext, preview, public careers page, and section components.
  */
 
-export type ThemeColors = {
+/* ============ THEME & COLORS ============ */
+
+export interface ThemeColors {
   primary: string;
   secondary: string;
   accent: string;
   heading: string;
   text: string;
-};
+}
 
-/** Full serializable state for undo/redo and save. Extend when adding layout, sections, etc. */
-export type FontScale = 'Small' | 'Medium' | 'Large' | 'Display';
-
-export type ButtonStyle = 'solid' | 'outline' | 'pill' | 'rounded';
-
-export type TypographySettings = {
-  headingFont: string;
-  bodyFont: string;
-  fontScale: FontScale;
-};
-
-export type ButtonSettings = {
-  style: ButtonStyle;
-  cornerRadius: number;
-};
-
-export type SectionPadding = 'compact' | 'normal' | 'spacious';
-export type ContentWidth = 'narrow' | 'medium' | 'wide' | 'full';
-export type SectionRadius = 'none' | 'small' | 'medium' | 'large';
-export type CardShadow = 'none' | 'subtle' | 'medium' | 'dramatic';
-export type SectionAnimation = 'none' | 'fade' | 'slide' | 'left' | 'scale';
-
-export type GradientStop = { color: string; pos: number };
-
-export type HeroGradientType = 'linear' | 'radial' | 'conic';
-
-export type LayoutSettings = {
-  sectionPadding: SectionPadding;
-  contentWidth: ContentWidth;
-  sectionRadius: SectionRadius;
-  cardShadow: CardShadow;
-  sectionAnimation: SectionAnimation;
-  hoverEffects: boolean;
-  heroGradient: string;
-  heroGradientType: HeroGradientType;
-  heroGradientAngle: number;
-  heroGradientStops: GradientStop[];
-};
+/* ============ SECTIONS ============ */
 
 export type SectionId =
   | 'hero'
@@ -67,25 +32,205 @@ export type SectionId =
   | 'analytics'
   | 'footer';
 
-export type NavigationStyle = 'Header' | 'Sidebar' | 'Both';
+/* ============ TYPOGRAPHY ============ */
+
+export type FontScale = 'Small' | 'Medium' | 'Large' | 'Display';
+
+export interface TypographySettings {
+  headingFont: string;
+  bodyFont: string;
+  fontScale: FontScale;
+}
+
+/* ============ BUTTONS ============ */
+
+export type ButtonStyle = 'solid' | 'outline' | 'pill' | 'rounded';
+
+export interface ButtonSettings {
+  style: ButtonStyle;
+  cornerRadius: number;
+}
+
+/* ============ LAYOUT ============ */
+
+export type SectionPadding = 'compact' | 'normal' | 'spacious';
+export type ContentWidth = 'narrow' | 'medium' | 'wide' | 'full';
+export type SectionRadius = 'none' | 'small' | 'medium' | 'large';
+export type CardShadow = 'none' | 'subtle' | 'medium' | 'dramatic';
+export type SectionAnimation = 'none' | 'fade' | 'slide' | 'left' | 'scale';
+
+export interface GradientStop {
+  color: string;
+  pos: number;
+}
+
+export type HeroGradientType = 'linear' | 'radial' | 'conic';
+
+export interface LayoutSettings {
+  sectionPadding: SectionPadding;
+  contentWidth: ContentWidth;
+  sectionRadius: SectionRadius;
+  cardShadow: CardShadow;
+  sectionAnimation: SectionAnimation;
+  hoverEffects: boolean;
+  heroGradient: string;
+  heroGradientType: HeroGradientType;
+  heroGradientAngle: number;
+  heroGradientStops: GradientStop[];
+}
+
+/* ============ NAVIGATION ============ */
+
+export type NavStyle = 'Header' | 'Sidebar' | 'Both';
+
+export interface NavigationSettings {
+  enabled: boolean;
+  style: NavStyle;
+}
+
+/* ============ PAGES ============ */
 
 export type PagesState = Record<string, SectionId[]>;
-
-/** Optional custom labels for pages (key = page id/slug). Falls back to formatted key. */
 export type PageLabelsState = Record<string, string>;
 
-export type NavigationSettings = {
-  enabled: boolean;
-  style: NavigationStyle;
-};
+/* ============ HERO SECTION SETTINGS ============ */
 
-/** When false, Section Order & Pages shows single-page section list (no pages/nav). */
-export type MultiPageLayoutState = boolean;
+export interface HeroSectionSettings {
+  headline: string;
+  subheadline: string;
+  primaryCtaText: string;
+  primaryCtaLink: string;
+  secondaryCtaText: string;
+  secondaryCtaLink: string;
+  alignment: string;
+  showSubheadline: boolean;
+  showPrimaryCta: boolean;
+  showSecondaryCta: boolean;
+  backgroundType: 'solid' | 'gradient' | 'image';
+  backgroundColor: string;
+  backgroundImage: string;
+  overlayOpacity: number;
+  /** Theme-aware text color for hero content */
+  textColor: string;
+  sectionHeight: 'auto' | 'small' | 'medium' | 'full';
+  animationOnLoad: 'fade' | 'slide' | 'none';
+  visibleDesktop: boolean;
+  visibleTablet: boolean;
+  visibleMobile: boolean;
+  scrollIndicator: boolean;
+  animateText: boolean;
+  parallaxEffect: boolean;
+}
 
-/** Order of all sections in the single-page list (used when multiPageLayout is false). */
-export type SinglePageSectionOrderState = SectionId[];
+/* ============ ABOUT SECTION SETTINGS ============ */
 
-export type BuilderState = {
+export type AboutSectionLayout = 'centered' | 'left' | 'split';
+
+export interface AboutSectionSettings {
+  sectionTitle: string;
+  content: string;
+  layout: AboutSectionLayout;
+  imageUrl: string;
+  showCompanyValues: boolean;
+  /** Shown when showCompanyValues is true */
+  companyValues: string[];
+}
+
+/* ============ BENEFITS SECTION SETTINGS ============ */
+
+export type BenefitsSectionLayout = 'grid' | 'list' | 'cards';
+export type BenefitsColumns = 2 | 3 | 4;
+
+export interface BenefitItem {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+}
+
+export interface BenefitsSectionSettings {
+  sectionTitle: string;
+  subtitle: string;
+  layout: BenefitsSectionLayout;
+  columns: BenefitsColumns;
+  items: BenefitItem[];
+}
+
+/* ============ JOB ALERTS SECTION SETTINGS ============ */
+
+export type JobAlertsLayout = 'inline' | 'stacked';
+
+export interface AlertsSectionSettings {
+  sectionTitle: string;
+  subtitle: string;
+  buttonText: string;
+  layout: JobAlertsLayout;
+  successMessage: string;
+  showNameField: boolean;
+  showPreferences: boolean;
+}
+
+/* ============ JOBS / OPEN POSITIONS SECTION SETTINGS ============ */
+
+export type JobsSectionLayout = 'cards' | 'list';
+export type JobsCardStyle = 'detailed' | 'compact';
+
+export interface JobsSectionSettings {
+  layout: JobsSectionLayout;
+  cardStyle: JobsCardStyle;
+  showLocation: boolean;
+  showDepartment: boolean;
+  showSalary: boolean;
+  showJobType: boolean;
+  searchBar: boolean;
+  filters: boolean;
+}
+
+/* ============ TESTIMONIALS SECTION SETTINGS ============ */
+
+export type TestimonialsSectionLayout = 'carousel' | 'grid';
+export type TestimonialsCardStyle = 'card' | 'minimal' | 'quote';
+
+export interface TestimonialsSectionSettings {
+  sectionTitle: string;
+  subtitle: string;
+  layout: TestimonialsSectionLayout;
+  cardStyle: TestimonialsCardStyle;
+  showRatings: boolean;
+  autoplay: boolean;
+  showArrows: boolean;
+}
+
+/* ============ TEAM GALLERY SECTION SETTINGS ============ */
+
+export type TeamSectionLayout = 'grid' | 'carousel';
+export type TeamSectionColumns = 2 | 3 | 4 | 5;
+export type TeamImageStyle = 'circle' | 'rounded' | 'square';
+
+export interface TeamSectionSettings {
+  sectionTitle: string;
+  subtitle: string;
+  layout: TeamSectionLayout;
+  columns: TeamSectionColumns;
+  imageStyle: TeamImageStyle;
+  socialLinks: boolean;
+  departmentFilter: boolean;
+  bioOnHover: boolean;
+}
+
+export interface SectionSettingsState {
+  hero?: HeroSectionSettings;
+  about?: AboutSectionSettings;
+  benefits?: BenefitsSectionSettings;
+  alerts?: AlertsSectionSettings;
+  jobs?: JobsSectionSettings;
+  testimonials?: TestimonialsSectionSettings;
+  team?: TeamSectionSettings;
+}
+
+/* ============ BUILDER STATE ============ */
+
+export interface BuilderState {
   themeName: string;
   colors: ThemeColors;
   logo: string | null;
@@ -93,11 +238,10 @@ export type BuilderState = {
   buttons: ButtonSettings;
   layout: LayoutSettings;
   navigation: NavigationSettings;
-  /** When false, UI shows single-page section manager only. */
   multiPageLayout: boolean;
-  /** Order of sections in single-page list; used for preview order when multiPageLayout is false. */
-  singlePageSectionOrder: SinglePageSectionOrderState;
+  singlePageSectionOrder: SectionId[];
   pages: PagesState;
   pageLabels?: PageLabelsState;
   activePage: string;
-};
+  sectionSettings?: SectionSettingsState;
+}

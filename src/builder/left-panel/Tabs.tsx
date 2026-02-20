@@ -3,6 +3,7 @@
 import styled from 'styled-components';
 import { BUILDER_UI } from '@/lib/constants/colors';
 import { RADIUS, TRANSITION, SHADOW } from '@/lib/constants/glassUI';
+import { IconLayoutList, IconType, PaletteIcon } from '@/builder/icons';
 
 type TabKey = 'theme' | 'fonts' | 'layout' | 'sections';
 
@@ -59,13 +60,16 @@ export default function Tabs({ activeTab, setActiveTab }: TabsProps) {
     <TabsWrapper>
       <TabsBar>
         <Tab active={activeTab === 'theme'} onClick={() => setActiveTab('theme')}>
-          🎨 Theme
+          <PaletteIcon size={20} />
+          Theme
         </Tab>
         <Tab active={activeTab === 'fonts'} onClick={() => setActiveTab('fonts')}>
-          T Fonts
+          <IconType size={20} />
+          Fonts
         </Tab>
         <Tab active={activeTab === 'layout'} onClick={() => setActiveTab('layout')}>
-          📐 Layout
+          <IconLayoutList size={20} />
+          Layout
         </Tab>
         <Tab
           active={activeTab === 'sections'}

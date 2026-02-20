@@ -4,11 +4,12 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import dynamic from 'next/dynamic';
 import type { BuilderState } from '@/lib/types/builder';
+import Loader from '@/app/components/Loader';
 
 // Dynamically import to avoid SSR issues with styled-components
 const PublicCareersPage = dynamic(
   () => import('@/app/components/PublicCareersPage'),
-  { ssr: false }
+  { ssr: false, loading: () => <Loader fullPage message="Loading preview…" size="lg" /> }
 );
 
 const PreviewHeader = styled.header`
@@ -41,25 +42,23 @@ export default function PreviewPage() {
 
   useEffect(() => {
     setMounted(true);
-    // Load current builder state from localStorage
+    // Load current builder state from localStorage (same key the builder uses)
     const saved = localStorage.getItem('career-page-builder-state');
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        // Ensure pages structure is valid
-        if (parsed.pages && typeof parsed.pages === 'object') {
-          // Ensure activePage exists in pages
-          if (!parsed.activePage || !parsed.pages[parsed.activePage]) {
-            parsed.activePage = Object.keys(parsed.pages)[0] || 'home';
-          }
-          // Ensure navigation exists
-          if (!parsed.navigation) {
-            parsed.navigation = { enabled: false, style: 'Both' };
-          }
-          setState(parsed);
-        } else {
-          console.error('Invalid pages structure in saved state');
-        }
+        // Ensure we have a valid pages object (builder always has at least { home: [...] })
+        const pages = parsed.pages && typeof parsed.pages === 'object' ? parsed.pages : { home: [] };
+        const activePage = parsed.activePage && pages[parsed.activePage] ? parsed.activePage : (Object.keys(pages)[0] || 'home');
+        const navigation = parsed.navigation && typeof parsed.navigation === 'object'
+          ? parsed.navigation
+          : { enabled: false, style: 'Both' };
+        setState({
+          ...parsed,
+          pages,
+          activePage,
+          navigation,
+        });
       } catch (e) {
         console.error('Failed to load preview state', e);
       }
@@ -67,7 +66,7 @@ export default function PreviewPage() {
   }, []);
 
   if (!mounted) {
-    return null;
+    return <Loader fullPage message="Loading…" size="lg" />;
   }
 
   if (!state) {
@@ -76,8 +75,10 @@ export default function PreviewPage() {
         <PreviewHeader>
           <PreviewLabel>Preview Mode</PreviewLabel>
         </PreviewHeader>
-        <Container style={{ padding: 24, textAlign: 'center' }}>
-          <p>No preview available. Please configure the builder first.</p>
+        <Container style={{ padding: 48, textAlign: 'center', maxWidth: 420, margin: '48px auto 0' }}>
+          <p style={{ fontSize: 15, color: '#64748b', lineHeight: 1.6, margin: 0 }}>
+            No preview available. Open the builder first to design your careers page, then return here to preview it.
+          </p>
         </Container>
       </>
     );

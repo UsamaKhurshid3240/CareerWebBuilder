@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { GLASS, RADIUS, SHADOW, TRANSITION } from '@/lib/constants/glassUI';
+import { IconRotateCcw } from '@/builder/icons';
 import { DeviceIcon } from './DeviceIcons';
 
 /* ================= TYPES ================= */
@@ -25,6 +26,7 @@ const Bar = styled.div`
   justify-content: space-between;
   padding: 0 22px;
   position: relative;
+  z-index: 10;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
   ${GLASS.toolbar}
@@ -225,8 +227,8 @@ export default function PreviewToolbar({
 
         <Divider />
 
-        <IconBtn title="Refresh Preview" onClick={refreshPreview}>
-          {/* <ReloadIcon /> */} r
+        <IconBtn title="Refresh Preview" onClick={refreshPreview} aria-label="Refresh Preview">
+          <IconRotateCcw size={14} />
         </IconBtn>
 
         <IconBtn title="Open in new tab" onClick={openInNewTab}>
@@ -245,7 +247,7 @@ export default function PreviewToolbar({
             step={5}
             value={zoomPercent}
             onChange={(e) => setZoomPercent(Number(e.target.value))}
-            style={{ width: "100%", marginTop: 10 }}
+            style={{ width: "100%", marginTop: 10, accentColor: "#1d3155" }}
           />
 
           <Presets>

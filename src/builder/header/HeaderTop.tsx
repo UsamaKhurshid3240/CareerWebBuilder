@@ -17,19 +17,16 @@ const Left = styled.div`
   display: flex;
   align-items: center;
   gap: 14px;
+  flex: 1;
+  min-width: 0;
 `;
 
-const Logo = styled.div`
-  width: 36px;
+const Logo = styled.img`
   height: 36px;
-  border-radius: ${RADIUS.md};
-  background: rgba(255, 255, 255, 0.15);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
+  width: auto;
+  display: block;
   flex-shrink: 0;
+  object-fit: contain;
 `;
 
 const Brand = styled.div`
@@ -134,7 +131,7 @@ export default function HeaderTop({
   return (
     <Row>
       <Left>
-        <Logo aria-hidden>◇</Logo>
+        <Logo src="/occy-logo.png" alt="" aria-hidden />
         <Brand>
           <Title>Careers Page Builder</Title>
           <Subtitle>Themes, typography & layout</Subtitle>
@@ -142,7 +139,7 @@ export default function HeaderTop({
       </Left>
 
       <Right>
-        <ProductName>Occy</ProductName>
+        <ProductName></ProductName>
         <Btn type="button">📄 Content Templates</Btn>
         <Btn type="button">🖼 Image Library</Btn>
         <ToggleWrap>

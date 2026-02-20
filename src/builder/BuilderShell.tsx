@@ -14,11 +14,11 @@ interface SplitProps {
 }
 
 const Shell = styled.div`
-  height: calc(100vh - 64px);
+  height: 100vh;
   min-height: 0;
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 0;
   background: ${SHELL_BG};
 `;
 

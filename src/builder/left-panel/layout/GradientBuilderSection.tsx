@@ -2,6 +2,7 @@
 
 import styled from 'styled-components';
 import { useBuilder } from '@/builder/context/BuilderContext';
+import { IconSparkles } from '@/builder/icons';
 import type { GradientStop, HeroGradientType } from '@/lib/types/builder';
 
 function buildGradientCss(
@@ -104,6 +105,7 @@ const Select = styled.select`
 
 const Slider = styled.input`
   width: 100%;
+  accent-color: #1d3155;
 `;
 
 /* ===== Color Stops ===== */
@@ -252,7 +254,7 @@ export default function GradientBuilderSection() {
   return (
     <Section>
       <Header>
-        <h3>✨ Gradient Builder</h3>
+        <h3><IconSparkles size={20} /> Gradient Builder</h3>
         <p>Create custom gradients for backgrounds</p>
       </Header>
 

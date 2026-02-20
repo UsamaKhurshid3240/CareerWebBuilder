@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { useBuilder } from '@/builder/context/BuilderContext';
 import { BUILDER_UI } from '@/lib/constants/colors';
 import { GLASS, RADIUS, TRANSITION } from '@/lib/constants/glassUI';
+import { IconSave, IconGlobe, EyeIcon } from '@/builder/icons';
 
 const Row = styled.div`
   padding: 12px 28px;
@@ -74,6 +75,9 @@ const Primary = styled.button`
   cursor: pointer;
   font-weight: 500;
   font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   transition: background ${TRANSITION.normal}, transform ${TRANSITION.fast};
 
   &:hover {
@@ -93,6 +97,9 @@ const Secondary = styled.button<{ disabled?: boolean }>`
   cursor: ${({ disabled }) => (disabled ? 'not-allowed' : 'pointer')};
   font-weight: 500;
   font-size: 13px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   opacity: ${({ disabled }) => (disabled ? 0.6 : 1)};
   transition: background ${TRANSITION.normal}, border-color ${TRANSITION.normal}, transform ${TRANSITION.fast};
 
@@ -175,12 +182,15 @@ export default function HeaderActions() {
 
       <Right>
         <Secondary type="button" onClick={handlePreview}>
+          <EyeIcon size={16} />
           Preview
         </Secondary>
         <Secondary type="button" onClick={save} disabled={!isUnsaved}>
+          <IconSave size={16} />
           Save
         </Secondary>
         <Primary type="button" onClick={publish}>
+          <IconGlobe size={16} />
           Publish
         </Primary>
       </Right>

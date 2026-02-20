@@ -39,12 +39,6 @@ const Logo = styled.div`
   justify-content: center;
 `;
 
-const Right = styled.div`
-  font-size: 14px;
-  font-weight: 600;
-  color: #111827;
-`;
-
 export default function AppHeader() {
   return (
     <Header>
@@ -52,8 +46,6 @@ export default function AppHeader() {
         <Left>
           <Logo>UK</Logo>
         </Left>
-
-        <Right>Usama Khurshid</Right>
       </Inner>
     </Header>
   );

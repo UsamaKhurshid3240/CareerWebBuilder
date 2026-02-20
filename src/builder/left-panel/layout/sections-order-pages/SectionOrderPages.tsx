@@ -13,8 +13,17 @@ import { useBuilder } from '@/builder/context/BuilderContext';
 import type { SectionId } from '@/lib/types/builder';
 import { ALL_SECTIONS } from '@/lib/constants/sections';
 import { BUILDER_UI, ACCENTS } from '@/lib/constants/colors';
-import { GLASS, RADIUS, TRANSITION } from '@/lib/constants/glassUI';
+import { GLASS, RADIUS, TRANSITION, SHADOW, BLUR } from '@/lib/constants/glassUI';
 import AddPageModal from './AddPageModal';
+import HeroSectionSettingsModal from './HeroSectionSettingsModal';
+import JobsSectionSettingsModal from './JobsSectionSettingsModal';
+import AboutSectionSettingsModal from './AboutSectionSettingsModal';
+import BenefitsSectionSettingsModal from './BenefitsSectionSettingsModal';
+import TestimonialsSectionSettingsModal from './TestimonialsSectionSettingsModal';
+import TeamSectionSettingsModal from './TeamSectionSettingsModal';
+import AlertsSectionSettingsModal from './AlertsSectionSettingsModal';
+import TrashIcon from '@/builder/icons/TrashIcon';
+import { IconLayoutList, IconHouse, IconSettings2 } from '@/builder/icons';
 
 /* ================= TYPES ================= */
 
@@ -45,6 +54,9 @@ const Title = styled.h3`
   font-size: 18px;
   font-weight: 600;
   color: ${BUILDER_UI.heading};
+  display: flex;
+  align-items: center;
+  gap: 8px;
 `;
 
 const Sub = styled.p`
@@ -68,6 +80,13 @@ const ColumnToggleRow = styled(ToggleRow)`
   flex-direction: column;
   align-items: stretch;
   gap: 10px;
+`;
+
+/** Row with label on left, toggle on right (e.g. Multi-Page Layout) */
+const ToggleRightRow = styled(ToggleRow)`
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const Toggle = styled.div<{ on: boolean }>`
@@ -169,22 +188,77 @@ const Panel = styled.div`
 const PanelHeader = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   font-size: 13px;
   margin-bottom: 8px;
   color: ${BUILDER_UI.heading};
+`;
+
+const PanelHeaderLeft = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+`;
+
+const PanelHeaderTitle = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+`;
+
+const PanelHeaderSub = styled.p`
+  margin: 0;
+  font-size: 12px;
+  color: ${BUILDER_UI.muted};
+  font-weight: 400;
+`;
+
+const PanelHeaderRight = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+`;
+
+const DeletePageBtn = styled.button`
+  width: 32px;
+  height: 32px;
+  border-radius: ${RADIUS.sm};
+  border: 1px solid ${BUILDER_UI.inputBorder};
+  background: ${BUILDER_UI.cardBg};
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${BUILDER_UI.muted};
+  transition: all 0.15s;
+  &:hover {
+    background: rgba(239, 68, 68, 0.08);
+    color: #dc2626;
+    border-color: rgba(220, 38, 38, 0.3);
+  }
 `;
 
 const Row = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px;
-  border: 1px solid ${BUILDER_UI.inputBorder};
-  border-radius: 8px;
+  padding: 10px 12px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: ${RADIUS.md};
   margin-bottom: 8px;
-  background: ${BUILDER_UI.cardBg};
-  transition: border-color 0.2s ease;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(${BLUR.sm});
+  -webkit-backdrop-filter: blur(${BLUR.sm});
+  box-shadow: ${SHADOW.xs};
+  transition: border-color ${TRANSITION.normal}, background ${TRANSITION.normal},
+    box-shadow ${TRANSITION.normal};
+
+  &:hover {
+    border-color: rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: ${SHADOW.sm};
+  }
 `;
 
 const Left = styled.div`
@@ -193,9 +267,25 @@ const Left = styled.div`
   gap: 10px;
 `;
 
+const RowIcon = styled.span`
+  font-size: 18px;
+  width: 32px;
+  height: 32px;
+  border-radius: ${RADIUS.sm};
+  background: linear-gradient(145deg, rgba(255,255,255,0.9) 0%, rgba(241,245,249,0.85) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+`;
+
 const Handle = styled.span`
   cursor: grab;
   color: #9ca3af;
+  &:hover {
+    color: #6b7280;
+  }
 `;
 
 const Icon = styled.span`
@@ -269,47 +359,72 @@ const ResetBtn = styled.button`
 const SPList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
 `;
 
 const SPRow = styled.div<{ enabled: boolean; isDragging?: boolean }>`
   display: grid;
-  grid-template-columns: 20px 38px 1fr auto 40px;
+  grid-template-columns: 20px 40px 1fr auto 40px;
   align-items: center;
-  gap: 10px;
-  padding: 11px 14px;
-  border: 1.5px solid ${({ enabled, isDragging }) =>
-    isDragging ? BUILDER_UI.inputFocus : enabled ? BUILDER_UI.inputBorder : BUILDER_UI.shellBg};
-  border-radius: 10px;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid ${({ enabled, isDragging }) =>
+    isDragging ? BUILDER_UI.inputFocus : enabled ? 'rgba(0, 0, 0, 0.08)' : 'rgba(0, 0, 0, 0.05)'};
+  border-radius: ${RADIUS.lg};
   background: ${({ enabled, isDragging }) =>
-    isDragging ? 'rgba(54, 126, 202, 0.06)' : enabled ? BUILDER_UI.cardBg : BUILDER_UI.shellBg};
+    isDragging
+      ? 'rgba(54, 126, 202, 0.08)'
+      : enabled
+        ? 'rgba(255, 255, 255, 0.85)'
+        : 'rgba(248, 250, 252, 0.9)'};
+  backdrop-filter: blur(${BLUR.sm});
+  -webkit-backdrop-filter: blur(${BLUR.sm});
   box-shadow: ${({ isDragging }) =>
-    isDragging ? `0 6px 20px rgba(54, 126, 202, 0.12)` : 'none'};
-  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
+    isDragging ? `0 6px 20px rgba(54, 126, 202, 0.15)` : SHADOW.xs};
+  transition: border-color ${TRANSITION.normal}, background ${TRANSITION.normal},
+    box-shadow ${TRANSITION.normal}, transform ${TRANSITION.fast};
+
+  &:hover {
+    border-color: rgba(0, 0, 0, 0.1);
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: ${SHADOW.sm};
+  }
+  &:active {
+    transform: scale(0.995);
+  }
 `;
 
 const SPDragHandle = styled.span`
   cursor: grab;
-  color: #d1d5db;
+  color: #cbd5e1;
   font-size: 14px;
   user-select: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  &:hover { color: #9ca3af; }
+  transition: color ${TRANSITION.fast};
+  &:hover {
+    color: #94a3b8;
+  }
 `;
 
 const SPIconWrap = styled.div<{ enabled: boolean }>`
-  width: 36px;
-  height: 36px;
-  border-radius: 9px;
-  background: ${({ enabled }) => (enabled ? '#f1f5f9' : '#f3f4f6')};
+  width: 40px;
+  height: 40px;
+  border-radius: ${RADIUS.md};
+  background: ${({ enabled }) =>
+    enabled
+      ? 'linear-gradient(145deg, rgba(255,255,255,0.95) 0%, rgba(241,245,249,0.9) 100%)'
+      : 'linear-gradient(145deg, rgba(248,250,252,0.9) 0%, rgba(241,245,249,0.8) 100%)'};
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 18px;
+  font-size: 20px;
   flex-shrink: 0;
-  opacity: ${({ enabled }) => (enabled ? 1 : 0.5)};
+  opacity: ${({ enabled }) => (enabled ? 1 : 0.55)};
+  transition: opacity ${TRANSITION.fast}, box-shadow ${TRANSITION.fast};
 `;
 
 const SPInfo = styled.div<{ enabled: boolean }>`
@@ -381,6 +496,26 @@ const SPSettingsBtn = styled.button`
   }
 `;
 
+const SPRemoveBtn = styled.button`
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  border: 1px solid ${BUILDER_UI.inputBorder};
+  background: ${BUILDER_UI.cardBg};
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${BUILDER_UI.muted};
+  flex-shrink: 0;
+  transition: all 0.15s;
+  &:hover {
+    background: rgba(239, 68, 68, 0.08);
+    color: #dc2626;
+    border-color: rgba(220, 38, 38, 0.3);
+  }
+`;
+
 const Divider = styled.div`
   height: 1px;
   background: ${BUILDER_UI.panelBorder};
@@ -414,7 +549,12 @@ export default function SectionOrderPages() {
   } = useBuilder();
 
   const [showAddPage, setShowAddPage] = useState<boolean>(false);
+  const [settingsSectionId, setSettingsSectionId] = useState<SectionId | null>(null);
   const [isClient, setIsClient] = useState(false);
+
+  const openSectionSettings = (id: SectionId) => {
+    setSettingsSectionId(id);
+  };
 
   useEffect(() => {
     setIsClient(true);
@@ -505,13 +645,16 @@ export default function SectionOrderPages() {
     <Wrapper>
       <TitleRow>
         <div>
-          <Title>Section Order & Pages</Title>
+          <Title>
+            <IconLayoutList size={20} />
+            Section Order & Pages
+          </Title>
           <Sub>Organize sections across pages</Sub>
         </div>
         <span>Reset</span>
       </TitleRow>
 
-      <ColumnToggleRow>
+      <ToggleRightRow>
         <div>
           <strong>Multi-Page Layout</strong>
           <Hint>
@@ -524,7 +667,7 @@ export default function SectionOrderPages() {
           on={multiPageLayout}
           onClick={() => setMultiPageLayout((v) => !v)}
         />
-      </ColumnToggleRow>
+      </ToggleRightRow>
 
       {multiPageLayout ? (
         <>
@@ -571,7 +714,8 @@ export default function SectionOrderPages() {
                 active={activePage === key}
                 onClick={() => setActivePage(key)}
               >
-                📄 {key.replace(/-/g, ' ')}{' '}
+                <IconHouse size={14} />
+                {key === 'home' ? 'Careers Home' : key.replace(/-/g, ' ')}{' '}
                 <strong>{pages[key].length}</strong>
               </Tab>
             ))}
@@ -581,22 +725,33 @@ export default function SectionOrderPages() {
           <Grid>
         <Panel>
           <PanelHeader>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <strong>
-                {activePage === 'home'
-                  ? 'Careers Home'
-                  : activePage.replace('-', ' ')}
-              </strong>
-              <Badge>{activeSections.length} sections</Badge>
-            </div>
+            <PanelHeaderLeft>
+              <PanelHeaderTitle>
+                <IconHouse size={18} />
+                <strong>
+                  {activePage === 'home'
+                    ? 'Careers Home'
+                    : activePage.replace(/-/g, ' ')}
+                </strong>
+              </PanelHeaderTitle>
+              <PanelHeaderSub>
+                {activePage === 'home' ? '/careers' : `/${activePage}`} • Drag to reorder
+              </PanelHeaderSub>
+            </PanelHeaderLeft>
 
-            {activeSections.length === 0 && activePage !== 'home' && (
-              <div
-                onClick={() => onDeletePage(activePage)}
-                title="Delete page"
-                style={{ cursor: 'pointer' }}
-              >trash</div>
-            )}
+            <PanelHeaderRight>
+              <Badge>{activeSections.length} sections</Badge>
+              {activeSections.length === 0 && activePage !== 'home' && (
+                <DeletePageBtn
+                  type="button"
+                  onClick={() => onDeletePage(activePage)}
+                  title="Delete page"
+                  aria-label="Delete page"
+                >
+                  <TrashIcon size={16} />
+                </DeletePageBtn>
+              )}
+            </PanelHeaderRight>
           </PanelHeader>
 
           <DragDropContext onDragEnd={onDragEnd}>
@@ -614,14 +769,27 @@ export default function SectionOrderPages() {
                           >
                             <Left>
                               <Handle {...p.dragHandleProps}>⠿</Handle>
+                              <RowIcon>{sec?.icon}</RowIcon>
                               {sec?.label}
                             </Left>
                             <Left>
-                              <Icon>⚙</Icon>
+                              <SPSettingsBtn
+                                type="button"
+                                title="Section settings"
+                                onClick={(e) => { e.stopPropagation(); openSectionSettings(id); }}
+                                aria-label="Section settings"
+                              >
+                                <IconSettings2 size={14} />
+                              </SPSettingsBtn>
                               {!sec?.required && (
-                                <div
-                                  onClick={() => removeSection(id)}
-                                >t</div>
+                                <SPRemoveBtn
+                                  type="button"
+                                  onClick={(e) => { e.stopPropagation(); removeSection(id); }}
+                                  title="Remove section"
+                                  aria-label="Remove section"
+                                >
+                                  <TrashIcon size={16} />
+                                </SPRemoveBtn>
                               )}
                             </Left>
                           </Row>
@@ -638,7 +806,12 @@ export default function SectionOrderPages() {
 
         <Panel>
           <PanelHeader>
-            <strong>＋ Available Sections</strong>
+            <PanelHeaderLeft>
+              <PanelHeaderTitle>
+                <strong>＋ Available Sections</strong>
+              </PanelHeaderTitle>
+              <PanelHeaderSub>Click to add to Careers Home</PanelHeaderSub>
+            </PanelHeaderLeft>
           </PanelHeader>
 
           {ALL_SECTIONS.map(s => {
@@ -659,6 +832,7 @@ export default function SectionOrderPages() {
                 onClick={() => !isAdded && addSection(s.id)}
               >
                 <Left>
+                  <RowIcon>{s.icon}</RowIcon>
                   {s.label}
                   {s.required && <Badge>Required</Badge>}
                 </Left>
@@ -757,7 +931,9 @@ export default function SectionOrderPages() {
                                     />
                                   )}
                                 </SPToggleWrap>
-                                <SPSettingsBtn type="button" title="Section settings">⚙</SPSettingsBtn>
+                                <SPSettingsBtn type="button" title="Section settings" onClick={() => openSectionSettings(sectionId)} aria-label="Section settings">
+                                  <IconSettings2 size={14} />
+                                </SPSettingsBtn>
                               </SPRow>
                             )}
                           </Draggable>
@@ -786,7 +962,9 @@ export default function SectionOrderPages() {
                         <Toggle on={enabled} onClick={() => setSectionEnabled(sectionId, !enabled)} />
                       )}
                     </SPToggleWrap>
-                    <SPSettingsBtn type="button" title="Section settings">⚙</SPSettingsBtn>
+                    <SPSettingsBtn type="button" title="Section settings" onClick={() => openSectionSettings(sectionId)} aria-label="Section settings">
+                      <IconSettings2 size={14} />
+                    </SPSettingsBtn>
                   </SPRow>
                 );
               })
@@ -794,6 +972,28 @@ export default function SectionOrderPages() {
           </SPList>
           <FooterHint>💡 The &quot;Open Positions&quot; section is always required and cannot be disabled.</FooterHint>
         </Wrapper>
+      )}
+
+      {settingsSectionId === 'hero' && (
+        <HeroSectionSettingsModal onClose={() => setSettingsSectionId(null)} />
+      )}
+      {settingsSectionId === 'about' && (
+        <AboutSectionSettingsModal onClose={() => setSettingsSectionId(null)} />
+      )}
+      {settingsSectionId === 'benefits' && (
+        <BenefitsSectionSettingsModal onClose={() => setSettingsSectionId(null)} />
+      )}
+      {settingsSectionId === 'alerts' && (
+        <AlertsSectionSettingsModal onClose={() => setSettingsSectionId(null)} />
+      )}
+      {settingsSectionId === 'jobs' && (
+        <JobsSectionSettingsModal onClose={() => setSettingsSectionId(null)} />
+      )}
+      {settingsSectionId === 'testimonials' && (
+        <TestimonialsSectionSettingsModal onClose={() => setSettingsSectionId(null)} />
+      )}
+      {settingsSectionId === 'team' && (
+        <TeamSectionSettingsModal onClose={() => setSettingsSectionId(null)} />
       )}
     </Wrapper>
   );
