@@ -3,34 +3,35 @@
 import styled from 'styled-components';
 import { useBuilder } from '@/builder/context/BuilderContext';
 import { IconType } from '@/builder/icons';
-import { FONT_SCALE_MAP, AVAILABLE_FONTS } from '@/lib/constants/typography';
+import { RADIUS, SPACING, ICON_SIZE } from '@/lib/constants/glassUI';
+import { FONT_SCALE_MAP, AVAILABLE_FONTS, BUILDER_TYPO } from '@/lib/constants/typography';
 import type { FontScale } from '@/lib/types/builder';
 
 /* ================= SECTION ================= */
 
 const Section = styled.div`
-  border: 1px solid #e5e7eb;
-  border-radius: 14px;
-  padding: 20px;
-  margin-bottom: 32px;
+  border: 1px solid ${(p) => p.theme.panelBorder};
+  border-radius: ${RADIUS.lg};
+  padding: ${SPACING.lg}px;
+  margin-bottom: ${SPACING.xxl}px;
 `;
 
 const Header = styled.div`
-  margin-bottom: 18px;
+  margin-bottom: ${SPACING.lg}px;
 `;
 
 const Title = styled.h3`
   margin: 0;
-  font-size: 18px;
+  font-size: ${BUILDER_TYPO.heading};
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: ${SPACING.xs}px;
 `;
 
 const Subtitle = styled.p`
-  margin: 4px 0 0;
-  font-size: 14px;
-  color: #6b7280;
+  margin: ${SPACING.xxs}px 0 0;
+  font-size: ${BUILDER_TYPO.body};
+  color: ${(p) => p.theme.muted};
 `;
 
 /* ================= GRID ================= */
@@ -38,33 +39,33 @@ const Subtitle = styled.p`
 const Grid2 = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  margin-bottom: 24px;
+  gap: ${SPACING.lg}px;
+  margin-bottom: ${SPACING.xl}px;
 `;
 
 const Field = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: ${SPACING.sm}px;
 `;
 
 const Label = styled.label`
-  font-size: 14px;
+  font-size: ${BUILDER_TYPO.body};
   font-weight: 500;
 `;
 
 const Select = styled.select`
   height: 44px;
-  border-radius: 10px;
-  border: 1px solid #e5e7eb;
-  padding: 0 12px;
-  font-size: 14px;
-  background: #fff;
+  border-radius: ${RADIUS.md};
+  border: 1px solid ${(p) => p.theme.inputBorder};
+  padding: 0 ${SPACING.sm}px;
+  font-size: ${BUILDER_TYPO.body};
+  background: ${(p) => p.theme.panelBg};
 `;
 
 const Helper = styled.span`
-  font-size: 12px;
-  color: #6b7280;
+  font-size: ${BUILDER_TYPO.helper};
+  color: ${(p) => p.theme.muted};
 `;
 
 /* ================= FONT SCALE ================= */
@@ -72,17 +73,17 @@ const Helper = styled.span`
 const ScaleGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
-  margin-bottom: 24px;
+  gap: ${SPACING.sm}px;
+  margin-bottom: ${SPACING.xl}px;
 `;
 
 const ScaleCard = styled.div<{ active?: boolean }>`
-  border: 1px solid ${({ active }) => (active ? '#fb923c' : '#e5e7eb')};
-  border-radius: 12px;
-  padding: 16px;
+  border: 1px solid ${({ active, theme }) => (active ? theme.inputFocus : theme.panelBorder)};
+  border-radius: ${RADIUS.md};
+  padding: ${SPACING.md}px;
   text-align: center;
   cursor: pointer;
-  background: ${({ active }) => (active ? '#fff7ed' : '#ffffff')};
+  background: ${({ active, theme }) => (active ? theme.dragHighlight : theme.panelBg)};
   transition: all 0.2s ease;
 `;
 
@@ -92,46 +93,46 @@ const Aa = styled.div<{ size: string }>`
 `;
 
 const ScaleLabel = styled.div`
-  margin-top: 6px;
-  font-size: 13px;
-  color: #475569;
+  margin-top: ${SPACING.sm}px;
+  font-size: ${BUILDER_TYPO.label};
+  color: ${(p) => p.theme.muted};
 `;
 
 /* ================= PREVIEW ================= */
 
 const PreviewBox = styled.div`
-  border: 1px solid #e5e7eb;
-  border-radius: 14px;
-  padding: 20px;
-  background: #ffffff;
+  border: 1px solid ${(p) => p.theme.panelBorder};
+  border-radius: ${RADIUS.lg};
+  padding: ${SPACING.lg}px;
+  background: ${(p) => p.theme.panelBg};
 `;
 
 const PreviewTitle = styled.div`
-  font-size: 14px;
-  color: #6b7280;
-  margin-bottom: 14px;
+  font-size: ${BUILDER_TYPO.body};
+  color: ${(p) => p.theme.muted};
+  margin-bottom: ${SPACING.sm}px;
 `;
 
 const H1 = styled.h1`
-  margin: 0 0 10px;
+  margin: 0 0 ${SPACING.sm}px;
 `;
 
 const H2 = styled.h2`
-  margin: 0 0 8px;
+  margin: 0 0 ${SPACING.xs}px;
 `;
 
 const H3 = styled.h3`
-  margin: 0 0 8px;
+  margin: 0 0 ${SPACING.xs}px;
 `;
 
 const P = styled.p`
-  margin: 0 0 6px;
-  font-size: 14px;
+  margin: 0 0 ${SPACING.sm}px;
+  font-size: ${BUILDER_TYPO.body};
 `;
 
 const Small = styled.span`
-  font-size: 12px;
-  color: #6b7280;
+  font-size: ${BUILDER_TYPO.helper};
+  color: ${(p) => p.theme.muted};
 `;
 
 /* ================= COMPONENT ================= */
@@ -145,7 +146,7 @@ export default function TypographySection() {
   return (
     <Section>
       <Header>
-        <Title><IconType size={20} /> Typography</Title>
+        <Title><IconType size={ICON_SIZE.lg} /> Typography</Title>
         <Subtitle>
           Choose fonts and sizing for headings and body text
         </Subtitle>

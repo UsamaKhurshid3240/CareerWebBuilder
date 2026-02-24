@@ -218,6 +218,35 @@ export interface TeamSectionSettings {
   bioOnHover: boolean;
 }
 
+/* ============ LOCATIONS SECTION SETTINGS ============ */
+
+export type LocationsLayoutMode = 'fullMap' | 'withText';
+export type LocationsMapPosition = 'left' | 'right';
+export type LocationsMapType = 'classic' | 'light' | 'dark';
+
+export interface LocationOption {
+  id: string;
+  label: string;
+  address: string;
+  lat: number;
+  lng: number;
+}
+
+export interface LocationsSectionSettings {
+  layoutMode: LocationsLayoutMode;
+  mapPosition: LocationsMapPosition;
+  heading: string;
+  subheading: string;
+  address: string;
+  selectedLocationId: string;
+  locationOptions: LocationOption[];
+  zoom: number;
+  mapType: LocationsMapType;
+  mapControls: boolean;
+  backgroundColor: string;
+  textColor: string;
+}
+
 export interface SectionSettingsState {
   hero?: HeroSectionSettings;
   about?: AboutSectionSettings;
@@ -226,6 +255,7 @@ export interface SectionSettingsState {
   jobs?: JobsSectionSettings;
   testimonials?: TestimonialsSectionSettings;
   team?: TeamSectionSettings;
+  locations?: LocationsSectionSettings;
 }
 
 /* ============ BUILDER STATE ============ */

@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
-import { GLASS, RADIUS, SHADOW, TRANSITION } from '@/lib/constants/glassUI';
+import { RADIUS, SHADOW, TRANSITION } from '@/lib/constants/glassUI';
 import { IconRotateCcw } from '@/builder/icons';
 import { DeviceIcon } from './DeviceIcons';
 
@@ -29,7 +29,7 @@ const Bar = styled.div`
   z-index: 10;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
-  ${GLASS.toolbar}
+  ${(p) => p.theme.glass.toolbar}
 `;
 
 const Left = styled.div`
@@ -65,22 +65,23 @@ const IconBtn = styled.button<{ active?: boolean }>`
   align-items: center;
   justify-content: center;
   border-radius: ${RADIUS.sm};
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  background: ${({ active }) => (active ? 'rgba(0, 0, 0, 0.06)' : 'rgba(255, 255, 255, 0.8)')};
-  color: #111827;
+  border: 1px solid ${(p) => p.theme.iconBtnBorder};
+  background: ${({ active, theme }) => (active ? theme.rowHover : theme.iconBtnBg)};
+  color: ${(p) => p.theme.heading};
   cursor: pointer;
   font-size: 14px;
   transition: background ${TRANSITION.normal}, border-color ${TRANSITION.normal};
 
   &:hover {
-    background: rgba(0, 0, 0, 0.05);
-    border-color: rgba(0, 0, 0, 0.1);
+    background: ${(p) => p.theme.panelBgHover};
+    border-color: ${(p) => p.theme.borderMuted};
   }
 `;
 
 const ZoomButton = styled.button`
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid ${(p) => p.theme.iconBtnBorder};
+  background: ${(p) => p.theme.iconBtnBg};
+  color: ${(p) => p.theme.heading};
   padding: 6px 12px;
   border-radius: ${RADIUS.sm};
   cursor: pointer;
@@ -89,7 +90,7 @@ const ZoomButton = styled.button`
   transition: background ${TRANSITION.normal};
 
   &:hover {
-    background: #fff;
+    background: ${(p) => p.theme.panelBgHover};
   }
 `;
 
@@ -98,11 +99,11 @@ const Popover = styled.div`
   top: 54px;
   right: 16px;
   width: 240px;
-  background: rgba(255, 255, 255, 0.95);
+  background: ${(p) => p.theme.panelBgHover};
   backdrop-filter: blur(20px);
   border-radius: ${RADIUS.md};
   box-shadow: ${SHADOW.lg};
-  border: 1px solid rgba(0, 0, 0, 0.06);
+  border: 1px solid ${(p) => p.theme.panelBorder};
   padding: 14px;
   z-index: 20;
 `;
@@ -119,9 +120,9 @@ const Preset = styled.button<{ active?: boolean }>`
   min-width: 60px;
   padding: 8px;
   border-radius: ${RADIUS.sm};
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  background: ${({ active }) => (active ? '#111827' : 'rgba(255, 255, 255, 0.8)')};
-  color: ${({ active }) => (active ? '#fff' : '#111827')};
+  border: 1px solid ${(p) => p.theme.iconBtnBorder};
+  background: ${({ active, theme }) => (active ? theme.tabDark : theme.iconBtnBg)};
+  color: ${({ active, theme }) => (active ? theme.tabActiveText : theme.heading)};
   cursor: pointer;
   font-size: 12px;
   font-weight: 500;

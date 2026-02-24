@@ -1,9 +1,9 @@
 'use client';
 
-import React, { type ReactNode } from 'react';
+import React, { useRef, useEffect, useCallback, type ReactNode } from 'react';
 import styled, { keyframes } from 'styled-components';
-import { BUILDER_UI, PRIMARY, SHADES } from '@/lib/constants/colors';
-import { RADIUS, TRANSITION, SHADOW, BLUR } from '@/lib/constants/glassUI';
+import { RADIUS, TRANSITION, SHADOW, BLUR, SPACING } from '@/lib/constants/glassUI';
+import { BUILDER_TYPO } from '@/lib/constants/typography';
 
 /** Vertical rhythm for modal content (aligns with design system) */
 export const MODAL_SPACING = {
@@ -35,7 +35,7 @@ const modalEnter = keyframes`
 const Overlay = styled.div`
   position: fixed;
   inset: 0;
-  background: rgba(13, 35, 73, 0.52);
+  background: ${(p) => p.theme.overlay};
   backdrop-filter: blur(${BLUR.xl});
   -webkit-backdrop-filter: blur(${BLUR.xl});
   display: flex;
@@ -52,13 +52,13 @@ const Modal = styled.div`
   width: 100%;
   max-width: 640px;
   max-height: calc(100vh - 48px);
-  background: linear-gradient(180deg, ${SHADES.white} 0%, rgba(248, 250, 252, 0.98) 100%);
+  background: ${(p) => p.theme.modalFooterBg};
   border-radius: ${RADIUS.xl};
-  box-shadow: ${SHADOW.lg}, 0 0 0 1px rgba(0, 0, 0, 0.05);
+  box-shadow: ${SHADOW.lg}, 0 0 0 1px ${(p) => p.theme.borderSubtle};
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  border: 1px solid ${BUILDER_UI.panelBorder};
+  border: 1px solid ${(p) => p.theme.panelBorder};
   animation: ${modalEnter} 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 `;
 
@@ -85,34 +85,34 @@ const IconWrap = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: ${SHADES.bg};
+  background: ${(p) => p.theme.shellBg};
   border-radius: ${RADIUS.md};
   font-size: 22px;
   flex-shrink: 0;
   box-shadow: ${SHADOW.xs};
-  border: 1px solid rgba(0, 0, 0, 0.04);
+  border: 1px solid ${(p) => p.theme.borderSubtle};
 `;
 
-const Title = styled.h3`
+const Title = styled.h2`
   margin: 0;
-  font-size: 20px;
+  font-size: ${BUILDER_TYPO.title};
   font-weight: 600;
   letter-spacing: -0.02em;
-  color: ${BUILDER_UI.heading};
+  color: ${(p) => p.theme.heading};
   line-height: 1.3;
 `;
 
 const Description = styled.p`
-  margin: 8px 0 0;
-  font-size: 14px;
-  color: ${BUILDER_UI.muted};
+  margin: ${SPACING.xs}px 0 0;
+  font-size: ${BUILDER_TYPO.body};
+  color: ${(p) => p.theme.muted};
   line-height: 1.5;
 `;
 
 const HeaderActions = styled.div`
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: ${SPACING.sm}px;
   flex-shrink: 0;
 `;
 
@@ -123,8 +123,8 @@ const CloseBtn = styled.button`
   align-items: center;
   justify-content: center;
   border: none;
-  background: ${SHADES.bg};
-  color: ${BUILDER_UI.muted};
+  background: ${(p) => p.theme.shellBg};
+  color: ${(p) => p.theme.muted};
   border-radius: ${RADIUS.md};
   font-size: 20px;
   line-height: 1;
@@ -132,12 +132,12 @@ const CloseBtn = styled.button`
   transition: background ${TRANSITION.fast}, color ${TRANSITION.fast};
 
   &:hover {
-    background: ${SHADES.border};
-    color: ${BUILDER_UI.heading};
+    background: ${(p) => p.theme.inputBorder};
+    color: ${(p) => p.theme.heading};
   }
   &:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px ${BUILDER_UI.inputFocus};
+    box-shadow: 0 0 0 2px ${(p) => p.theme.inputFocus};
   }
 `;
 
@@ -157,8 +157,8 @@ const Body = styled.div`
 const FooterSlot = styled.div`
   flex-shrink: 0;
   padding: ${MODAL_SPACING.fieldGap}px ${MODAL_SPACING.bodyPadding}px ${MODAL_SPACING.bodyPadding}px;
-  border-top: 1px solid ${SHADES.border};
-  background: rgba(248, 250, 252, 0.95);
+  border-top: 1px solid ${(p) => p.theme.panelBorder};
+  background: ${(p) => p.theme.modalFooterBg};
 `;
 
 export interface SectionSettingsModalProps {
@@ -176,6 +176,9 @@ export interface SectionSettingsModalProps {
   children: ReactNode;
 }
 
+const FOCUSABLE =
+  'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])';
+
 export default function SectionSettingsModal({
   title,
   description,
@@ -186,14 +189,60 @@ export default function SectionSettingsModal({
   footer,
   children,
 }: SectionSettingsModalProps) {
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+        return;
+      }
+      if (e.key !== 'Tab' || !modalRef.current) return;
+      const focusable = modalRef.current.querySelectorAll<HTMLElement>(FOCUSABLE);
+      const list = Array.from(focusable).filter((el) => !el.hasAttribute('disabled'));
+      if (list.length === 0) return;
+      const first = list[0];
+      const last = list[list.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+      if (e.shiftKey) {
+        if (active === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else {
+        if (active === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    },
+    [onClose]
+  );
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [handleKeyDown]);
+
+  useEffect(() => {
+    const first = modalRef.current?.querySelector<HTMLElement>(FOCUSABLE);
+    first?.focus();
+  }, []);
+
   return (
     <Overlay onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <Modal onClick={(e) => e.stopPropagation()}>
+      <Modal
+        ref={modalRef}
+        onClick={(e) => e.stopPropagation()}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="section-settings-modal-title"
+      >
         <Header>
           <TitleBlock>
             {icon != null && <IconWrap>{icon}</IconWrap>}
             <div>
-              <Title>{title}</Title>
+              <Title id="section-settings-modal-title">{title}</Title>
               <Description>{description}</Description>
             </div>
           </TitleBlock>

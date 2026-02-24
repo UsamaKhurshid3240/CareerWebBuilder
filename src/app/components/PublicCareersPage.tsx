@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import type { BuilderState } from '@/lib/types/builder';
+import type { PreviewDevice } from '@/lib/constants/builderEnums';
 import { BuilderProvider } from '@/builder/context/BuilderContext';
 import HeaderNav from '@/builder/components/HeaderNav';
 import SidebarNav from '@/builder/components/SidebarNav';
@@ -30,11 +31,12 @@ const MainContent = styled.div<{ hasSidebar: boolean }>`
   flex-direction: column;
 `;
 
-interface Props {
+interface PublicCareersPageContentProps {
   initialState: BuilderState;
+  device?: PreviewDevice;
 }
 
-function PublicCareersPageContent({ initialState }: Props) {
+function PublicCareersPageContent({ initialState, device = 'desktop' }: PublicCareersPageContentProps) {
   const {
     colors,
     logo,
@@ -99,7 +101,7 @@ function PublicCareersPageContent({ initialState }: Props) {
           activePage={activePage}
           typography={typography}
           layout={layout}
-          device="desktop"
+          device={device}
           onPageChange={setActivePage}
         />
       )}
@@ -112,7 +114,7 @@ function PublicCareersPageContent({ initialState }: Props) {
             activePage={activePage}
             typography={typography}
             layout={layout}
-            device="desktop"
+            device={device}
             collapsed={sidebarCollapsed}
             onToggleCollapse={() => setSidebarCollapsed((p) => !p)}
             onPageChange={setActivePage}
@@ -149,10 +151,15 @@ function PublicCareersPageContent({ initialState }: Props) {
   );
 }
 
-export default function PublicCareersPage({ initialState }: Props) {
+interface PublicCareersPageProps {
+  initialState: BuilderState;
+  device?: PreviewDevice;
+}
+
+export default function PublicCareersPage({ initialState, device = 'desktop' }: PublicCareersPageProps) {
   return (
     <BuilderProvider initialState={initialState}>
-      <PublicCareersPageContent initialState={initialState} />
+      <PublicCareersPageContent initialState={initialState} device={device} />
     </BuilderProvider>
   );
 }

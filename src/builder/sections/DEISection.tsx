@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import styled from 'styled-components';
 import type { TypographySettings, LayoutSettings } from '@/lib/types/builder';
 import { FONT_SCALE_MAP } from '@/lib/constants/typography';
@@ -71,7 +72,7 @@ const DEI_STATS = [
   { number: '60%', label: 'Underrepresented Groups' },
 ];
 
-export default function DEISection({ typography, layout }: Props) {
+function DEISection({ typography, layout }: Props) {
   const scale = FONT_SCALE_MAP[typography.fontScale];
 
   return (
@@ -98,3 +99,5 @@ export default function DEISection({ typography, layout }: Props) {
     </Section>
   );
 }
+
+export default memo(DEISection);

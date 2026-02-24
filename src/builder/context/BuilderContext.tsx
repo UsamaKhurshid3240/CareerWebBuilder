@@ -80,6 +80,9 @@ function cloneState(s: BuilderState): BuilderState {
           jobs: s.sectionSettings.jobs ? { ...s.sectionSettings.jobs } : undefined,
           testimonials: s.sectionSettings.testimonials ? { ...s.sectionSettings.testimonials } : undefined,
           team: s.sectionSettings.team ? { ...s.sectionSettings.team } : undefined,
+          locations: s.sectionSettings.locations
+            ? { ...s.sectionSettings.locations, locationOptions: s.sectionSettings.locations.locationOptions?.map((o) => ({ ...o })) ?? [] }
+            : undefined,
         }
       : undefined,
   };
@@ -243,6 +246,24 @@ export const initialBuilderState: BuilderState = {
       socialLinks: false,
       departmentFilter: false,
       bioOnHover: false,
+    },
+    locations: {
+      layoutMode: 'withText',
+      mapPosition: 'right',
+      heading: 'Location',
+      subheading: 'Our offices located throughout the united kingdom',
+      address: 'MK15 0DU, 5 Diamond Court, Opal Drive Milton Keynes',
+      selectedLocationId: 'loc1',
+      locationOptions: [
+        { id: 'loc1', label: 'Milton Keynes Office', address: 'MK15 0DU, 5 Diamond Court, Opal Drive Milton Keynes', lat: 52.0406, lng: -0.7594 },
+        { id: 'loc2', label: 'London', address: 'London, UK', lat: 51.5074, lng: -0.1278 },
+        { id: 'loc3', label: 'Manchester', address: 'Manchester, UK', lat: 53.4808, lng: -2.2426 },
+      ],
+      zoom: 5,
+      mapType: 'classic',
+      mapControls: false,
+      backgroundColor: '#f9fafb',
+      textColor: '',
     },
   },
 };
@@ -604,6 +625,7 @@ export function BuilderProvider({
       current.multiPageLayout,
       current.singlePageSectionOrder,
       current.pages,
+      current.pageLabels,
       current.activePage,
       current.sectionSettings,
       applyTheme,

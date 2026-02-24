@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import styled, { keyframes } from 'styled-components';
-import { BUILDER_UI, SHADES } from '@/lib/constants/colors';
 import { RADIUS, TRANSITION, SHADOW, BLUR } from '@/lib/constants/glassUI';
 import { MODAL_SPACING } from '@/builder/components/section-settings/SectionSettingsModal';
 import { ModalFooter, BtnPrimary, BtnSecondary } from '@/builder/components/section-settings/FormControls';
@@ -43,7 +42,7 @@ const modalEnter = keyframes`
 const Overlay = styled.div`
   position: fixed;
   inset: 0;
-  background: rgba(13, 35, 73, 0.52);
+  background: ${(p) => p.theme.overlay};
   backdrop-filter: blur(${BLUR.xl});
   -webkit-backdrop-filter: blur(${BLUR.xl});
   display: flex;
@@ -64,10 +63,10 @@ const Modal = styled.div`
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(180deg, ${SHADES.white} 0%, rgba(248, 250, 252, 0.98) 100%);
+  background: ${(p) => p.theme.modalFooterBg};
   border-radius: ${RADIUS.xl};
-  box-shadow: ${SHADOW.lg}, 0 0 0 1px rgba(0, 0, 0, 0.05);
-  border: 1px solid ${BUILDER_UI.panelBorder};
+  box-shadow: ${SHADOW.lg}, 0 0 0 1px ${(p) => p.theme.borderSubtle};
+  border: 1px solid ${(p) => p.theme.panelBorder};
   box-sizing: border-box;
   margin: auto;
   animation: ${modalEnter} 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
@@ -91,14 +90,14 @@ const Title = styled.h3`
   font-size: 20px;
   font-weight: 600;
   letter-spacing: -0.02em;
-  color: ${BUILDER_UI.heading};
+  color: ${(p) => p.theme.heading};
   line-height: 1.3;
 `;
 
 const Sub = styled.p`
   margin: 8px 0 0;
   font-size: 14px;
-  color: ${BUILDER_UI.muted};
+  color: ${(p) => p.theme.muted};
   line-height: 1.5;
 `;
 
@@ -110,8 +109,8 @@ const Close = styled.button`
   align-items: center;
   justify-content: center;
   border: none;
-  background: ${SHADES.bg};
-  color: ${BUILDER_UI.muted};
+  background: ${(p) => p.theme.shellBg};
+  color: ${(p) => p.theme.muted};
   border-radius: ${RADIUS.md};
   font-size: 20px;
   line-height: 1;
@@ -119,12 +118,12 @@ const Close = styled.button`
   transition: background ${TRANSITION.fast}, color ${TRANSITION.fast};
 
   &:hover {
-    background: ${SHADES.border};
-    color: ${BUILDER_UI.heading};
+    background: ${(p) => p.theme.inputBorder};
+    color: ${(p) => p.theme.heading};
   }
   &:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px ${BUILDER_UI.inputFocus};
+    box-shadow: 0 0 0 2px ${(p) => p.theme.inputFocus};
   }
 `;
 
@@ -148,7 +147,7 @@ const Label = styled.label`
   display: block;
   font-size: 13px;
   font-weight: 500;
-  color: ${BUILDER_UI.heading};
+  color: ${(p) => p.theme.heading};
   margin-bottom: 8px;
   line-height: 1.4;
 `;
@@ -158,25 +157,25 @@ const Input = styled.input`
   min-width: 0;
   padding: 12px 14px;
   border-radius: ${RADIUS.md};
-  border: 1px solid ${BUILDER_UI.inputBorder};
+  border: 1px solid ${(p) => p.theme.inputBorder};
   font-size: 14px;
-  color: ${BUILDER_UI.body};
-  background: ${SHADES.white};
+  color: ${(p) => p.theme.body};
+  background: ${(p) => p.theme.cardBg};
   box-sizing: border-box;
   transition: border-color ${TRANSITION.normal}, box-shadow ${TRANSITION.fast};
 
   &::placeholder {
-    color: ${BUILDER_UI.muted};
+    color: ${(p) => p.theme.muted};
   }
   &:focus {
     outline: none;
-    border-color: ${BUILDER_UI.inputFocus};
-    box-shadow: 0 0 0 3px ${BUILDER_UI.inputFocus}22;
+    border-color: ${(p) => p.theme.inputFocus};
+    box-shadow: 0 0 0 3px ${(p) => p.theme.inputFocus}22;
   }
   &:focus-visible {
     outline: none;
-    border-color: ${BUILDER_UI.inputFocus};
-    box-shadow: 0 0 0 3px ${BUILDER_UI.inputFocus}22;
+    border-color: ${(p) => p.theme.inputFocus};
+    box-shadow: 0 0 0 3px ${(p) => p.theme.inputFocus}22;
   }
 `;
 
@@ -189,7 +188,7 @@ const SlugRow = styled.div`
 
 const Prefix = styled.span`
   font-size: 14px;
-  color: ${BUILDER_UI.muted};
+  color: ${(p) => p.theme.muted};
   flex-shrink: 0;
 `;
 
@@ -200,7 +199,7 @@ const SlugInput = styled(Input)`
 
 const Footer = styled.div`
   padding: ${MODAL_SPACING.fieldGap}px ${MODAL_SPACING.bodyPadding}px ${MODAL_SPACING.bodyPadding}px;
-  border-top: 1px solid ${SHADES.border};
+  border-top: 1px solid ${(p) => p.theme.panelBorder};
   background: rgba(248, 250, 252, 0.95);
   flex-shrink: 0;
 `;

@@ -3,8 +3,12 @@
 import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import dynamic from 'next/dynamic';
+import { useSearchParams } from 'next/navigation';
 import type { BuilderState } from '@/lib/types/builder';
+import { PREVIEW_DEVICE, type PreviewDevice } from '@/lib/constants/builderEnums';
+import { getPreviewDeviceStorageKey } from '@/app/components/PreviewHeader';
 import Loader from '@/app/components/Loader';
+import PreviewHeader from '@/app/components/PreviewHeader';
 
 // Dynamically import to avoid SSR issues with styled-components
 const PublicCareersPage = dynamic(
@@ -12,33 +16,50 @@ const PublicCareersPage = dynamic(
   { ssr: false, loading: () => <Loader fullPage message="Loading preview…" size="lg" /> }
 );
 
-const PreviewHeader = styled.header`
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 48px;
-  background: #f4f4f4;
-  color: "#111827";
-  display: flex;
-  align-items: center;
-  padding: 0 24px;
-  z-index: 1000;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-`;
+const VALID_DEVICES: PreviewDevice[] = [PREVIEW_DEVICE.Desktop, PREVIEW_DEVICE.Tablet, PREVIEW_DEVICE.Mobile];
 
-const PreviewLabel = styled.span`
-  font-size: 14px;
-  font-weight: 500;
-`;
+function getDevice(searchParams: ReturnType<typeof useSearchParams> | null): PreviewDevice {
+  const d = searchParams?.get('device');
+  if (d != null && VALID_DEVICES.includes(d as PreviewDevice)) return d as PreviewDevice;
+  if (typeof window !== 'undefined') {
+    const stored = sessionStorage.getItem(getPreviewDeviceStorageKey());
+    if (stored != null && VALID_DEVICES.includes(stored as PreviewDevice)) return stored as PreviewDevice;
+  }
+  return PREVIEW_DEVICE.Desktop;
+}
 
-const Container = styled.div`
+const VIEWPORT_WIDTH: Record<PreviewDevice, string> = {
+  [PREVIEW_DEVICE.Desktop]: '100%',
+  [PREVIEW_DEVICE.Tablet]: '768px',
+  [PREVIEW_DEVICE.Mobile]: '375px',
+};
+
+const Container = styled.div<{ $device: PreviewDevice }>`
   margin-top: 48px;
+  padding: 24px 0;
+  padding-left: ${({ $device }) => ($device === PREVIEW_DEVICE.Desktop ? 0 : 24)}px;
+  padding-right: ${({ $device }) => ($device === PREVIEW_DEVICE.Desktop ? 0 : 24)}px;
+  display: flex;
+  justify-content: center;
+  min-height: calc(100vh - 48px);
+  background: #f6f6f8;
+`;
+
+const ViewportFrame = styled.div<{ width: string; $device: PreviewDevice }>`
+  width: ${({ width }) => width};
+  max-width: 100%;
+  min-height: 400px;
+  // background: #ffffff;
+  box-shadow: ${({ $device }) => ($device === PREVIEW_DEVICE.Desktop ? 'none' : '0 10px 30px rgba(0, 0, 0, 0.1)')};
+  transition: width 0.2s ease;
 `;
 
 export default function PreviewPage() {
+  const searchParams = useSearchParams();
   const [state, setState] = useState<BuilderState | null>(null);
   const [mounted, setMounted] = useState(false);
+
+  const device = getDevice(searchParams);
 
   useEffect(() => {
     setMounted(true);
@@ -72,10 +93,8 @@ export default function PreviewPage() {
   if (!state) {
     return (
       <>
-        <PreviewHeader>
-          <PreviewLabel>Preview Mode</PreviewLabel>
-        </PreviewHeader>
-        <Container style={{ padding: 48, textAlign: 'center', maxWidth: 420, margin: '48px auto 0' }}>
+        <PreviewHeader />
+        <Container $device={PREVIEW_DEVICE.Desktop} style={{ padding: 48, textAlign: 'center', maxWidth: 420, margin: '48px auto 0' }}>
           <p style={{ fontSize: 15, color: '#64748b', lineHeight: 1.6, margin: 0 }}>
             No preview available. Open the builder first to design your careers page, then return here to preview it.
           </p>
@@ -86,11 +105,11 @@ export default function PreviewPage() {
 
   return (
     <>
-      <PreviewHeader>
-        <PreviewLabel>Preview Mode</PreviewLabel>
-      </PreviewHeader>
-      <Container>
-        <PublicCareersPage initialState={state} />
+      <PreviewHeader />
+      <Container $device={device}>
+        <ViewportFrame width={VIEWPORT_WIDTH[device]} $device={device}>
+          <PublicCareersPage initialState={state} device={device} />
+        </ViewportFrame>
       </Container>
     </>
   );

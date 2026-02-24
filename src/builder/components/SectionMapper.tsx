@@ -1,5 +1,6 @@
 'use client';
 
+import React, { memo } from 'react';
 import type {
   SectionId,
   TypographySettings,
@@ -30,14 +31,7 @@ interface Props {
   layout: LayoutSettings;
 }
 
-export default function SectionMapper({
-  sectionId,
-  logo,
-  typography,
-  buttons,
-  layout,
-}: Props) {
-  // Validate sectionId
+function SectionMapper({ sectionId, logo, typography, buttons, layout }: Props) {
   if (!sectionId) return null;
 
   switch (sectionId) {
@@ -92,3 +86,5 @@ export default function SectionMapper({
       return null;
   }
 }
+
+export default memo(SectionMapper);

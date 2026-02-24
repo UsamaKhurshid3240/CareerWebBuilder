@@ -2,9 +2,9 @@
 
 import React, { useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import styled, { keyframes } from 'styled-components';
-import { BUILDER_UI, SHADES } from '@/lib/constants/colors';
+import styled, { keyframes, ThemeProvider } from 'styled-components';
 import { RADIUS, TRANSITION, SHADOW, BLUR } from '@/lib/constants/glassUI';
+import { builderThemeLight } from '@/lib/constants/builderThemeLight';
 import { MODAL_SPACING } from '@/builder/components/section-settings/SectionSettingsModal';
 import SectionSettingsTabs from '@/builder/components/section-settings/SectionSettingsTabs';
 import { useBuilder } from '@/builder/context/BuilderContext';
@@ -35,7 +35,7 @@ const modalEnter = keyframes`
 const Overlay = styled.div`
   position: fixed;
   inset: 0;
-  background: rgba(13, 35, 73, 0.52);
+  background: ${(p) => p.theme.overlay};
   backdrop-filter: blur(${BLUR.xl});
   -webkit-backdrop-filter: blur(${BLUR.xl});
   display: flex;
@@ -53,13 +53,13 @@ const Modal = styled.div`
   max-width: 720px;
   max-height: min(70vh, 560px);
   min-width: 0;
-  background: linear-gradient(180deg, ${SHADES.white} 0%, rgba(248, 250, 252, 0.98) 100%);
+  background: ${(p) => p.theme.modalFooterBg};
   border-radius: ${RADIUS.xl};
-  box-shadow: ${SHADOW.lg}, 0 0 0 1px rgba(0, 0, 0, 0.05);
+  box-shadow: ${SHADOW.lg}, 0 0 0 1px ${(p) => p.theme.borderSubtle};
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  border: 1px solid ${BUILDER_UI.panelBorder};
+  border: 1px solid ${(p) => p.theme.panelBorder};
   animation: ${modalEnter} 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 `;
 
@@ -87,12 +87,12 @@ const IconWrap = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: ${SHADES.bg};
+  background: ${(p) => p.theme.shellBg};
   border-radius: ${RADIUS.md};
   flex-shrink: 0;
   box-shadow: ${SHADOW.xs};
-  border: 1px solid rgba(0, 0, 0, 0.04);
-  color: ${BUILDER_UI.heading};
+  border: 1px solid ${(p) => p.theme.borderSubtle};
+  color: ${(p) => p.theme.heading};
 `;
 
 const Title = styled.h3`
@@ -100,13 +100,13 @@ const Title = styled.h3`
   font-size: 20px;
   font-weight: 600;
   letter-spacing: -0.02em;
-  color: ${BUILDER_UI.heading};
+  color: ${(p) => p.theme.heading};
 `;
 
 const Subtitle = styled.p`
   margin: 8px 0 0;
   font-size: 14px;
-  color: ${BUILDER_UI.muted};
+  color: ${(p) => p.theme.muted};
   line-height: 1.5;
 `;
 
@@ -117,8 +117,8 @@ const CloseBtn = styled.button`
   align-items: center;
   justify-content: center;
   border: none;
-  background: ${SHADES.bg};
-  color: ${BUILDER_UI.muted};
+  background: ${(p) => p.theme.shellBg};
+  color: ${(p) => p.theme.muted};
   border-radius: ${RADIUS.md};
   font-size: 20px;
   line-height: 1;
@@ -127,12 +127,12 @@ const CloseBtn = styled.button`
   transition: background ${TRANSITION.fast}, color ${TRANSITION.fast};
 
   &:hover {
-    background: ${SHADES.border};
-    color: ${BUILDER_UI.heading};
+    background: ${(p) => p.theme.panelBorder};
+    color: ${(p) => p.theme.heading};
   }
   &:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px ${BUILDER_UI.inputFocus};
+    box-shadow: 0 0 0 2px ${(p) => p.theme.inputFocus};
   }
 `;
 
@@ -152,19 +152,19 @@ const SearchInput = styled.input`
   height: 44px;
   padding: 0 14px 0 40px;
   border-radius: ${RADIUS.md};
-  border: 1px solid ${BUILDER_UI.inputBorder};
+  border: 1px solid ${(p) => p.theme.inputBorder};
   font-size: 14px;
-  color: ${BUILDER_UI.heading};
-  background: ${SHADES.white};
+  color: ${(p) => p.theme.heading};
+  background: ${(p) => p.theme.cardBg};
   transition: border-color ${TRANSITION.fast}, box-shadow ${TRANSITION.fast};
 
   &::placeholder {
-    color: ${BUILDER_UI.muted};
+    color: ${(p) => p.theme.muted};
   }
   &:focus {
     outline: none;
-    border-color: ${BUILDER_UI.inputFocus};
-    box-shadow: 0 0 0 3px ${BUILDER_UI.inputFocus}22;
+    border-color: ${(p) => p.theme.inputFocus};
+    box-shadow: 0 0 0 3px ${(p) => p.theme.inputFocus}22;
   }
 `;
 
@@ -177,14 +177,14 @@ const SearchWrap = styled.div`
     top: 50%;
     transform: translateY(-50%);
     pointer-events: none;
-    color: ${BUILDER_UI.muted};
+    color: ${(p) => p.theme.muted};
   }
 `;
 
 const ApplyToLabel = styled.label`
   font-size: 13px;
   font-weight: 500;
-  color: ${BUILDER_UI.heading};
+  color: ${(p) => p.theme.heading};
   display: block;
   margin-bottom: 8px;
 `;
@@ -193,10 +193,10 @@ const ApplyToSelect = styled.select`
   height: 40px;
   padding: 0 12px;
   border-radius: ${RADIUS.md};
-  border: 1px solid ${BUILDER_UI.inputBorder};
+  border: 1px solid ${(p) => p.theme.inputBorder};
   font-size: 14px;
-  color: ${BUILDER_UI.heading};
-  background: ${SHADES.white};
+  color: ${(p) => p.theme.heading};
+  background: ${(p) => p.theme.cardBg};
   min-width: 180px;
 `;
 
@@ -214,18 +214,18 @@ const Card = styled.button`
   border: 2px solid transparent;
   padding: 0;
   cursor: pointer;
-  background: ${SHADES.border};
+  background: ${(p) => p.theme.panelBorder};
   transition: transform ${TRANSITION.fast}, box-shadow ${TRANSITION.fast}, border-color ${TRANSITION.fast};
 
   &:hover {
     transform: scale(1.02);
     box-shadow: ${SHADOW.md};
-    border-color: ${BUILDER_UI.inputFocus};
+    border-color: ${(p) => p.theme.inputFocus};
   }
   &:focus-visible {
     outline: none;
-    border-color: ${BUILDER_UI.inputFocus};
-    box-shadow: 0 0 0 3px ${BUILDER_UI.inputFocus}22;
+    border-color: ${(p) => p.theme.inputFocus};
+    box-shadow: 0 0 0 3px ${(p) => p.theme.inputFocus}22;
   }
 `;
 
@@ -243,7 +243,7 @@ const CardCaption = styled.span`
   right: 0;
   padding: 24px 12px 10px;
   background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
-  color: #fff;
+  color: ${(p) => p.theme.cardBg};
   font-size: 13px;
   font-weight: 500;
   text-align: left;
@@ -252,16 +252,16 @@ const CardCaption = styled.span`
 
 const Footer = styled.div`
   padding: 12px ${MODAL_SPACING.bodyPadding}px 20px;
-  border-top: 1px solid ${SHADES.border};
-  background: rgba(248, 250, 252, 0.95);
+  border-top: 1px solid ${(p) => p.theme.panelBorder};
+  background: ${(p) => p.theme.modalFooterBg};
   flex-shrink: 0;
   text-align: center;
   font-size: 13px;
-  color: ${BUILDER_UI.muted};
+  color: ${(p) => p.theme.muted};
 `;
 
 const FooterLink = styled.a`
-  color: ${BUILDER_UI.inputFocus};
+  color: ${(p) => p.theme.inputFocus};
   text-decoration: underline;
   margin-left: 4px;
 
@@ -327,8 +327,9 @@ export default function ImageLibraryModal({ onClose }: ImageLibraryModalProps) {
   };
 
   const modalContent = (
-    <Overlay onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <Modal onClick={(e) => e.stopPropagation()}>
+    <ThemeProvider theme={builderThemeLight}>
+      <Overlay onClick={(e) => e.target === e.currentTarget && onClose()}>
+        <Modal onClick={(e) => e.stopPropagation()}>
         <Header>
           <TitleBlock>
             <IconWrap>
@@ -392,6 +393,7 @@ export default function ImageLibraryModal({ onClose }: ImageLibraryModalProps) {
         </Footer>
       </Modal>
     </Overlay>
+    </ThemeProvider>
   );
 
   if (typeof document === 'undefined') return null;

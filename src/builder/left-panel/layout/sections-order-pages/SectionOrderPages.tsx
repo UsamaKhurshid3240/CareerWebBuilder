@@ -1,19 +1,19 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import {
   DragDropContext,
   Droppable,
   Draggable,
   DropResult
-} from 'react-beautiful-dnd';
+} from '@hello-pangea/dnd';
 
 import { useBuilder } from '@/builder/context/BuilderContext';
 import type { SectionId } from '@/lib/types/builder';
 import { ALL_SECTIONS } from '@/lib/constants/sections';
-import { BUILDER_UI, ACCENTS } from '@/lib/constants/colors';
-import { GLASS, RADIUS, TRANSITION, SHADOW, BLUR } from '@/lib/constants/glassUI';
+import { RADIUS, TRANSITION, SHADOW, BLUR, SPACING } from '@/lib/constants/glassUI';
+import { BUILDER_TYPO } from '@/lib/constants/typography';
 import AddPageModal from './AddPageModal';
 import HeroSectionSettingsModal from './HeroSectionSettingsModal';
 import JobsSectionSettingsModal from './JobsSectionSettingsModal';
@@ -22,8 +22,10 @@ import BenefitsSectionSettingsModal from './BenefitsSectionSettingsModal';
 import TestimonialsSectionSettingsModal from './TestimonialsSectionSettingsModal';
 import TeamSectionSettingsModal from './TeamSectionSettingsModal';
 import AlertsSectionSettingsModal from './AlertsSectionSettingsModal';
+import LocationsSectionSettingsModal from './LocationsSectionSettingsModal';
 import TrashIcon from '@/builder/icons/TrashIcon';
 import { IconLayoutList, IconHouse, IconSettingsCog, IconPlus } from '@/builder/icons';
+import { Toggle as FormToggle } from '@/builder/components/section-settings/FormControls';
 
 /* ================= TYPES ================= */
 
@@ -34,12 +36,12 @@ type PagesState = Record<PageKey, SectionId[]>;
 /* ================= STYLES ================= */
 
 const Wrapper = styled.div`
-  ${GLASS.card}
+  ${(p) => p.theme.glass.card}
   border-radius: ${RADIUS.lg};
   padding: 22px;
   margin-bottom: 18px;
   &:hover {
-    ${GLASS.cardHover}
+    ${(p) => p.theme.glass.cardHover}
   }
 `;
 
@@ -53,7 +55,7 @@ const Title = styled.h3`
   margin: 0;
   font-size: 18px;
   font-weight: 600;
-  color: ${BUILDER_UI.heading};
+  color: ${(p) => p.theme.heading};
   display: flex;
   align-items: center;
   gap: 8px;
@@ -62,7 +64,7 @@ const Title = styled.h3`
 const Sub = styled.p`
   margin: 4px 0 0;
   font-size: 13px;
-  color: ${BUILDER_UI.muted};
+  color: ${(p) => p.theme.muted};
 `;
 
 const ToggleRow = styled.div`
@@ -70,9 +72,9 @@ const ToggleRow = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 14px 16px;
-  border: 1px solid ${BUILDER_UI.inputBorder};
+  border: 1px solid ${(p) => p.theme.inputBorder};
   border-radius: 10px;
-  background: ${BUILDER_UI.shellBg};
+  background: ${(p) => p.theme.shellBg};
   margin-bottom: 12px;
 `;
 
@@ -89,31 +91,9 @@ const ToggleRightRow = styled(ToggleRow)`
   align-items: center;
 `;
 
-const Toggle = styled.div<{ on: boolean }>`
-  width: 42px;
-  height: 22px;
-  border-radius: 999px;
-  background: ${({ on }) => (on ? BUILDER_UI.btnPrimary : BUILDER_UI.inputBorder)};
-  position: relative;
-  cursor: pointer;
-  transition: background 0.2s ease;
-
-  &:after {
-    content: '';
-    width: 18px;
-    height: 18px;
-    background: #fff;
-    border-radius: 50%;
-    position: absolute;
-    top: 2px;
-    left: ${({ on }) => (on ? '22px' : '2px')};
-    transition: left 0.2s ease;
-  }
-`;
-
 const Hint = styled.div`
-  font-size: 12px;
-  color: ${BUILDER_UI.muted};
+  font-size: ${BUILDER_TYPO.helper};
+  color: ${(p) => p.theme.muted};
 `;
 
 const NavStyleRow = styled.div`
@@ -126,13 +106,13 @@ const NavStyleRow = styled.div`
 const Select = styled.select`
   padding: 6px 10px;
   border-radius: 8px;
-  border: 1px solid ${BUILDER_UI.inputBorder};
+  border: 1px solid ${(p) => p.theme.inputBorder};
   font-size: 13px;
-  color: ${BUILDER_UI.heading};
-  background: ${BUILDER_UI.cardBg};
+  color: ${(p) => p.theme.heading};
+  background: ${(p) => p.theme.cardBg};
   &:focus {
     outline: none;
-    border-color: ${BUILDER_UI.inputFocus};
+    border-color: ${(p) => p.theme.inputFocus};
   }
 `;
 
@@ -146,9 +126,9 @@ const PageTabs = styled.div`
 const Tab = styled.button<{ active?: boolean }>`
   padding: 6px 12px;
   border-radius: 999px;
-  border: 1px solid ${BUILDER_UI.inputBorder};
-  background: ${({ active }) => (active ? BUILDER_UI.tabActiveBg : BUILDER_UI.tabInactiveBg)};
-  color: ${({ active }) => (active ? BUILDER_UI.tabActiveText : BUILDER_UI.tabInactiveText)};
+  border: 1px solid ${(p) => p.theme.inputBorder};
+  background: ${({ active, theme }) => (active ? theme.tabActiveBg : theme.tabInactiveBg)};
+  color: ${({ active, theme }) => (active ? theme.tabActiveText : theme.tabInactiveText)};
   font-size: 13px;
   display: flex;
   gap: 6px;
@@ -165,9 +145,9 @@ const Chips = styled.div`
 
 const Chip = styled.span`
   padding: 4px 10px;
-  border-radius: 999px;
-  border: 1px dashed #cbd5e1;
-  font-size: 12px;
+  border-radius: ${RADIUS.full};
+  border: 1px dashed ${(p) => p.theme.panelBorder};
+  font-size: ${BUILDER_TYPO.helper};
   cursor: pointer;
 `;
 
@@ -178,10 +158,10 @@ const Grid = styled.div`
 `;
 
 const Panel = styled.div`
-  border: 1px solid ${BUILDER_UI.cardBorder};
+  border: 1px solid ${(p) => p.theme.cardBorder};
   border-radius: 10px;
   padding: 12px;
-  background: ${BUILDER_UI.cardBg};
+  background: ${(p) => p.theme.cardBg};
   min-height: 320px;
 `;
 
@@ -191,7 +171,7 @@ const PanelHeader = styled.div`
   align-items: flex-start;
   font-size: 13px;
   margin-bottom: 8px;
-  color: ${BUILDER_UI.heading};
+  color: ${(p) => p.theme.heading};
 `;
 
 const PanelHeaderLeft = styled.div`
@@ -209,7 +189,7 @@ const PanelHeaderTitle = styled.div`
 const PanelHeaderSub = styled.p`
   margin: 0;
   font-size: 12px;
-  color: ${BUILDER_UI.muted};
+  color: ${(p) => p.theme.muted};
   font-weight: 400;
 `;
 
@@ -224,18 +204,18 @@ const DeletePageBtn = styled.button`
   width: 32px;
   height: 32px;
   border-radius: ${RADIUS.sm};
-  border: 1px solid ${BUILDER_UI.inputBorder};
-  background: ${BUILDER_UI.cardBg};
+  border: 1px solid ${(p) => p.theme.inputBorder};
+  background: ${(p) => p.theme.cardBg};
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${BUILDER_UI.muted};
+  color: ${(p) => p.theme.muted};
   transition: all 0.15s;
   &:hover {
-    background: rgba(239, 68, 68, 0.08);
-    color: #dc2626;
-    border-color: rgba(220, 38, 38, 0.3);
+    background: ${(p) => p.theme.dangerBg};
+    color: ${(p) => p.theme.dangerText};
+    border-color: ${(p) => p.theme.dangerBorder};
   }
 `;
 
@@ -244,10 +224,10 @@ const Row = styled.div`
   justify-content: space-between;
   align-items: center;
   padding: 10px 12px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  border: 1px solid ${(p) => p.theme.borderMuted};
   border-radius: ${RADIUS.md};
   margin-bottom: 8px;
-  background: rgba(255, 255, 255, 0.85);
+  background: ${(p) => p.theme.shellContentBg};
   backdrop-filter: blur(${BLUR.sm});
   -webkit-backdrop-filter: blur(${BLUR.sm});
   box-shadow: ${SHADOW.xs};
@@ -255,8 +235,8 @@ const Row = styled.div`
     box-shadow ${TRANSITION.normal};
 
   &:hover {
-    border-color: rgba(0, 0, 0, 0.1);
-    background: rgba(255, 255, 255, 0.95);
+    border-color: ${(p) => p.theme.borderSubtle};
+    background: ${(p) => p.theme.panelBgHover};
     box-shadow: ${SHADOW.sm};
   }
 `;
@@ -272,8 +252,8 @@ const RowIcon = styled.span`
   width: 32px;
   height: 32px;
   border-radius: ${RADIUS.sm};
-  background: linear-gradient(145deg, rgba(255,255,255,0.9) 0%, rgba(241,245,249,0.85) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: ${(p) => p.theme.iconBtnBg};
+  border: 1px solid ${(p) => p.theme.iconBtnBorder};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -282,36 +262,36 @@ const RowIcon = styled.span`
 
 const Handle = styled.span`
   cursor: grab;
-  color: #9ca3af;
+  color: ${(p) => p.theme.muted};
   &:hover {
-    color: #6b7280;
+    color: ${(p) => p.theme.body};
   }
 `;
 
 const Icon = styled.span`
-  font-size: 14px;
+  font-size: ${BUILDER_TYPO.body};
   cursor: pointer;
-  color: #6b7280;
+  color: ${(p) => p.theme.muted};
 `;
 
 const Badge = styled.span`
-  font-size: 11px;
+  font-size: ${BUILDER_TYPO.overline};
   padding: 2px 6px;
-  border-radius: 999px;
-  background: #f1f5f9;
+  border-radius: ${RADIUS.full};
+  background: ${(p) => p.theme.shellBg};
 `;
 
 const Tag = styled.span`
-  font-size: 11px;
+  font-size: ${BUILDER_TYPO.overline};
   padding: 2px 8px;
-  border-radius: 999px;
-  border: 1px solid #e5e7eb;
+  border-radius: ${RADIUS.full};
+  border: 1px solid ${(p) => p.theme.panelBorder};
 `;
 
 const Warning = styled.div`
   font-size: 11px;
   margin-top: 10px;
-  color: ${BUILDER_UI.warning};
+  color: ${(p) => p.theme.warning};
 `;
 
 /* ================= SINGLE-PAGE MODE STYLES ================= */
@@ -326,12 +306,12 @@ const SPHeader = styled.div`
 const SPHeaderTitle = styled.div`
   font-size: 15px;
   font-weight: 700;
-  color: ${BUILDER_UI.heading};
+  color: ${(p) => p.theme.heading};
 `;
 
 const SPHeaderSub = styled.div`
   font-size: 12px;
-  color: ${BUILDER_UI.muted};
+  color: ${(p) => p.theme.muted};
   margin-top: 2px;
 `;
 
@@ -339,11 +319,11 @@ const ResetBtn = styled.button`
   height: 32px;
   padding: 0 12px;
   border-radius: 8px;
-  border: 1px solid ${BUILDER_UI.inputBorder};
-  background: ${BUILDER_UI.cardBg};
+  border: 1px solid ${(p) => p.theme.inputBorder};
+  background: ${(p) => p.theme.cardBg};
   font-size: 12px;
   font-weight: 500;
-  color: ${BUILDER_UI.heading};
+  color: ${(p) => p.theme.heading};
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -351,8 +331,8 @@ const ResetBtn = styled.button`
   flex-shrink: 0;
   transition: all 0.2s ease;
   &:hover {
-    background: ${BUILDER_UI.shellBg};
-    border-color: ${BUILDER_UI.cardBorderHover};
+    background: ${(p) => p.theme.shellBg};
+    border-color: ${(p) => p.theme.cardBorderHover};
   }
 `;
 
@@ -368,25 +348,25 @@ const SPRow = styled.div<{ enabled: boolean; isDragging?: boolean }>`
   align-items: center;
   gap: 12px;
   padding: 12px 14px;
-  border: 1px solid ${({ enabled, isDragging }) =>
-    isDragging ? BUILDER_UI.inputFocus : enabled ? 'rgba(0, 0, 0, 0.08)' : 'rgba(0, 0, 0, 0.05)'};
+  border: 1px solid ${({ enabled, isDragging, theme }) =>
+    isDragging ? theme.inputFocus : enabled ? theme.borderMuted : theme.borderSubtle};
   border-radius: ${RADIUS.lg};
-  background: ${({ enabled, isDragging }) =>
+  background: ${({ enabled, isDragging, theme }) =>
     isDragging
-      ? 'rgba(54, 126, 202, 0.08)'
+      ? theme.dragHighlight
       : enabled
-        ? 'rgba(255, 255, 255, 0.85)'
-        : 'rgba(248, 250, 252, 0.9)'};
+        ? theme.shellContentBg
+        : theme.shellBg};
   backdrop-filter: blur(${BLUR.sm});
   -webkit-backdrop-filter: blur(${BLUR.sm});
-  box-shadow: ${({ isDragging }) =>
-    isDragging ? `0 6px 20px rgba(54, 126, 202, 0.15)` : SHADOW.xs};
+  box-shadow: ${({ isDragging, theme }) =>
+    isDragging ? theme.dragShadow : SHADOW.xs};
   transition: border-color ${TRANSITION.normal}, background ${TRANSITION.normal},
     box-shadow ${TRANSITION.normal}, transform ${TRANSITION.fast};
 
   &:hover {
-    border-color: rgba(0, 0, 0, 0.1);
-    background: rgba(255, 255, 255, 0.95);
+    border-color: ${(p) => p.theme.borderSubtle};
+    background: ${(p) => p.theme.panelBgHover};
     box-shadow: ${SHADOW.sm};
   }
   &:active {
@@ -396,15 +376,15 @@ const SPRow = styled.div<{ enabled: boolean; isDragging?: boolean }>`
 
 const SPDragHandle = styled.span`
   cursor: grab;
-  color: #cbd5e1;
-  font-size: 14px;
+  color: ${(p) => p.theme.muted};
+  font-size: ${BUILDER_TYPO.body};
   user-select: none;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: color ${TRANSITION.fast};
   &:hover {
-    color: #94a3b8;
+    color: ${(p) => p.theme.body};
   }
 `;
 
@@ -412,12 +392,10 @@ const SPIconWrap = styled.div<{ enabled: boolean }>`
   width: 40px;
   height: 40px;
   border-radius: ${RADIUS.md};
-  background: ${({ enabled }) =>
-    enabled
-      ? 'linear-gradient(145deg, rgba(255,255,255,0.95) 0%, rgba(241,245,249,0.9) 100%)'
-      : 'linear-gradient(145deg, rgba(248,250,252,0.9) 0%, rgba(241,245,249,0.8) 100%)'};
-  border: 1px solid rgba(255, 255, 255, 0.6);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  background: ${({ enabled, theme }) =>
+    enabled ? theme.iconBtnBg : theme.shellBg};
+  border: 1px solid ${(p) => p.theme.iconBtnBorder};
+  box-shadow: ${SHADOW.xs};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -435,7 +413,7 @@ const SPInfo = styled.div<{ enabled: boolean }>`
 const SPTitle = styled.div`
   font-size: 13px;
   font-weight: 600;
-  color: ${BUILDER_UI.heading};
+  color: ${(p) => p.theme.heading};
   display: flex;
   align-items: center;
   gap: 6px;
@@ -443,7 +421,7 @@ const SPTitle = styled.div`
 
 const SPDesc = styled.div`
   font-size: 11px;
-  color: ${BUILDER_UI.muted};
+  color: ${(p) => p.theme.muted};
   margin-top: 2px;
 `;
 
@@ -456,10 +434,10 @@ const SPToggleWrap = styled.div`
 const SPBadgeRequired = styled.span`
   font-size: 10px;
   font-weight: 600;
-  color: ${ACCENTS.completed};
-  background: rgba(42, 112, 98, 0.12);
-  border: 1px solid rgba(42, 112, 98, 0.3);
-  border-radius: 999px;
+  color: ${(p) => p.theme.successText};
+  background: ${(p) => p.theme.successBg};
+  border: 1px solid ${(p) => p.theme.successBorder};
+  border-radius: ${RADIUS.full};
   padding: 2px 7px;
   white-space: nowrap;
 `;
@@ -467,10 +445,10 @@ const SPBadgeRequired = styled.span`
 const AlwaysOnLabel = styled.span`
   font-size: 10px;
   font-weight: 600;
-  color: ${ACCENTS.completed};
-  background: rgba(42, 112, 98, 0.12);
-  border: 1px solid rgba(42, 112, 98, 0.3);
-  border-radius: 999px;
+  color: ${(p) => p.theme.successText};
+  background: ${(p) => p.theme.successBg};
+  border: 1px solid ${(p) => p.theme.successBorder};
+  border-radius: ${RADIUS.full};
   padding: 2px 7px;
   white-space: nowrap;
 `;
@@ -479,20 +457,20 @@ const SPSettingsBtn = styled.button`
   width: 34px;
   height: 34px;
   border-radius: 8px;
-  border: 1px solid ${BUILDER_UI.inputBorder};
-  background: ${BUILDER_UI.cardBg};
+  border: 1px solid ${(p) => p.theme.inputBorder};
+  background: ${(p) => p.theme.cardBg};
   cursor: pointer;
   font-size: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${BUILDER_UI.muted};
+  color: ${(p) => p.theme.muted};
   flex-shrink: 0;
   transition: all 0.15s;
   &:hover {
-    background: ${BUILDER_UI.shellBg};
-    color: ${BUILDER_UI.heading};
-    border-color: ${BUILDER_UI.cardBorderHover};
+    background: ${(p) => p.theme.shellBg};
+    color: ${(p) => p.theme.heading};
+    border-color: ${(p) => p.theme.cardBorderHover};
   }
 `;
 
@@ -500,31 +478,31 @@ const SPRemoveBtn = styled.button`
   width: 34px;
   height: 34px;
   border-radius: 8px;
-  border: 1px solid ${BUILDER_UI.inputBorder};
-  background: ${BUILDER_UI.cardBg};
+  border: 1px solid ${(p) => p.theme.inputBorder};
+  background: ${(p) => p.theme.cardBg};
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: ${BUILDER_UI.muted};
+  color: ${(p) => p.theme.muted};
   flex-shrink: 0;
   transition: all 0.15s;
   &:hover {
-    background: rgba(239, 68, 68, 0.08);
-    color: #dc2626;
-    border-color: rgba(220, 38, 38, 0.3);
+    background: ${(p) => p.theme.dangerBg};
+    color: ${(p) => p.theme.dangerText};
+    border-color: ${(p) => p.theme.dangerBorder};
   }
 `;
 
 const Divider = styled.div`
   height: 1px;
-  background: ${BUILDER_UI.panelBorder};
+  background: ${(p) => p.theme.panelBorder};
   margin: 10px 0;
 `;
 
 const FooterHint = styled.div`
   font-size: 11px;
-  color: ${BUILDER_UI.muted};
+  color: ${(p) => p.theme.muted};
   margin-top: 12px;
 `;
 
@@ -547,6 +525,7 @@ export default function SectionOrderPages() {
     addPage,
     deletePage,
   } = useBuilder();
+  const theme = useTheme();
 
   const [showAddPage, setShowAddPage] = useState<boolean>(false);
   const [settingsSectionId, setSettingsSectionId] = useState<SectionId | null>(null);
@@ -663,9 +642,10 @@ export default function SectionOrderPages() {
               : 'OFF — single page, section list only'}
           </Hint>
         </div>
-        <Toggle
-          on={multiPageLayout}
-          onClick={() => setMultiPageLayout((v) => !v)}
+        <FormToggle
+          checked={multiPageLayout}
+          onChange={(v) => setMultiPageLayout(v)}
+          aria-label="Multi-page layout"
         />
       </ToggleRightRow>
 
@@ -678,11 +658,12 @@ export default function SectionOrderPages() {
                 <strong>Auto Navigation</strong>
                 <Hint>Generate navigation menu (Header, Sidebar, or Both)</Hint>
               </div>
-              <Toggle
-                on={navigation.enabled}
-                onClick={() =>
-                  setNavigation((p) => ({ ...p, enabled: !p.enabled }))
+              <FormToggle
+                checked={navigation.enabled}
+                onChange={(enabled) =>
+                  setNavigation((p) => ({ ...p, enabled }))
                 }
+                aria-label="Auto navigation"
               />
             </div>
 
@@ -898,7 +879,7 @@ export default function SectionOrderPages() {
                         gap: 6,
                         padding: snapshot.isDraggingOver ? 4 : 0,
                         borderRadius: 10,
-                        background: snapshot.isDraggingOver ? '#f8fafc' : 'transparent',
+                        background: snapshot.isDraggingOver ? theme.shellBg : 'transparent',
                       }}
                     >
                       {singlePageSectionOrder.map((sectionId, index) => {
@@ -928,10 +909,10 @@ export default function SectionOrderPages() {
                                   {sec.required ? (
                                     <AlwaysOnLabel>Always on</AlwaysOnLabel>
                                   ) : (
-                                    <Toggle
-                                      on={enabled}
-                                      onClick={() => setSectionEnabled(sectionId, !enabled)}
-                                      title={enabled ? 'Hide section' : 'Show section'}
+                                    <FormToggle
+                                      checked={enabled}
+                                      onChange={(v) => setSectionEnabled(sectionId, v)}
+                                      aria-label={enabled ? 'Hide section' : 'Show section'}
                                     />
                                   )}
                                 </SPToggleWrap>
@@ -963,7 +944,7 @@ export default function SectionOrderPages() {
                     </SPInfo>
                     <SPToggleWrap>
                       {sec.required ? <AlwaysOnLabel>Always on</AlwaysOnLabel> : (
-                        <Toggle on={enabled} onClick={() => setSectionEnabled(sectionId, !enabled)} />
+                        <FormToggle checked={enabled} onChange={(v) => setSectionEnabled(sectionId, v)} aria-label={enabled ? 'Hide section' : 'Show section'} />
                       )}
                     </SPToggleWrap>
                     <SPSettingsBtn type="button" title="Section settings" onClick={() => openSectionSettings(sectionId)} aria-label="Section settings">
@@ -998,6 +979,9 @@ export default function SectionOrderPages() {
       )}
       {settingsSectionId === 'team' && (
         <TeamSectionSettingsModal onClose={() => setSettingsSectionId(null)} />
+      )}
+      {settingsSectionId === 'locations' && (
+        <LocationsSectionSettingsModal onClose={() => setSettingsSectionId(null)} />
       )}
     </Wrapper>
   );

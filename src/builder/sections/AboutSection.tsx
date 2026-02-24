@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import styled from 'styled-components';
 import type { TypographySettings, LayoutSettings } from '@/lib/types/builder';
 import type { AboutSectionSettings } from '@/lib/types/builder';
@@ -108,7 +109,7 @@ interface Props {
   layout: LayoutSettings;
 }
 
-export default function AboutSection({ typography, layout }: Props) {
+function AboutSection({ typography, layout }: Props) {
   const { sectionSettings } = useBuilder();
   const about = sectionSettings?.about
     ? { ...DEFAULT_ABOUT, ...sectionSettings.about }
@@ -200,3 +201,5 @@ export default function AboutSection({ typography, layout }: Props) {
     </Section>
   );
 }
+
+export default memo(AboutSection);

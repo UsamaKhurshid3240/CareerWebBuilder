@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import styled from 'styled-components';
 import type { TypographySettings, LayoutSettings } from '@/lib/types/builder';
 import type { BenefitsSectionSettings } from '@/lib/types/builder';
@@ -79,12 +80,21 @@ const List = styled.div<{ columns: number }>`
   }
 `;
 
-const Card = styled.div<{ sectionRadius: number }>`
+const Card = styled.div<{ sectionRadius: number; $hoverEffects?: boolean }>`
   padding: 24px;
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: ${({ sectionRadius }) => sectionRadius}px;
   background: #fff;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  ${({ $hoverEffects }) =>
+    $hoverEffects &&
+    `
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+  `}
 `;
 
 const ListItem = styled.div`
@@ -148,7 +158,7 @@ interface Props {
   layout: LayoutSettings;
 }
 
-export default function BenefitsSection({ typography, layout }: Props) {
+function BenefitsSection({ typography, layout }: Props) {
   const { sectionSettings } = useBuilder();
   const benefits = sectionSettings?.benefits
     ? {
@@ -197,7 +207,7 @@ export default function BenefitsSection({ typography, layout }: Props) {
         {(layoutType === 'grid' || layoutType === 'cards') && (
           <Grid columns={columns}>
             {items.map((item) => (
-              <Card key={item.id} sectionRadius={radius}>
+              <Card key={item.id} sectionRadius={radius} $hoverEffects={layout.hoverEffects}>
                 <Icon>{item.icon || '✨'}</Icon>
                 <CardTitle fontFamily={typography.headingFont}>
                   {item.title}
@@ -213,3 +223,5 @@ export default function BenefitsSection({ typography, layout }: Props) {
     </Section>
   );
 }
+
+export default memo(BenefitsSection);

@@ -112,4 +112,40 @@ export const BUILDER_UI = {
   success: ACCENTS.teal,
   warning: ACCENTS.gold,
   error: ACCENTS.red,
+  /** Overlay (e.g. image overlay, modal backdrop) */
+  overlay: 'rgba(13, 35, 73, 0.52)',
+  /** Destructive actions (delete, remove) */
+  danger: ACCENTS.red,
+  /** Dark tab/button active (slate-900 equivalent) */
+  tabDark: PRIMARY.base,
+  /** Success background (badges, alerts) */
+  successBg: 'rgba(34, 197, 94, 0.12)',
+  successBorder: 'rgba(34, 197, 94, 0.25)',
+  successText: '#15803d',
+  /** Warning background */
+  warningBg: 'rgba(234, 179, 8, 0.12)',
+  warningBorder: 'rgba(234, 179, 8, 0.25)',
+  warningText: '#854d0e',
+  /** Danger/destructive background */
+  dangerBg: 'rgba(224, 85, 85, 0.08)',
+  dangerBorder: 'rgba(224, 85, 85, 0.4)',
+  dangerText: '#c2410c',
+  /** Neutral list/row hovers */
+  rowHover: 'rgba(0, 0, 0, 0.03)',
+  borderSubtle: 'rgba(0, 0, 0, 0.06)',
+  borderMuted: 'rgba(0, 0, 0, 0.08)',
+  /** Icon button / panel surfaces */
+  iconBtnBg: 'rgba(255, 255, 255, 0.8)',
+  iconBtnBorder: 'rgba(0, 0, 0, 0.08)',
+  /** Drag-and-drop highlight (e.g. SPRow isDragging) */
+  dragHighlight: 'rgba(54, 126, 202, 0.06)',
+  /** Modal footer / sticky footer background */
+  modalFooterBg: 'rgba(248, 250, 252, 0.95)',
+  /** Shell content area (translucent panel) */
+  shellContentBg: 'rgba(255, 255, 255, 0.85)',
+  shellContentBorder: 'rgba(255, 255, 255, 0.6)',
+  /** Row/card hover background (slightly opaque white) */
+  panelBgHover: 'rgba(255, 255, 255, 0.95)',
+  /** Drag state shadow (blue tint) */
+  dragShadow: '0 6px 20px rgba(54, 126, 202, 0.15)',
 } as const;

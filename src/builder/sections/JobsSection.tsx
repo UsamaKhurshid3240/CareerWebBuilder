@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import styled from 'styled-components';
 import type { TypographySettings, ButtonSettings, LayoutSettings, JobsSectionSettings } from '@/lib/types/builder';
 import { FONT_SCALE_MAP } from '@/lib/constants/typography';
@@ -91,6 +92,7 @@ const Card = styled.div<{
   cardShadow: string;
   compact: boolean;
   isList: boolean;
+  $hoverEffects?: boolean;
 }>`
   border: 1px solid #e5e7eb;
   padding: ${({ compact }) => (compact ? '12px 16px' : '20px')};
@@ -101,6 +103,15 @@ const Card = styled.div<{
   align-items: ${({ compact, isList }) => (compact || isList ? 'center' : 'flex-start')};
   flex-direction: ${({ isList }) => (isList ? 'row' : 'column')};
   gap: ${({ compact }) => (compact ? '0' : '12px')};
+  ${({ $hoverEffects }) =>
+    $hoverEffects &&
+    `
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+  `}
 `;
 
 const CardMain = styled.div`
@@ -144,7 +155,7 @@ interface Props {
   layout: LayoutSettings;
 }
 
-export default function JobsSection({ typography, buttons, layout }: Props) {
+function JobsSection({ typography, buttons, layout }: Props) {
   const { sectionSettings } = useBuilder();
   const jobsSettings: JobsSectionSettings = sectionSettings?.jobs
     ? { ...DEFAULT_JOBS, ...sectionSettings.jobs }
@@ -218,6 +229,7 @@ export default function JobsSection({ typography, buttons, layout }: Props) {
                 cardShadow={cardShadow}
                 compact={compact}
                 isList={true}
+                $hoverEffects={layout.hoverEffects}
               >
                 <CardMain>
                   <JobTitle fontFamily={typography.headingFont}>{job.title}</JobTitle>
@@ -240,6 +252,7 @@ export default function JobsSection({ typography, buttons, layout }: Props) {
                 cardShadow={cardShadow}
                 compact={compact}
                 isList={false}
+                $hoverEffects={layout.hoverEffects}
               >
                 <CardMain>
                   <JobTitle fontFamily={typography.headingFont}>{job.title}</JobTitle>
@@ -258,3 +271,5 @@ export default function JobsSection({ typography, buttons, layout }: Props) {
     </Section>
   );
 }
+
+export default memo(JobsSection);

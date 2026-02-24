@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import styled from 'styled-components';
 import type { TypographySettings, LayoutSettings } from '@/lib/types/builder';
 import { FONT_SCALE_MAP } from '@/lib/constants/typography';
@@ -90,7 +90,7 @@ const FAQS = [
   },
 ];
 
-export default function FAQSection({ typography, layout }: Props) {
+function FAQSection({ typography, layout }: Props) {
   const scale = FONT_SCALE_MAP[typography.fontScale];
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
@@ -128,3 +128,5 @@ export default function FAQSection({ typography, layout }: Props) {
     </Section>
   );
 }
+
+export default memo(FAQSection);

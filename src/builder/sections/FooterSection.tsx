@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import styled from 'styled-components';
 import type { TypographySettings, LayoutSettings } from '@/lib/types/builder';
 import { SECTION_RADIUS_PX } from '@/lib/constants/layout';
@@ -20,7 +21,7 @@ interface Props {
   layout: LayoutSettings;
 }
 
-export default function FooterSection({ typography, layout }: Props) {
+function FooterSection({ typography, layout }: Props) {
   return (
     <Footer
       fontFamily={typography.bodyFont}
@@ -30,3 +31,5 @@ export default function FooterSection({ typography, layout }: Props) {
     </Footer>
   );
 }
+
+export default memo(FooterSection);

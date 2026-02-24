@@ -41,6 +41,26 @@ export const TRANSITION = {
   smooth: '0.25s cubic-bezier(0.4, 0, 0.2, 1)',
 } as const;
 
+/** Icon size tokens — use for toolbar, tabs, modals (sm=compact, xl=prominent) */
+export const ICON_SIZE = {
+  sm: 14,
+  md: 18,
+  lg: 20,
+  xl: 24,
+} as const;
+
+/** Spacing scale (4px base grid) — use in panels, modals, cards */
+export const SPACING = {
+  xxs: 4,
+  xs: 8,
+  sm: 12,
+  md: 16,
+  lg: 20,
+  xl: 24,
+  xxl: 32,
+  xxxl: 48,
+} as const;
+
 /** Glass surface — frosted background */
 export const GLASS = {
   /** Header bar */

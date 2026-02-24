@@ -7,120 +7,100 @@ import {
   Droppable,
   Draggable,
   DropResult,
-} from 'react-beautiful-dnd';
+} from '@hello-pangea/dnd';
 import { useBuilder } from '@/builder/context/BuilderContext';
 import type { SectionId } from '@/lib/types/builder';
 import { ALL_SECTIONS } from '@/lib/constants/sections';
 import { getPageLabel } from '@/builder/lib/navUtils';
 import AddPageModal from '@/builder/left-panel/layout/sections-order-pages/AddPageModal';
 import { IconSettingsCog } from '@/builder/icons';
+import { BUILDER_UI, SHADES } from '@/lib/constants/colors';
+import { RADIUS, SPACING, SHADOW } from '@/lib/constants/glassUI';
+import { BUILDER_TYPO } from '@/lib/constants/typography';
+import { Toggle as FormToggle } from '@/builder/components/section-settings/FormControls';
 
 /* ─────────────────────────── Shared ─────────────────────────── */
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  padding: 16px;
+  padding: ${SPACING.md}px;
 `;
 
 const Card = styled.div`
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 20px;
-  background: #fff;
-  margin-bottom: 14px;
+  border: 1px solid ${BUILDER_UI.panelBorder};
+  border-radius: ${RADIUS.md};
+  padding: ${SPACING.lg}px;
+  background: ${BUILDER_UI.panelBg};
+  margin-bottom: ${SPACING.sm}px;
 `;
 
 const CardHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 14px;
+  margin-bottom: ${SPACING.sm}px;
 `;
 
 const CardTitle = styled.h3`
   margin: 0;
-  font-size: 16px;
+  font-size: ${BUILDER_TYPO.subheading};
   font-weight: 700;
-  color: #111827;
+  color: ${BUILDER_UI.heading};
 `;
 
 const CardSubtitle = styled.p`
   margin: 3px 0 0;
-  font-size: 12px;
-  color: #6b7280;
-`;
-
-const Toggle = styled.button<{ on: boolean }>`
-  width: 42px;
-  height: 24px;
-  border-radius: 999px;
-  background: ${({ on }) => (on ? '#111827' : '#d1d5db')};
-  border: none;
-  cursor: pointer;
-  position: relative;
-  flex-shrink: 0;
-  transition: background 0.2s;
-
-  &:after {
-    content: '';
-    width: 18px;
-    height: 18px;
-    background: #fff;
-    border-radius: 50%;
-    position: absolute;
-    top: 3px;
-    left: ${({ on }) => (on ? '21px' : '3px')};
-    transition: left 0.2s;
-  }
+  font-size: ${BUILDER_TYPO.helper};
+  color: ${BUILDER_UI.muted};
 `;
 
 const ToggleRow = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 14px;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  background: #fafafa;
-  margin-bottom: 10px;
+  padding: ${SPACING.sm}px ${SPACING.sm}px;
+  border: 1px solid ${BUILDER_UI.panelBorder};
+  border-radius: ${RADIUS.md};
+  background: ${BUILDER_UI.shellBg};
+  margin-bottom: ${SPACING.sm}px;
 `;
 
 const ToggleLabel = styled.div`
-  font-size: 14px;
+  font-size: ${BUILDER_TYPO.body};
   font-weight: 600;
-  color: #111827;
+  color: ${BUILDER_UI.heading};
 `;
 
 const ToggleSub = styled.div`
-  font-size: 11px;
-  color: #6b7280;
-  margin-top: 2px;
+  font-size: ${BUILDER_TYPO.overline};
+  color: ${BUILDER_UI.muted};
+  margin-top: ${SPACING.xxs}px;
 `;
 
 const Badge = styled.span<{ variant?: 'required' | 'count' | 'default' }>`
-  font-size: 11px;
+  font-size: ${BUILDER_TYPO.overline};
   font-weight: 600;
   padding: 2px 7px;
-  border-radius: 999px;
+  border-radius: ${RADIUS.full};
   flex-shrink: 0;
 
   ${({ variant }) =>
     variant === 'required'
       ? css`
-          background: #fef9c3;
-          color: #854d0e;
-          border: 1px solid #fde68a;
+          background: ${BUILDER_UI.warningBg};
+          color: ${BUILDER_UI.warningText};
+          border: 1px solid ${BUILDER_UI.warningBorder};
         `
       : variant === 'count'
       ? css`
-          background: #f1f5f9;
-          color: #475569;
-          border: 1px solid #e2e8f0;
+          background: ${BUILDER_UI.shellBg};
+          color: ${BUILDER_UI.muted};
+          border: 1px solid ${BUILDER_UI.panelBorder};
         `
       : css`
-          background: #f1f5f9;
-          color: #475569;
+          background: ${BUILDER_UI.shellBg};
+          color: ${BUILDER_UI.muted};
         `}
 `;
 
@@ -129,55 +109,55 @@ const Badge = styled.span<{ variant?: 'required' | 'count' | 'default' }>`
 const NavStyleRow = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px;
-  font-size: 13px;
-  color: #6b7280;
-  margin-top: 10px;
+  gap: ${SPACING.sm}px;
+  font-size: ${BUILDER_TYPO.label};
+  color: ${BUILDER_UI.muted};
+  margin-top: ${SPACING.sm}px;
 `;
 
 const Select = styled.select`
-  padding: 6px 10px;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  font-size: 13px;
-  background: #fff;
+  padding: ${SPACING.sm}px ${SPACING.sm}px;
+  border-radius: ${RADIUS.sm};
+  border: 1px solid ${BUILDER_UI.panelBorder};
+  font-size: ${BUILDER_TYPO.label};
+  background: ${BUILDER_UI.panelBg};
 `;
 
 const PageTabs = styled.div`
   display: flex;
-  gap: 8px;
-  margin: 12px 0;
+  gap: ${SPACING.xs}px;
+  margin: ${SPACING.sm}px 0;
   flex-wrap: wrap;
 `;
 
 const Tab = styled.button<{ active?: boolean }>`
-  padding: 6px 12px;
-  border-radius: 999px;
-  border: 1.5px solid ${({ active }) => (active ? '#111827' : '#e5e7eb')};
-  background: ${({ active }) => (active ? '#111827' : '#fff')};
-  color: ${({ active }) => (active ? '#fff' : '#374151')};
-  font-size: 12px;
+  padding: ${SPACING.sm}px ${SPACING.sm}px;
+  border-radius: ${RADIUS.full};
+  border: 1.5px solid ${({ active }) => (active ? BUILDER_UI.tabDark : BUILDER_UI.panelBorder)};
+  background: ${({ active }) => (active ? BUILDER_UI.tabActiveBg : BUILDER_UI.panelBg)};
+  color: ${({ active }) => (active ? BUILDER_UI.tabActiveText : BUILDER_UI.body)};
+  font-size: ${BUILDER_TYPO.helper};
   font-weight: 500;
   display: flex;
-  gap: 6px;
+  gap: ${SPACING.sm}px;
   align-items: center;
   cursor: pointer;
   transition: all 0.15s;
   &:hover {
-    border-color: #111827;
+    border-color: ${BUILDER_UI.tabDark};
   }
 `;
 
 const Grid = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  gap: ${SPACING.sm}px;
 `;
 
 const Panel = styled.div`
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  background: #fff;
+  border: 1px solid ${BUILDER_UI.panelBorder};
+  border-radius: ${RADIUS.md};
+  background: ${BUILDER_UI.panelBg};
   min-height: 300px;
   overflow: hidden;
 `;
@@ -186,20 +166,20 @@ const PanelHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 12px;
+  font-size: ${BUILDER_TYPO.helper};
   font-weight: 700;
-  color: #111827;
-  padding: 12px 14px;
-  border-bottom: 1px solid #f3f4f6;
+  color: ${BUILDER_UI.heading};
+  padding: ${SPACING.sm}px ${SPACING.sm}px;
+  border-bottom: 1px solid ${BUILDER_UI.shellBg};
 `;
 
 const SectionRow = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 9px 12px;
-  border-bottom: 1px solid #f9fafb;
-  background: #fff;
+  padding: 9px ${SPACING.sm}px;
+  border-bottom: 1px solid ${BUILDER_UI.shellBg};
+  background: ${BUILDER_UI.panelBg};
   cursor: default;
   &:last-child {
     border-bottom: none;
@@ -209,17 +189,17 @@ const SectionRow = styled.div`
 const RowLeft = styled.div`
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: ${SPACING.xs}px;
   min-width: 0;
 `;
 
 const RowHandle = styled.span`
   cursor: grab;
-  color: #d1d5db;
-  font-size: 14px;
+  color: ${BUILDER_UI.muted};
+  font-size: ${BUILDER_TYPO.body};
   flex-shrink: 0;
   &:hover {
-    color: #6b7280;
+    color: ${BUILDER_UI.body};
   }
 `;
 
@@ -233,17 +213,17 @@ const RowInfo = styled.div`
 `;
 
 const RowTitle = styled.div`
-  font-size: 12px;
+  font-size: ${BUILDER_TYPO.helper};
   font-weight: 600;
-  color: #111827;
+  color: ${BUILDER_UI.heading};
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 `;
 
 const RowDesc = styled.div`
-  font-size: 10px;
-  color: #9ca3af;
+  font-size: ${BUILDER_TYPO.overline};
+  color: ${BUILDER_UI.muted};
   margin-top: 1px;
   white-space: nowrap;
   overflow: hidden;
@@ -253,11 +233,11 @@ const RowDesc = styled.div`
 const RemoveBtn = styled.button`
   width: 22px;
   height: 22px;
-  border-radius: 5px;
-  border: 1px solid #e5e7eb;
-  background: #fff;
-  color: #9ca3af;
-  font-size: 13px;
+  border-radius: ${RADIUS.sm};
+  border: 1px solid ${BUILDER_UI.panelBorder};
+  background: ${BUILDER_UI.panelBg};
+  color: ${BUILDER_UI.muted};
+  font-size: ${BUILDER_TYPO.label};
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -265,25 +245,25 @@ const RemoveBtn = styled.button`
   flex-shrink: 0;
   line-height: 1;
   &:hover {
-    background: #fef2f2;
-    color: #dc2626;
-    border-color: #fca5a5;
+    background: ${BUILDER_UI.dangerBg};
+    color: ${BUILDER_UI.dangerText};
+    border-color: ${BUILDER_UI.dangerBorder};
   }
 `;
 
 const EmptyState = styled.div`
   text-align: center;
-  padding: 36px 16px;
-  color: #9ca3af;
-  font-size: 13px;
+  padding: 36px ${SPACING.md}px;
+  color: ${BUILDER_UI.muted};
+  font-size: ${BUILDER_TYPO.label};
 `;
 
 /* ─────────────────────── Available Panel ──────────────────────── */
 
 const AvailablePanel = styled.div`
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  background: #fff;
+  border: 1px solid ${BUILDER_UI.panelBorder};
+  border-radius: ${RADIUS.md};
+  background: ${BUILDER_UI.panelBg};
   min-height: 300px;
   display: flex;
   flex-direction: column;
@@ -298,10 +278,10 @@ const AvailableList = styled.div`
 const AvailableRow = styled.div<{ added: boolean }>`
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 9px 12px;
-  border-bottom: 1px solid #f3f4f6;
-  background: ${({ added }) => (added ? '#f0f9ff' : '#fff')};
+  gap: ${SPACING.xs}px;
+  padding: 9px ${SPACING.sm}px;
+  border-bottom: 1px solid ${BUILDER_UI.shellBg};
+  background: ${({ added }) => (added ? BUILDER_UI.successBg : BUILDER_UI.panelBg)};
   cursor: ${({ added }) => (added ? 'default' : 'pointer')};
   transition: background 0.12s;
 
@@ -309,15 +289,15 @@ const AvailableRow = styled.div<{ added: boolean }>`
     border-bottom: none;
   }
   &:hover {
-    background: ${({ added }) => (added ? '#e0f2fe' : '#f9fafb')};
+    background: ${({ added }) => (added ? BUILDER_UI.successBorder : BUILDER_UI.rowHover)};
   }
 `;
 
 const AvailableIcon = styled.div`
   width: 32px;
   height: 32px;
-  border-radius: 8px;
-  background: #f1f5f9;
+  border-radius: ${RADIUS.sm};
+  background: ${BUILDER_UI.shellBg};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -331,29 +311,29 @@ const AvailableInfo = styled.div`
 `;
 
 const AvailableName = styled.div`
-  font-size: 12px;
+  font-size: ${BUILDER_TYPO.helper};
   font-weight: 600;
-  color: #111827;
+  color: ${BUILDER_UI.heading};
 `;
 
 const AvailableDesc = styled.div`
-  font-size: 10px;
-  color: #9ca3af;
+  font-size: ${BUILDER_TYPO.overline};
+  color: ${BUILDER_UI.muted};
   margin-top: 1px;
 `;
 
 const AvailableStatus = styled.div<{ added: boolean; required?: boolean }>`
   flex-shrink: 0;
-  font-size: 10px;
+  font-size: ${BUILDER_TYPO.overline};
   font-weight: 600;
   padding: 2px 7px;
-  border-radius: 999px;
+  border-radius: ${RADIUS.full};
   border: 1px solid ${({ added, required }) =>
-    required ? '#fde68a' : added ? '#bae6fd' : '#e5e7eb'};
+    required ? BUILDER_UI.warningBorder : added ? BUILDER_UI.successBorder : BUILDER_UI.panelBorder};
   background: ${({ added, required }) =>
-    required ? '#fef9c3' : added ? '#e0f2fe' : '#f9fafb'};
+    required ? BUILDER_UI.warningBg : added ? BUILDER_UI.successBg : BUILDER_UI.shellBg};
   color: ${({ added, required }) =>
-    required ? '#854d0e' : added ? '#0369a1' : '#6b7280'};
+    required ? BUILDER_UI.warningText : added ? BUILDER_UI.successText : BUILDER_UI.muted};
   white-space: nowrap;
 `;
 
@@ -363,40 +343,40 @@ const SPHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 14px;
+  margin-bottom: ${SPACING.sm}px;
 `;
 
 const SPHeaderLeft = styled.div``;
 
 const SPHeaderTitle = styled.div`
-  font-size: 15px;
+  font-size: ${BUILDER_TYPO.subheading};
   font-weight: 700;
-  color: #111827;
+  color: ${BUILDER_UI.heading};
 `;
 
 const SPHeaderSub = styled.div`
-  font-size: 12px;
-  color: #6b7280;
-  margin-top: 2px;
+  font-size: ${BUILDER_TYPO.helper};
+  color: ${BUILDER_UI.muted};
+  margin-top: ${SPACING.xxs}px;
 `;
 
 const ResetBtn = styled.button`
   height: 32px;
-  padding: 0 12px;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  background: #fff;
-  font-size: 12px;
+  padding: 0 ${SPACING.sm}px;
+  border-radius: ${RADIUS.sm};
+  border: 1px solid ${BUILDER_UI.panelBorder};
+  background: ${BUILDER_UI.panelBg};
+  font-size: ${BUILDER_TYPO.helper};
   font-weight: 500;
-  color: #374151;
+  color: ${BUILDER_UI.body};
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 5px;
+  gap: ${SPACING.xxs}px;
   flex-shrink: 0;
   &:hover {
-    background: #f9fafb;
-    border-color: #d1d5db;
+    background: ${BUILDER_UI.shellBg};
+    border-color: ${BUILDER_UI.inputBorder};
   }
 `;
 
@@ -410,34 +390,34 @@ const SPRow = styled.div<{ enabled: boolean; isDragging?: boolean }>`
   display: grid;
   grid-template-columns: 20px 38px 1fr auto 40px;
   align-items: center;
-  gap: 10px;
-  padding: 11px 14px;
+  gap: ${SPACING.sm}px;
+  padding: ${SPACING.sm}px ${SPACING.sm}px;
   border: 1.5px solid ${({ enabled, isDragging }) =>
-    isDragging ? '#6366f1' : enabled ? '#e5e7eb' : '#f3f4f6'};
-  border-radius: 10px;
+    isDragging ? BUILDER_UI.inputFocus : enabled ? BUILDER_UI.panelBorder : BUILDER_UI.shellBg};
+  border-radius: ${RADIUS.md};
   background: ${({ enabled, isDragging }) =>
-    isDragging ? '#f5f3ff' : enabled ? '#fff' : '#f9fafb'};
+    isDragging ? BUILDER_UI.dragHighlight : enabled ? BUILDER_UI.panelBg : BUILDER_UI.shellBg};
   box-shadow: ${({ isDragging }) =>
-    isDragging ? '0 8px 24px rgba(99,102,241,0.12)' : 'none'};
+    isDragging ? SHADOW.sm : 'none'};
   transition: border-color 0.15s, background 0.15s, box-shadow 0.15s;
 `;
 
 const SPDragHandle = styled.span`
   cursor: grab;
-  color: #d1d5db;
-  font-size: 14px;
+  color: ${BUILDER_UI.muted};
+  font-size: ${BUILDER_TYPO.body};
   user-select: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  &:hover { color: #9ca3af; }
+  &:hover { color: ${BUILDER_UI.body}; }
 `;
 
 const SPIconWrap = styled.div<{ enabled: boolean }>`
   width: 36px;
   height: 36px;
-  border-radius: 9px;
-  background: ${({ enabled }) => (enabled ? '#f1f5f9' : '#f3f4f6')};
+  border-radius: ${RADIUS.sm};
+  background: ${({ enabled }) => (enabled ? BUILDER_UI.shellBg : SHADES.bg)};
   display: flex;
   align-items: center;
   justify-content: center;
@@ -452,18 +432,18 @@ const SPInfo = styled.div<{ enabled: boolean }>`
 `;
 
 const SPTitle = styled.div`
-  font-size: 13px;
+  font-size: ${BUILDER_TYPO.label};
   font-weight: 600;
-  color: #111827;
+  color: ${BUILDER_UI.heading};
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: ${SPACING.sm}px;
 `;
 
 const SPDesc = styled.div`
-  font-size: 11px;
-  color: #9ca3af;
-  margin-top: 2px;
+  font-size: ${BUILDER_TYPO.overline};
+  color: ${BUILDER_UI.muted};
+  margin-top: ${SPACING.xxs}px;
 `;
 
 const SPToggleWrap = styled.div`
@@ -473,50 +453,50 @@ const SPToggleWrap = styled.div`
 `;
 
 const AlwaysOnLabel = styled.span`
-  font-size: 10px;
+  font-size: ${BUILDER_TYPO.overline};
   font-weight: 600;
-  color: #92400e;
-  background: #fef9c3;
-  border: 1px solid #fde68a;
-  border-radius: 999px;
-  padding: 2px 7px;
+  color: ${BUILDER_UI.warningText};
+  background: ${BUILDER_UI.warningBg};
+  border: 1px solid ${BUILDER_UI.warningBorder};
+  border-radius: ${RADIUS.full};
+  padding: ${SPACING.xxs}px 7px;
   white-space: nowrap;
 `;
 
 const SPSettingsBtn = styled.button`
   width: 34px;
   height: 34px;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  background: #fff;
+  border-radius: ${RADIUS.sm};
+  border: 1px solid ${BUILDER_UI.panelBorder};
+  background: ${BUILDER_UI.panelBg};
   cursor: pointer;
   font-size: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #9ca3af;
+  color: ${BUILDER_UI.muted};
   flex-shrink: 0;
   transition: all 0.15s;
   &:hover {
-    background: #f9fafb;
-    color: #374151;
-    border-color: #d1d5db;
+    background: ${BUILDER_UI.shellBg};
+    color: ${BUILDER_UI.body};
+    border-color: ${BUILDER_UI.inputBorder};
   }
 `;
 
 const Divider = styled.div`
   height: 1px;
-  background: #f3f4f6;
-  margin: 10px 0;
+  background: ${BUILDER_UI.shellBg};
+  margin: ${SPACING.sm}px 0;
 `;
 
 const FooterHint = styled.div`
   display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 11px;
-  color: #9ca3af;
-  margin-top: 12px;
+  gap: ${SPACING.sm}px;
+  font-size: ${BUILDER_TYPO.overline};
+  color: ${BUILDER_UI.muted};
+  margin-top: ${SPACING.sm}px;
 `;
 
 /* ─────────────────────── Component ─────────────────────── */
@@ -748,7 +728,7 @@ export default function SectionsTab() {
                           {...provided.droppableProps}
                           style={{
                             minHeight: 40,
-                            background: snapshot.isDraggingOver ? '#f9fafb' : undefined,
+                            background: snapshot.isDraggingOver ? BUILDER_UI.shellBg : undefined,
                           }}
                         >
                           {activeSections.map((id, i) => {
@@ -768,7 +748,7 @@ export default function SectionsTab() {
                                       ...prov.draggableProps.style,
                                       opacity: snap.isDragging ? 0.85 : 1,
                                       boxShadow: snap.isDragging
-                                        ? '0 4px 12px rgba(0,0,0,0.1)'
+                                        ? SHADOW.sm
                                         : 'none',
                                     }}
                                   >
@@ -839,9 +819,9 @@ export default function SectionsTab() {
               <AvailablePanel>
                 <PanelHeader>
                   <span>＋ Available Sections</span>
-                  <span style={{ fontSize: 10, color: '#9ca3af', fontWeight: 400 }}>
-                    Click to add
-                  </span>
+<span style={{ fontSize: 10, color: BUILDER_UI.muted, fontWeight: 400 }}>
+                                    Click to add
+                                  </span>
                 </PanelHeader>
                 <AvailableList>
                   {ALL_SECTIONS.map((s) => {
@@ -934,7 +914,7 @@ export default function SectionsTab() {
                         gap: 6,
                         padding: snapshot.isDraggingOver ? '4px' : '0',
                         borderRadius: 10,
-                        background: snapshot.isDraggingOver ? '#f8fafc' : 'transparent',
+                        background: snapshot.isDraggingOver ? BUILDER_UI.shellBg : 'transparent',
                         transition: 'background 0.15s, padding 0.15s',
                       }}
                     >

@@ -1,37 +1,40 @@
 'use client';
 
 import styled from 'styled-components';
+import { BUILDER_UI } from '@/lib/constants/colors';
+import { RADIUS, SPACING } from '@/lib/constants/glassUI';
+import { BUILDER_TYPO } from '@/lib/constants/typography';
 import { ALL_SECTIONS, getSectionMeta } from '@/lib/constants/sections';
 import type { SectionId } from '@/lib/types/builder';
 
 const Nav = styled.div`
   display: flex;
-  gap: 8px;
+  gap: ${SPACING.xs}px;
   overflow-x: auto;
-  padding-bottom: 4px;
+  padding-bottom: ${SPACING.xxs}px;
 `;
 
 const Tab = styled.button<{ active?: boolean }>`
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  border-radius: 8px;
-  border: 1px solid ${({ active }) => (active ? '#111827' : '#e5e7eb')};
-  background: ${({ active }) => (active ? '#111827' : '#fff')};
-  color: ${({ active }) => (active ? '#fff' : '#374151')};
-  font-size: 13px;
+  gap: ${SPACING.sm}px;
+  padding: ${SPACING.sm}px ${SPACING.sm}px;
+  border-radius: ${RADIUS.md};
+  border: 1px solid ${({ active }) => (active ? BUILDER_UI.tabActiveBg : BUILDER_UI.panelBorder)};
+  background: ${({ active }) => (active ? BUILDER_UI.tabActiveBg : BUILDER_UI.panelBg)};
+  color: ${({ active }) => (active ? BUILDER_UI.tabActiveText : BUILDER_UI.heading)};
+  font-size: ${BUILDER_TYPO.label};
   cursor: pointer;
   white-space: nowrap;
   transition: all 0.2s ease;
   &:hover {
-    border-color: ${({ active }) => (active ? '#111827' : '#9ca3af')};
-    background: ${({ active }) => (active ? '#111827' : '#f9fafb')};
+    border-color: ${({ active }) => (active ? BUILDER_UI.tabActiveBg : BUILDER_UI.muted)};
+    background: ${({ active }) => (active ? BUILDER_UI.tabActiveBg : BUILDER_UI.shellBg)};
   }
 `;
 
 const TabIcon = styled.span`
-  font-size: 14px;
+  font-size: ${BUILDER_TYPO.body};
   opacity: 0.95;
 `;
 

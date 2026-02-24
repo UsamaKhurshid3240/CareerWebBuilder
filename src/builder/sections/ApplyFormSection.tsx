@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import styled from 'styled-components';
 import type { TypographySettings, ButtonSettings, LayoutSettings } from '@/lib/types/builder';
 import { FONT_SCALE_MAP } from '@/lib/constants/typography';
@@ -75,6 +75,7 @@ const SubmitButton = styled.button<{
   buttonStyle: ButtonSettings['style'];
   cornerRadius: number;
   fontFamily: string;
+  $hoverEffects?: boolean;
 }>`
   width: 100%;
   padding: 14px;
@@ -91,6 +92,15 @@ const SubmitButton = styled.button<{
   &:hover {
     opacity: 0.9;
   }
+  ${({ $hoverEffects }) =>
+    $hoverEffects &&
+    `
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    &:hover {
+      transform: translateY(-1px);
+      opacity: 0.95;
+    }
+  `}
 `;
 
 interface Props {
@@ -99,7 +109,7 @@ interface Props {
   layout: LayoutSettings;
 }
 
-export default function ApplyFormSection({ typography, buttons, layout }: Props) {
+function ApplyFormSection({ typography, buttons, layout }: Props) {
   const scale = FONT_SCALE_MAP[typography.fontScale];
   const [formData, setFormData] = useState({
     name: '',
@@ -176,6 +186,7 @@ export default function ApplyFormSection({ typography, buttons, layout }: Props)
           buttonStyle={buttons.style}
           cornerRadius={buttons.cornerRadius}
           fontFamily={typography.bodyFont}
+          $hoverEffects={layout.hoverEffects}
         >
           Submit Application
         </SubmitButton>
@@ -184,3 +195,5 @@ export default function ApplyFormSection({ typography, buttons, layout }: Props)
     </Section>
   );
 }
+
+export default memo(ApplyFormSection);

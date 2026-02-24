@@ -1,11 +1,13 @@
 'use client';
 
-import React, { useRef, useState, useEffect } from 'react';
+import React, { memo, useRef, useState, useEffect } from 'react';
 import styled from 'styled-components';
 import type { TypographySettings, LayoutSettings, TestimonialsSectionSettings } from '@/lib/types/builder';
 import { FONT_SCALE_MAP } from '@/lib/constants/typography';
 import { SECTION_PADDING_PX, SECTION_RADIUS_PX, CARD_SHADOW_CSS, CONTENT_WIDTH_PX } from '@/lib/constants/layout';
 import { useBuilder } from '@/builder/context/BuilderContext';
+import { BUILDER_UI, SHADES } from '@/lib/constants/colors';
+import { SHADOW } from '@/lib/constants/glassUI';
 
 const DEFAULT_TESTIMONIALS: TestimonialsSectionSettings = {
   sectionTitle: 'What Our Team Says',
@@ -23,7 +25,7 @@ const Section = styled.section<{
 }>`
   padding: ${({ sectionPadding }) => sectionPadding}px 40px;
   border-radius: ${({ sectionRadius }) => sectionRadius}px;
-  background: #f9fafb;
+  background: ${SHADES.bg};
   width: 100%;
   min-width: 0;
   overflow-x: hidden;
@@ -82,11 +84,11 @@ const CarouselScroll = styled.div`
     height: 8px;
   }
   &::-webkit-scrollbar-track {
-    background: #e5e7eb;
+    background: ${SHADES.border};
     border-radius: 4px;
   }
   &::-webkit-scrollbar-thumb {
-    background: #9ca3af;
+    background: ${BUILDER_UI.muted};
     border-radius: 4px;
   }
 `;
@@ -105,9 +107,9 @@ const ArrowBtn = styled.button<{ left?: boolean }>`
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  border: 1px solid #e5e7eb;
-  background: white;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border: 1px solid ${SHADES.border};
+  background: ${SHADES.white};
+  box-shadow: ${SHADOW.sm};
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -117,8 +119,8 @@ const ArrowBtn = styled.button<{ left?: boolean }>`
   z-index: 1;
 
   &:hover {
-    background: #f9fafb;
-    border-color: #d1d5db;
+    background: ${SHADES.bg};
+    border-color: ${BUILDER_UI.inputBorder};
   }
 `;
 
@@ -126,10 +128,11 @@ const TestimonialCard = styled.div<{
   sectionRadius: number;
   cardShadow: string;
   cardStyle: string;
+  $hoverEffects?: boolean;
 }>`
   padding: ${({ cardStyle }) =>
     cardStyle === 'minimal' ? '20px 24px' : cardStyle === 'quote' ? '24px 24px 24px 32px' : '32px'};
-  background: white;
+  background: ${SHADES.white};
   border-radius: ${({ sectionRadius }) => sectionRadius}px;
   box-shadow: ${({ cardShadow }) => cardShadow};
   height: 100%;
@@ -139,13 +142,22 @@ const TestimonialCard = styled.div<{
   flex-direction: column;
   border-left: ${({ cardStyle }) => (cardStyle === 'quote' ? '4px solid var(--primary)' : 'none')};
   box-sizing: border-box;
+  ${({ $hoverEffects }) =>
+    $hoverEffects &&
+    `
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: ${SHADOW.md};
+    }
+  `}
 `;
 
 const Stars = styled.div`
   display: flex;
   gap: 2px;
   margin-bottom: 12px;
-  color: #f59e0b;
+  color: ${BUILDER_UI.warning};
   font-size: 14px;
 `;
 
@@ -212,7 +224,7 @@ function StarRating({ n }: { n: number }) {
   );
 }
 
-export default function TestimonialsSection({ typography, layout }: Props) {
+function TestimonialsSection({ typography, layout }: Props) {
   const { sectionSettings } = useBuilder();
   const settings: TestimonialsSectionSettings = sectionSettings?.testimonials
     ? { ...DEFAULT_TESTIMONIALS, ...sectionSettings.testimonials }
@@ -254,6 +266,7 @@ export default function TestimonialsSection({ typography, layout }: Props) {
       sectionRadius={radiusPx}
       cardShadow={cardShadow}
       cardStyle={settings.cardStyle}
+      $hoverEffects={layout.hoverEffects}
       data-index={index}
     >
       {settings.showRatings && <StarRating n={testimonial.rating} />}
@@ -334,3 +347,5 @@ export default function TestimonialsSection({ typography, layout }: Props) {
     </Section>
   );
 }
+
+export default memo(TestimonialsSection);

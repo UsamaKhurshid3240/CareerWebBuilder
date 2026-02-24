@@ -13,7 +13,7 @@ type Colors = Record<ColorKey, string>;
 
 const Section = styled.div`
   margin-bottom: 40px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid ${(p) => p.theme.inputBorder};
   border-radius: 12px;
   padding: 16px;
 `;
@@ -35,8 +35,8 @@ const Palette = styled.button<{ active?: boolean }>`
   gap: 4px;
   padding: 6px;
   border-radius: 8px;
-  border: 2px solid ${({ active }) => (active ? '#fb923c' : '#e5e7eb')};
-  background: #fff;
+  border: 2px solid ${({ active, theme }) => (active ? theme.headerAccent : theme.inputBorder)};
+  background: ${(p) => p.theme.cardBg};
   cursor: pointer;
 `;
 
@@ -78,14 +78,17 @@ const TextInput = styled.input`
   flex: 1;
   padding: 8px 10px;
   border-radius: 8px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid ${(p) => p.theme.inputBorder};
+  background: ${(p) => p.theme.cardBg};
+  color: ${(p) => p.theme.body};
 `;
 
 const Preview = styled.div`
   margin-top: 24px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid ${(p) => p.theme.inputBorder};
   border-radius: 12px;
   padding: 20px;
+  background: ${(p) => p.theme.panelBg};
 `;
 
 const ButtonPreview = styled.button<{ primary: string }>`
@@ -94,7 +97,7 @@ const ButtonPreview = styled.button<{ primary: string }>`
   border-radius: 8px;
   border: none;
   background: ${({ primary }) => primary};
-  color: white;
+  color: ${(p) => p.theme.tabActiveText};
   margin-bottom: 20px;
 `;
 

@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import styled from 'styled-components';
 import type { TypographySettings, LayoutSettings } from '@/lib/types/builder';
 import { FONT_SCALE_MAP } from '@/lib/constants/typography';
@@ -78,7 +79,7 @@ const VIDEOS = [
   { title: 'Office Tour', desc: 'Take a virtual tour of our workspace' },
 ];
 
-export default function VideosSection({ typography, layout }: Props) {
+function VideosSection({ typography, layout }: Props) {
   const scale = FONT_SCALE_MAP[typography.fontScale];
 
   return (
@@ -105,3 +106,5 @@ export default function VideosSection({ typography, layout }: Props) {
     </Section>
   );
 }
+
+export default memo(VideosSection);

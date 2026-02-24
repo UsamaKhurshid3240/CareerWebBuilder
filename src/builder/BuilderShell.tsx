@@ -1,10 +1,10 @@
 'use client';
 
 import { useState } from 'react';
-import styled from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components';
 
-import { BUILDER_UI } from '@/lib/constants/colors';
-import { SHELL_BG, SHADOW, RADIUS, BLUR } from '@/lib/constants/glassUI';
+import { SHADOW, RADIUS, BLUR } from '@/lib/constants/glassUI';
+import { builderThemeLight } from '@/lib/constants/builderThemeLight';
 import BuilderHeader from '@/builder/header/BuilderHeader';
 import LeftPanel from '@/builder/left-panel/LeftPanel';
 import PreviewPanel from '@/builder/preview/PreviewPanel';
@@ -19,7 +19,7 @@ const Shell = styled.div`
   display: flex;
   flex-direction: column;
   padding: 0;
-  background: ${SHELL_BG};
+  background: ${(p) => p.theme.shellBg};
 `;
 
 const Body = styled.div`
@@ -27,12 +27,11 @@ const Body = styled.div`
   min-height: 0;
   display: flex;
   overflow: hidden;
-  background: rgba(255, 255, 255, 0.85);
+  background: ${(p) => p.theme.shellContentBg};
   backdrop-filter: blur(${BLUR.md});
   -webkit-backdrop-filter: blur(${BLUR.md});
-  // border-radius: ${RADIUS.xl};
   box-shadow: ${SHADOW.lg};
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  border: 1px solid ${(p) => p.theme.shellContentBorder};
 `;
 
 const Left = styled.div<SplitProps>`
@@ -40,8 +39,8 @@ const Left = styled.div<SplitProps>`
   min-width: 0;
   min-height: 0;
   overflow: auto;
-  border-right: ${({ split }) =>
-    split ? '1px solid rgba(0, 0, 0, 0.06)' : 'none'};
+  border-right: ${({ split, theme }) =>
+    split ? `1px solid ${theme.borderSubtle}` : 'none'};
 `;
 
 const Right = styled.div`
@@ -70,7 +69,9 @@ export default function BuilderShell() {
 
         {splitView && (
           <Right>
-            <PreviewPanel splitView={splitView} />
+            <ThemeProvider theme={builderThemeLight}>
+              <PreviewPanel splitView={splitView} />
+            </ThemeProvider>
           </Right>
         )}
       </Body>

@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import styled from 'styled-components';
-import { GLASS, RADIUS, SHADOW, TRANSITION } from '@/lib/constants/glassUI';
+import { RADIUS, SHADOW, TRANSITION } from '@/lib/constants/glassUI';
 
 /* ================= Types ================= */
 
@@ -19,17 +19,16 @@ interface ThemeCardProps {
 
 const Card = styled.div<{ active?: boolean; hover?: boolean }>`
   position: relative;
-  ${GLASS.card}
+  ${(p) => p.theme.glass.card}
   border-radius: ${RADIUS.lg};
   padding: 16px;
-  border-width: 2px;
-  border-color: ${({ active, hover }) =>
-    active || hover ? 'rgba(234, 88, 12, 0.4)' : 'rgba(0, 0, 0, 0.06)'};
-  background: ${({ active }) => (active ? 'rgba(255, 247, 237, 0.9)' : '#fff')};
-  transition: border-color ${TRANSITION.normal}, box-shadow ${TRANSITION.normal};
+  border: ${({ active, theme }) =>
+    active ? `2px solid ${theme.headerAccent}` : 'none'};
+  background: ${({ active, theme }) => (active ? theme.panelBgHover : theme.cardBg)};
+  transition: box-shadow ${TRANSITION.normal}, border-color ${TRANSITION.normal};
 
   &:hover {
-    ${GLASS.cardHover}
+    ${(p) => p.theme.glass.cardHover}
   }
 `;
 
@@ -48,10 +47,11 @@ const Dot = styled.div<{ color: string }>`
 
 const Badge = styled.span`
   font-size: 11px;
-  background: #f3f4f6;
+  background: ${(p) => p.theme.rowHover};
   padding: 4px 8px;
   border-radius: 999px;
   margin-right: 6px;
+  color: ${(p) => p.theme.body};
 `;
 
 const ApplyWrapper = styled.div`
@@ -64,8 +64,8 @@ const ApplyBtn = styled.button<{ show: boolean }>`
   height: 100%;
   border-radius: ${RADIUS.sm};
   border: none;
-  background: #111827;
-  color: #fff;
+  background: ${(p) => p.theme.btnPrimary};
+  color: ${(p) => p.theme.tabActiveText};
   cursor: pointer;
   opacity: ${({ show }) => (show ? 1 : 0)};
   pointer-events: ${({ show }) => (show ? 'auto' : 'none')};
@@ -80,8 +80,8 @@ const ActiveTag = styled.div`
   position: absolute;
   top: -10px;
   right: 10px;
-  background: #111827;
-  color: #fff;
+  background: ${(p) => p.theme.tabDark};
+  color: ${(p) => p.theme.tabActiveText};
   font-size: 11px;
   font-weight: 500;
   padding: 4px 10px;
@@ -90,6 +90,12 @@ const ActiveTag = styled.div`
   align-items: center;
   gap: 6px;
   box-shadow: ${SHADOW.sm};
+`;
+
+const DescText = styled.p`
+  font-size: 13px;
+  color: ${(p) => p.theme.muted};
+  margin: 0;
 `;
 
 /* ================= Component ================= */
@@ -120,7 +126,7 @@ export default function ThemeCard({
       </Colors>
 
       <strong>{title}</strong>
-      <p style={{ fontSize: 13, color: '#475569' }}>{desc}</p>
+      <DescText>{desc}</DescText>
 
       {fonts.map((f) => (
         <Badge key={f}>{f}</Badge>

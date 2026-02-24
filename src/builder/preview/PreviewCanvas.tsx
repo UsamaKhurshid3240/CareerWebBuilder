@@ -4,6 +4,9 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { useBuilder } from '@/builder/context/BuilderContext';
 import { CONTENT_WIDTH_PX } from '@/lib/constants/layout';
+import { SPACING, SHADOW } from '@/lib/constants/glassUI';
+import { BUILDER_TYPO } from '@/lib/constants/typography';
+import { getThemeVarsStyle } from '@/lib/utils/themeStyle';
 import HeaderNav from '@/builder/components/HeaderNav';
 import SidebarNav from '@/builder/components/SidebarNav';
 import SectionMapper from '@/builder/components/SectionMapper';
@@ -15,7 +18,7 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   overflow: auto;
-  background: #f6f6f8;
+  background: ${(p) => p.theme.shellBg};
 `;
 
 const PreviewContainer = styled.div<{
@@ -24,8 +27,8 @@ const PreviewContainer = styled.div<{
   contentWidth: string;
   hasSidebar: boolean;
 }>`
-  background: #ffffff;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  background: ${(p) => p.theme.cardBg};
+  box-shadow: ${SHADOW.lg};
   transform: scale(${({ zoom }) => zoom});
   transform-origin: top center;
   transition: all 0.2s ease;
@@ -101,15 +104,7 @@ export default function PreviewCanvas({ device, zoom }: Props) {
         zoom={zoom}
         contentWidth={CONTENT_WIDTH_PX[layout.contentWidth]}
         hasSidebar={showSidebarNav}
-        style={{
-          ['--primary' as any]: colors.primary,
-          ['--secondary' as any]: colors.secondary,
-          ['--accent' as any]: colors.accent,
-          ['--heading' as any]: colors.heading,
-          ['--text' as any]: colors.text,
-          ['--heading-font' as any]: typography.headingFont,
-          ['--body-font' as any]: typography.bodyFont,
-        }}
+        style={getThemeVarsStyle(colors, typography)}
       >
         {showHeaderNav && (
           <HeaderNav
@@ -141,10 +136,17 @@ export default function PreviewCanvas({ device, zoom }: Props) {
           <MainContent hasSidebar={showSidebarNav}>
             <Page key={activePage}>
               {activeSections.length === 0 ? (
-                <div style={{ padding: 48, textAlign: 'center', color: '#6b7280' }}>
+                <div
+                  style={{
+                    padding: SPACING.xxxl,
+                    textAlign: 'center',
+                    color: `var(--text, ${BUILDER_UI.body})`,
+                    fontSize: BUILDER_TYPO.body,
+                  }}
+                >
                   <p>No sections added to this page yet.</p>
-                  <p style={{ fontSize: 14, marginTop: 8 }}>
-                    Add sections from the Sections tab.
+                  <p style={{ marginTop: SPACING.xs, fontSize: BUILDER_TYPO.body }}>
+                    Add sections from the Layout tab → Section order & pages.
                   </p>
                 </div>
               ) : (

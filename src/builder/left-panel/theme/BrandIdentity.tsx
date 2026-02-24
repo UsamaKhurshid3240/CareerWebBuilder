@@ -3,6 +3,9 @@
 import { useRef } from 'react';
 import styled from 'styled-components';
 import { useBuilder } from '@/builder/context/BuilderContext';
+import { BUILDER_UI, SHADES } from '@/lib/constants/colors';
+import { RADIUS, SPACING } from '@/lib/constants/glassUI';
+import { BUILDER_TYPO } from '@/lib/constants/typography';
 
 /* ================= Types ================= */
 
@@ -15,31 +18,31 @@ type BuilderContextType = {
 
 const Section = styled.div`
   margin-bottom: 32px;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 16px;
+  border: 1px solid ${BUILDER_UI.panelBorder};
+  border-radius: ${RADIUS.md};
+  padding: ${SPACING.md}px;
 `;
 
 const Title = styled.h3`
   margin: 0;
-  font-size: 18px;
+  font-size: ${BUILDER_TYPO.subheading};
 `;
 
 const Subtitle = styled.p`
-  margin: 4px 0 16px;
-  font-size: 14px;
-  color: #6b7280;
+  margin: ${SPACING.xs}px 0 ${SPACING.md}px;
+  font-size: ${BUILDER_TYPO.body};
+  color: ${BUILDER_UI.muted};
 `;
 
 const Label = styled.label`
-  font-size: 14px;
+  font-size: ${BUILDER_TYPO.body};
   font-weight: 500;
 `;
 
 const UploadBox = styled.div`
-  margin-top: 8px;
-  border: 2px dashed #e5e7eb;
-  border-radius: 12px;
+  margin-top: ${SPACING.xs}px;
+  border: 2px dashed ${BUILDER_UI.panelBorder};
+  border-radius: ${RADIUS.md};
   height: 220px;
   position: relative;
   overflow: hidden;
@@ -57,50 +60,50 @@ const Inner = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
+  gap: ${SPACING.sm}px;
 `;
 
 const UploadIcon = styled.div`
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #f1f5f9;
+  background: ${BUILDER_UI.shellBg};
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 20px;
-  color: #64748b;
+  color: ${BUILDER_UI.muted};
 `;
 
 const Hint = styled.p`
-  font-size: 14px;
-  color: #475569;
+  font-size: ${BUILDER_TYPO.body};
+  color: ${BUILDER_UI.body};
   margin: 0;
 `;
 
 const Actions = styled.div`
   display: flex;
-  gap: 10px;
-  margin-top: 4px;
+  gap: ${SPACING.sm}px;
+  margin-top: ${SPACING.xs}px;
 `;
 
 const Button = styled.button`
   display: flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 14px;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  background: #ffffff;
+  gap: ${SPACING.sm}px;
+  padding: ${SPACING.xs}px ${SPACING.sm}px;
+  border-radius: ${RADIUS.sm};
+  border: 1px solid ${BUILDER_UI.panelBorder};
+  background: ${BUILDER_UI.panelBg};
   cursor: pointer;
-  font-size: 14px;
+  font-size: ${BUILDER_TYPO.body};
 `;
 
 const ImageWrap = styled.div`
   height: 100%;
   width: 100%;
   position: relative;
-  background: #f8fafc;
+  background: ${SHADES.bg};
 
   &:hover .overlay {
     opacity: 1;
@@ -117,29 +120,29 @@ const LogoImage = styled.img`
 const Overlay = styled.div`
   position: absolute;
   inset: 0;
-  background: rgba(15, 23, 42, 0.45);
+  background: ${BUILDER_UI.overlay};
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: ${SPACING.sm}px;
   opacity: 0;
   transition: opacity 0.2s ease;
 `;
 
 const OverlayBtn = styled.button<{ danger?: boolean }>`
-  padding: 8px 14px;
-  border-radius: 8px;
+  padding: ${SPACING.xs}px ${SPACING.sm}px;
+  border-radius: ${RADIUS.sm};
   border: none;
   cursor: pointer;
-  font-size: 14px;
-  background: ${({ danger }) => (danger ? '#ef4444' : '#ffffff')};
-  color: ${({ danger }) => (danger ? '#ffffff' : '#111827')};
+  font-size: ${BUILDER_TYPO.body};
+  background: ${({ danger }) => (danger ? BUILDER_UI.danger : SHADES.white)};
+  color: ${({ danger }) => (danger ? SHADES.white : BUILDER_UI.heading)};
 `;
 
 const FooterNote = styled.p`
-  margin-top: 8px;
-  font-size: 12px;
-  color: #6b7280;
+  margin-top: ${SPACING.xs}px;
+  font-size: ${BUILDER_TYPO.helper};
+  color: ${BUILDER_UI.muted};
 `;
 
 /* ================= Component ================= */

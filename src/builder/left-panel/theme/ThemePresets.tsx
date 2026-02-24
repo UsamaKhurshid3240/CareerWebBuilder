@@ -22,7 +22,7 @@ interface ThemePreset {
 
 const Section = styled.div`
   margin-bottom: 24px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid ${(p) => p.theme.inputBorder};
   border-radius: 12px;
   padding: 16px;
 `;
@@ -38,8 +38,9 @@ const CreateBtn = styled.button`
   width: 100%;
   padding: 14px;
   border-radius: 12px;
-  border: 2px dashed #e5e7eb;
-  background: #fff;
+  border: 2px dashed ${(p) => p.theme.inputBorder};
+  background: ${(p) => p.theme.cardBg};
+  color: ${(p) => p.theme.body};
   font-weight: 500;
   cursor: pointer;
 `;
@@ -48,10 +49,10 @@ const Note = styled.div`
   margin-top: 12px;
   padding: 12px 14px;
   border-radius: 10px;
-  border: 1px dashed #e5e7eb;
-  background: #f9fafb;
+  border: 1px dashed ${(p) => p.theme.inputBorder};
+  background: ${(p) => p.theme.shellBg};
   font-size: 13px;
-  color: #475569;
+  color: ${(p) => p.theme.muted};
   display: flex;
   align-items: center;
   gap: 8px;

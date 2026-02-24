@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import styled from 'styled-components';
 import type { TypographySettings, LayoutSettings } from '@/lib/types/builder';
 import type { AlertsSectionSettings } from '@/lib/types/builder';
@@ -142,7 +142,7 @@ interface Props {
   layout: LayoutSettings;
 }
 
-export default function AlertsSection({ typography, layout }: Props) {
+function AlertsSection({ typography, layout }: Props) {
   const [submitted, setSubmitted] = useState(false);
   const { sectionSettings, buttons } = useBuilder();
   const alerts: AlertsSectionSettings = sectionSettings?.alerts
@@ -265,3 +265,5 @@ export default function AlertsSection({ typography, layout }: Props) {
     </Section>
   );
 }
+
+export default memo(AlertsSection);

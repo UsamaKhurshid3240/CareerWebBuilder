@@ -31,3 +31,6 @@ export const CARD_SHADOW_CSS: Record<CardShadow, string> = {
   medium: '0 4px 12px rgba(0,0,0,0.1)',
   dramatic: '0 20px 40px rgba(0,0,0,0.15)',
 };
+
+/** Option card icon size for Spacing & Layout section */
+export const OPTION_CARD_ICON = { width: 40, height: 32, viewBox: '0 0 28 18' } as const;

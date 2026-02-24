@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 import styled from 'styled-components';
 import type { TypographySettings, LayoutSettings, TeamSectionSettings } from '@/lib/types/builder';
 import { FONT_SCALE_MAP } from '@/lib/constants/typography';
@@ -108,10 +108,18 @@ const DepartmentFilter = styled.div<{ fontFamily: string; sectionRadius: number 
   }
 `;
 
-const TeamMemberWrap = styled.div<{ showBioOnHover: boolean }>`
+const TeamMemberWrap = styled.div<{ showBioOnHover: boolean; $hoverEffects?: boolean }>`
   text-align: center;
   position: relative;
   ${({ showBioOnHover }) => showBioOnHover && 'cursor: pointer;'}
+  ${({ $hoverEffects }) =>
+    $hoverEffects &&
+    `
+    transition: transform 0.2s ease;
+    &:hover {
+      transform: translateY(-2px);
+    }
+  `}
 `;
 
 const Avatar = styled.div<{ sectionRadius: number; imageStyle: string }>`
@@ -202,7 +210,7 @@ const TEAM = [
 
 const DEPARTMENTS = [...new Set(TEAM.map((m) => m.department))];
 
-export default function TeamSection({ typography, layout }: Props) {
+function TeamSection({ typography, layout }: Props) {
   const { sectionSettings } = useBuilder();
   const settings: TeamSectionSettings = sectionSettings?.team
     ? { ...DEFAULT_TEAM, ...sectionSettings.team }
@@ -217,7 +225,7 @@ export default function TeamSection({ typography, layout }: Props) {
     : TEAM;
 
   const renderMember = (member: (typeof TEAM)[0]) => (
-    <TeamMemberWrap key={member.name} showBioOnHover={settings.bioOnHover}>
+    <TeamMemberWrap key={member.name} showBioOnHover={settings.bioOnHover} $hoverEffects={layout.hoverEffects}>
       <Avatar
         sectionRadius={radiusPx}
         imageStyle={settings.imageStyle}
@@ -281,3 +289,5 @@ export default function TeamSection({ typography, layout }: Props) {
     </Section>
   );
 }
+
+export default memo(TeamSection);

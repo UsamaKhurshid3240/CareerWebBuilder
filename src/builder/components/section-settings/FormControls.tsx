@@ -1,8 +1,8 @@
 'use client';
 
 import styled from 'styled-components';
-import { BUILDER_UI, SHADES, ACCENTS } from '@/lib/constants/colors';
-import { RADIUS, TRANSITION, SHADOW } from '@/lib/constants/glassUI';
+import { RADIUS, TRANSITION, SHADOW, SPACING } from '@/lib/constants/glassUI';
+import { BUILDER_TYPO } from '@/lib/constants/typography';
 
 /** Reusable form primitives and modal footer actions for section settings modals. */
 
@@ -17,54 +17,54 @@ export const ModalFooter = styled.div`
 `;
 
 export const BtnPrimary = styled.button`
-  padding: 10px 20px;
+  padding: 10px ${SPACING.lg}px;
   border-radius: ${RADIUS.md};
-  font-size: 14px;
+  font-size: ${BUILDER_TYPO.buttonLarge};
   font-weight: 500;
   cursor: pointer;
   border: none;
-  background: ${BUILDER_UI.btnPrimary};
-  color: ${SHADES.white};
+  background: ${(p) => p.theme.btnPrimary};
+  color: ${(p) => p.theme.tabActiveText};
   transition: background ${TRANSITION.normal}, transform ${TRANSITION.fast};
 
   &:hover:not(:disabled) {
-    background: ${BUILDER_UI.btnPrimaryHover};
+    background: ${(p) => p.theme.btnPrimaryHover};
   }
   &:active:not(:disabled) {
     transform: scale(0.98);
   }
   &:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px ${BUILDER_UI.inputFocus};
+    box-shadow: 0 0 0 2px ${(p) => p.theme.inputFocus};
   }
   &:disabled {
-    background: ${SHADES.border};
-    color: ${BUILDER_UI.muted};
+    background: ${(p) => p.theme.inputBorder};
+    color: ${(p) => p.theme.muted};
     cursor: not-allowed;
   }
 `;
 
 export const BtnSecondary = styled.button`
-  padding: 10px 20px;
+  padding: 10px ${SPACING.lg}px;
   border-radius: ${RADIUS.md};
-  font-size: 14px;
+  font-size: ${BUILDER_TYPO.buttonLarge};
   font-weight: 500;
   cursor: pointer;
-  border: 1px solid ${BUILDER_UI.btnSecondaryBorder};
-  background: ${BUILDER_UI.btnSecondaryBg};
-  color: ${BUILDER_UI.heading};
+  border: 1px solid ${(p) => p.theme.btnSecondaryBorder};
+  background: ${(p) => p.theme.btnSecondaryBg};
+  color: ${(p) => p.theme.heading};
   transition: background ${TRANSITION.normal}, border-color ${TRANSITION.normal}, transform ${TRANSITION.fast};
 
   &:hover:not(:disabled) {
-    background: rgba(0, 0, 0, 0.04);
-    border-color: ${BUILDER_UI.cardBorderHover};
+    background: ${(p) => p.theme.rowHover};
+    border-color: ${(p) => p.theme.cardBorderHover};
   }
   &:active:not(:disabled) {
     transform: scale(0.98);
   }
   &:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px ${BUILDER_UI.inputFocus};
+    box-shadow: 0 0 0 2px ${(p) => p.theme.inputFocus};
   }
   &:disabled {
     opacity: 0.6;
@@ -73,26 +73,26 @@ export const BtnSecondary = styled.button`
 `;
 
 export const BtnDanger = styled.button`
-  padding: 10px 20px;
+  padding: 10px ${SPACING.lg}px;
   border-radius: ${RADIUS.md};
-  font-size: 14px;
+  font-size: ${BUILDER_TYPO.buttonLarge};
   font-weight: 500;
   cursor: pointer;
-  border: 1px solid rgba(224, 85, 85, 0.4);
-  background: rgba(224, 85, 85, 0.08);
-  color: ${ACCENTS.red};
+  border: 1px solid ${(p) => p.theme.dangerBorder};
+  background: ${(p) => p.theme.dangerBg};
+  color: ${(p) => p.theme.dangerText};
   transition: background ${TRANSITION.normal}, border-color ${TRANSITION.normal}, transform ${TRANSITION.fast};
 
   &:hover:not(:disabled) {
-    background: rgba(224, 85, 85, 0.14);
-    border-color: ${ACCENTS.red};
+    background: ${(p) => p.theme.danger};
+    border-color: ${(p) => p.theme.danger};
   }
   &:active:not(:disabled) {
     transform: scale(0.98);
   }
   &:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px rgba(224, 85, 85, 0.35);
+    box-shadow: 0 0 0 2px ${(p) => p.theme.dangerBorder};
   }
   &:disabled {
     opacity: 0.5;
@@ -105,7 +105,7 @@ export const BtnDanger = styled.button`
 export const Grid2 = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px 24px;
+  gap: ${SPACING.lg}px ${SPACING.xl}px;
 `;
 
 export const Field = styled.div<{ fullWidth?: boolean }>`
@@ -114,14 +114,14 @@ export const Field = styled.div<{ fullWidth?: boolean }>`
 `;
 
 export const SectionLabel = styled.div`
-  font-size: 11px;
+  font-size: ${BUILDER_TYPO.overline};
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: ${BUILDER_UI.muted};
-  margin-bottom: 12px;
+  color: ${(p) => p.theme.muted};
+  margin-bottom: ${SPACING.sm}px;
   grid-column: 1 / -1;
-  margin-top: 20px;
+  margin-top: ${SPACING.lg}px;
 
   &:first-child {
     margin-top: 0;
@@ -130,106 +130,104 @@ export const SectionLabel = styled.div`
 
 export const Label = styled.label`
   display: block;
-  font-size: 13px;
+  font-size: ${BUILDER_TYPO.label};
   font-weight: 500;
-  color: ${BUILDER_UI.heading};
-  margin-bottom: 8px;
+  color: ${(p) => p.theme.heading};
+  margin-bottom: ${SPACING.xs}px;
   line-height: 1.4;
 `;
 
 export const HelperText = styled.span`
   display: block;
-  font-size: 12px;
-  color: ${BUILDER_UI.muted};
-  margin-top: 6px;
+  font-size: ${BUILDER_TYPO.helper};
+  color: ${(p) => p.theme.muted};
+  margin-top: ${SPACING.sm}px;
   line-height: 1.4;
 `;
 
-const focusRing = `0 0 0 3px ${ACCENTS.blue}22`;
-
 export const Input = styled.input`
   width: 100%;
-  padding: 12px 14px;
+  padding: ${SPACING.sm}px;
   border-radius: ${RADIUS.md};
-  border: 1px solid ${BUILDER_UI.inputBorder};
-  font-size: 14px;
-  color: ${BUILDER_UI.body};
-  background: ${SHADES.white};
+  border: 1px solid ${(p) => p.theme.inputBorder};
+  font-size: ${BUILDER_TYPO.body};
+  color: ${(p) => p.theme.body};
+  background: ${(p) => p.theme.cardBg};
   box-sizing: border-box;
   transition: border-color ${TRANSITION.normal}, box-shadow ${TRANSITION.fast};
 
   &::placeholder {
-    color: ${BUILDER_UI.muted};
+    color: ${(p) => p.theme.muted};
   }
   &:hover:not(:focus) {
-    border-color: ${BUILDER_UI.cardBorderHover};
+    border-color: ${(p) => p.theme.cardBorderHover};
   }
   &:focus {
     outline: none;
-    border-color: ${BUILDER_UI.inputFocus};
-    box-shadow: ${focusRing};
+    border-color: ${(p) => p.theme.inputFocus};
+    box-shadow: 0 0 0 3px ${(p) => p.theme.inputFocus}22;
   }
   &:focus-visible {
     outline: none;
-    border-color: ${BUILDER_UI.inputFocus};
-    box-shadow: ${focusRing};
+    border-color: ${(p) => p.theme.inputFocus};
+    box-shadow: 0 0 0 3px ${(p) => p.theme.inputFocus}22;
   }
 `;
 
 export const Textarea = styled.textarea`
   width: 100%;
   min-height: 84px;
-  padding: 12px 14px;
+  padding: ${SPACING.sm}px;
   border-radius: ${RADIUS.md};
-  border: 1px solid ${BUILDER_UI.inputBorder};
-  font-size: 14px;
-  color: ${BUILDER_UI.body};
-  background: ${SHADES.white};
+  border: 1px solid ${(p) => p.theme.inputBorder};
+  font-size: ${BUILDER_TYPO.body};
+  color: ${(p) => p.theme.body};
+  background: ${(p) => p.theme.cardBg};
   box-sizing: border-box;
   resize: vertical;
   transition: border-color ${TRANSITION.normal}, box-shadow ${TRANSITION.fast};
 
   &::placeholder {
-    color: ${BUILDER_UI.muted};
+    color: ${(p) => p.theme.muted};
   }
   &:hover:not(:focus) {
-    border-color: ${BUILDER_UI.cardBorderHover};
+    border-color: ${(p) => p.theme.cardBorderHover};
   }
   &:focus {
     outline: none;
-    border-color: ${BUILDER_UI.inputFocus};
-    box-shadow: ${focusRing};
+    border-color: ${(p) => p.theme.inputFocus};
+    box-shadow: 0 0 0 3px ${(p) => p.theme.inputFocus}22;
   }
   &:focus-visible {
     outline: none;
-    border-color: ${BUILDER_UI.inputFocus};
-    box-shadow: ${focusRing};
+    border-color: ${(p) => p.theme.inputFocus};
+    box-shadow: 0 0 0 3px ${(p) => p.theme.inputFocus}22;
   }
 `;
 
 export const Select = styled.select`
   width: 100%;
-  padding: 12px 14px;
+  padding: ${SPACING.sm}px;
   border-radius: ${RADIUS.md};
-  border: 1px solid ${BUILDER_UI.inputBorder};
-  font-size: 14px;
-  color: ${BUILDER_UI.body};
-  background: ${SHADES.white};
+  border: 1px solid ${(p) => p.theme.inputBorder};
+  font-size: ${BUILDER_TYPO.body};
+  color: ${(p) => p.theme.body};
+  background: ${(p) => p.theme.cardBg};
   cursor: pointer;
   transition: border-color ${TRANSITION.normal}, box-shadow ${TRANSITION.fast};
 
   &:hover:not(:focus) {
-    border-color: ${BUILDER_UI.cardBorderHover};
+    border-color: ${(p) => p.theme.cardBorderHover};
   }
   &:focus {
     outline: none;
-    border-color: ${BUILDER_UI.inputFocus};
-    box-shadow: ${focusRing};
+    border-color: ${(p) => p.theme.inputFocus};
+    box-shadow: 0 0 0 3px ${(p) => p.theme.inputFocus}22;
   }
   &:focus-visible {
     outline: none;
-    border-color: ${BUILDER_UI.inputFocus};
-    box-shadow: ${focusRing};
+    border-color: ${(p) => p.theme.inputFocus};
+    box-shadow: 0 0 0 3px ${(p) => p.theme.inputFocus}22;
   }
 `;
 
@@ -237,9 +235,9 @@ export const ToggleRow = styled.label`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  font-size: 14px;
-  color: ${BUILDER_UI.body};
+  gap: ${SPACING.sm}px;
+  font-size: ${BUILDER_TYPO.body};
+  color: ${(p) => p.theme.body};
   cursor: pointer;
   margin-bottom: 0;
 `;
@@ -248,7 +246,7 @@ const ToggleTrack = styled.span<{ checked: boolean }>`
   width: 44px;
   height: 24px;
   border-radius: 999px;
-  background: ${({ checked }) => (checked ? BUILDER_UI.btnPrimary : BUILDER_UI.inputBorder)};
+  background: ${({ checked, theme }) => (checked ? theme.btnPrimary : theme.inputBorder)};
   position: relative;
   transition: background ${TRANSITION.fast};
   flex-shrink: 0;
@@ -259,7 +257,7 @@ const ToggleTrack = styled.span<{ checked: boolean }>`
 
   &:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px ${BUILDER_UI.inputFocus};
+    box-shadow: 0 0 0 2px ${(p) => p.theme.inputFocus};
   }
 
   &::after {
@@ -268,7 +266,7 @@ const ToggleTrack = styled.span<{ checked: boolean }>`
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: ${SHADES.white};
+    background: ${(p) => p.theme.tabActiveText};
     box-shadow: ${SHADOW.sm};
     top: 2px;
     left: ${({ checked }) => (checked ? '22px' : '2px')};
@@ -306,7 +304,7 @@ const SliderInput = styled.input`
   height: 8px;
   -webkit-appearance: none;
   appearance: none;
-  background: ${SHADES.border};
+  background: ${(p) => p.theme.inputBorder};
   border-radius: 999px;
   outline: none;
 
@@ -315,7 +313,7 @@ const SliderInput = styled.input`
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: ${ACCENTS.blue};
+    background: ${(p) => p.theme.inputFocus};
     cursor: pointer;
     box-shadow: ${SHADOW.sm};
     transition: transform ${TRANSITION.fast};
@@ -327,7 +325,7 @@ const SliderInput = styled.input`
     width: 20px;
     height: 20px;
     border-radius: 50%;
-    background: ${ACCENTS.blue};
+    background: ${(p) => p.theme.inputFocus};
     cursor: pointer;
     border: none;
     box-shadow: ${SHADOW.sm};
@@ -367,16 +365,16 @@ const ColorInput = styled.input`
   height: 44px;
   padding: 2px;
   border-radius: ${RADIUS.md};
-  border: 1px solid ${BUILDER_UI.inputBorder};
+  border: 1px solid ${(p) => p.theme.inputBorder};
   cursor: pointer;
-  background: ${SHADES.white};
+  background: ${(p) => p.theme.cardBg};
   flex-shrink: 0;
   transition: border-color ${TRANSITION.fast}, box-shadow ${TRANSITION.fast};
 
   &:focus-visible {
     outline: none;
-    border-color: ${BUILDER_UI.inputFocus};
-    box-shadow: ${focusRing};
+    border-color: ${(p) => p.theme.inputFocus};
+    box-shadow: 0 0 0 3px ${(p) => p.theme.inputFocus}22;
   }
 
   &::-webkit-color-swatch-wrapper {
@@ -424,9 +422,9 @@ export function ColorPicker({
 export const CheckboxRow = styled.label`
   display: flex;
   align-items: center;
-  gap: 10px;
-  font-size: 14px;
-  color: ${BUILDER_UI.body};
+  gap: ${SPACING.sm}px;
+  font-size: ${BUILDER_TYPO.body};
+  color: ${(p) => p.theme.body};
   cursor: pointer;
   margin-bottom: 0;
 `;

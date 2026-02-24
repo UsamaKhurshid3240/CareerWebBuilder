@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import styled from 'styled-components';
 import type { TypographySettings, LayoutSettings } from '@/lib/types/builder';
 import { FONT_SCALE_MAP } from '@/lib/constants/typography';
@@ -84,7 +85,7 @@ const HIRING_STEPS = [
   { title: 'Offer', desc: 'Receive an offer and join our amazing team!' },
 ];
 
-export default function HiringSection({ typography, layout }: Props) {
+function HiringSection({ typography, layout }: Props) {
   const scale = FONT_SCALE_MAP[typography.fontScale];
 
   return (
@@ -111,3 +112,5 @@ export default function HiringSection({ typography, layout }: Props) {
     </Section>
   );
 }
+
+export default memo(HiringSection);

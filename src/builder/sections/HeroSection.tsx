@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import styled, { keyframes, css } from 'styled-components';
 import type { TypographySettings, ButtonSettings, LayoutSettings, HeroSectionSettings } from '@/lib/types/builder';
 import { FONT_SCALE_MAP } from '@/lib/constants/typography';
@@ -148,6 +149,7 @@ const ButtonWrap = styled.div`
 const Button = styled.a<{
   buttonStyle: ButtonSettings['style'];
   cornerRadius: number;
+  $hoverEffects?: boolean;
 }>`
   background: var(--primary);
   color: white;
@@ -159,11 +161,21 @@ const Button = styled.a<{
   cursor: pointer;
   text-decoration: none;
   display: inline-block;
+  ${({ $hoverEffects }) =>
+    $hoverEffects &&
+    `
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    &:hover {
+      transform: translateY(-1px);
+      opacity: 0.95;
+    }
+  `}
 `;
 
 const ButtonSecondary = styled.a<{
   buttonStyle: ButtonSettings['style'];
   cornerRadius: number;
+  $hoverEffects?: boolean;
 }>`
   background: transparent;
   color: white;
@@ -175,6 +187,15 @@ const ButtonSecondary = styled.a<{
   cursor: pointer;
   text-decoration: none;
   display: inline-block;
+  ${({ $hoverEffects }) =>
+    $hoverEffects &&
+    `
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    &:hover {
+      transform: translateY(-1px);
+      opacity: 0.9;
+    }
+  `}
 `;
 
 const ScrollIndicator = styled.div`
@@ -229,7 +250,7 @@ function getHeroBackgroundCss(
 }
 
 
-export default function HeroSection({ logo, typography, buttons, layout }: Props) {
+function HeroSection({ logo, typography, buttons, layout }: Props) {
   const { sectionSettings } = useBuilder();
   const hero = sectionSettings?.hero
     ? { ...DEFAULT_HERO, ...sectionSettings.hero }
@@ -279,6 +300,7 @@ export default function HeroSection({ logo, typography, buttons, layout }: Props
             <Button
               buttonStyle={buttons.style}
               cornerRadius={buttons.cornerRadius}
+              $hoverEffects={layout.hoverEffects}
               href={hero.primaryCtaLink || '#'}
             >
               {hero.primaryCtaText}
@@ -288,6 +310,7 @@ export default function HeroSection({ logo, typography, buttons, layout }: Props
             <ButtonSecondary
               buttonStyle={buttons.style}
               cornerRadius={buttons.cornerRadius}
+              $hoverEffects={layout.hoverEffects}
               href={hero.secondaryCtaLink || '#'}
             >
               {hero.secondaryCtaText}
@@ -299,3 +322,5 @@ export default function HeroSection({ logo, typography, buttons, layout }: Props
     </Hero>
   );
 }
+
+export default memo(HeroSection);
