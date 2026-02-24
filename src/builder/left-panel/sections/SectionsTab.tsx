@@ -17,7 +17,7 @@ import { IconSettingsCog } from '@/builder/icons';
 import { BUILDER_UI, SHADES } from '@/lib/constants/colors';
 import { RADIUS, SPACING, SHADOW } from '@/lib/constants/glassUI';
 import { BUILDER_TYPO } from '@/lib/constants/typography';
-import { Toggle as FormToggle } from '@/builder/components/section-settings/FormControls';
+import { Toggle } from '@/builder/components/section-settings/FormControls';
 
 /* ─────────────────────────── Shared ─────────────────────────── */
 
@@ -632,8 +632,9 @@ export default function SectionsTab() {
             </ToggleSub>
           </div>
           <Toggle
-            on={multiPageLayout}
-            onClick={() => setMultiPageLayout((p) => !p)}
+            checked={multiPageLayout}
+            onChange={(v) => setMultiPageLayout(v)}
+            aria-label="Multi-page layout"
           />
         </ToggleRow>
       </Card>
@@ -646,8 +647,9 @@ export default function SectionsTab() {
             <CardSubtitle>Generate navigation menu from your pages (Header, Sidebar, or Both)</CardSubtitle>
           </div>
           <Toggle
-            on={navigation.enabled}
-            onClick={() => setNavigation((p) => ({ ...p, enabled: !p.enabled }))}
+            checked={navigation.enabled}
+            onChange={(v) => setNavigation((p) => ({ ...p, enabled: v }))}
+            aria-label="Auto navigation"
           />
         </CardHeader>
 
@@ -963,11 +965,11 @@ export default function SectionsTab() {
                                     <AlwaysOnLabel>Always on</AlwaysOnLabel>
                                   ) : (
                                     <Toggle
-                                      on={enabled}
-                                      onClick={() =>
+                                      checked={enabled}
+                                      onChange={() =>
                                         setSectionEnabled(sectionId, !enabled)
                                       }
-                                      title={enabled ? 'Hide section' : 'Show section'}
+                                      aria-label={enabled ? 'Hide section' : 'Show section'}
                                     />
                                   )}
                                 </SPToggleWrap>
@@ -1010,8 +1012,9 @@ export default function SectionsTab() {
                         <AlwaysOnLabel>Always on</AlwaysOnLabel>
                       ) : (
                         <Toggle
-                          on={enabled}
-                          onClick={() => setSectionEnabled(sectionId, !enabled)}
+                          checked={enabled}
+                          onChange={() => setSectionEnabled(sectionId, !enabled)}
+                          aria-label={enabled ? 'Hide section' : 'Show section'}
                         />
                       )}
                     </SPToggleWrap>
