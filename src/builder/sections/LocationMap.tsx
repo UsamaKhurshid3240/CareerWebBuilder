@@ -12,6 +12,20 @@ interface MapTypeStyle {
   stylers?: Array<Record<string, unknown>>;
 }
 
+/** Minimal type for window.google.maps (avoids reference to undefined 'google') */
+interface GoogleMapsWindow extends Window {
+  google?: {
+    maps: {
+      Map: new (el: HTMLElement, o: Record<string, unknown>) => {
+        setCenter: (c: { lat: number; lng: number }) => void;
+        setZoom: (z: number) => void;
+        setOptions: (o: Record<string, unknown>) => void;
+      };
+      Marker: new (o: { position: { lat: number; lng: number }; map: unknown }) => void;
+    };
+  };
+}
+
 /** Dark map style for Google Maps */
 const DARK_MAP_STYLES: MapTypeStyle[] = [
   { elementType: 'geometry', stylers: [{ color: '#242f3e' }] },
@@ -61,9 +75,9 @@ export default function LocationMap({
   useEffect(() => {
     if (!apiKey || !containerRef.current) return;
 
-    const g = (window as Window & { google?: { maps: typeof google.maps } }).google;
+    const g = (window as GoogleMapsWindow).google;
     const initMap = () => {
-      const google = (window as Window & { google?: { maps: { Map: new (el: HTMLElement, o: Record<string, unknown>) => { setCenter: (c: { lat: number; lng: number }) => void; setZoom: (z: number) => void; setOptions: (o: Record<string, unknown>) => void }; Marker: new (o: { position: { lat: number; lng: number }; map: unknown }) => void } } }).google;
+      const google = (window as GoogleMapsWindow).google;
       if (!google?.maps || !containerRef.current) return;
 
       const map = new google.maps.Map(containerRef.current, {
