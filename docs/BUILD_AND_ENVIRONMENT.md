@@ -28,3 +28,7 @@ Quick reference for building and running the Careers Page Builder. Full context:
 
 - **Output:** `.next/` (and static assets).
 - **Routes:** `/` = builder; `/careers` = public careers (reads published state); `/preview` = standalone preview.
+
+## Build size & chunks
+
+For build output structure, chunk breakdown, and how to see bundle sizes (and optional analyzer), see **[BUILD_DETAILS.md](./BUILD_DETAILS.md)**.

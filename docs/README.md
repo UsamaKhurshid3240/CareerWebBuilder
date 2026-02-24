@@ -32,6 +32,7 @@ Suitable for **internal docs**, **client delivery**, and **developer onboarding*
 
 ## Other docs
 
+- **[BUILD_DETAILS.md](./BUILD_DETAILS.md)** — Build output structure, chunks, bundle sizes, how to see size report, optional bundle analyzer, and tips to reduce size.
 - **[ADDING_A_SECTION.md](./ADDING_A_SECTION.md)** — Step-by-step guide to adding a new section type to the builder (types, state, section component, SectionMapper, settings modal, Layout tab, Sections tab).
 
 ---
@@ -41,6 +42,7 @@ Suitable for **internal docs**, **client delivery**, and **developer onboarding*
 | Topic | Location in main doc |
 |-------|----------------------|
 | Build commands | § 3.3 Build Commands |
+| Build size & chunks | [BUILD_DETAILS.md](./BUILD_DETAILS.md) |
 | Environment variables | § 3.2 Environment Setup |
 | Dependency breakdown | § 4 Packages & Dependencies |
 | Folder structure | § 5 Project Folder & Architecture |

@@ -85,7 +85,7 @@ No dedicated lint or format scripts in `package.json`; ESLint/Prettier can be ad
 
 ### 3.4 Deployment Readiness
 
-- **Build output:** `.next/` (and optionally static export if configured).
+- **Build output:** `.next/` (and optionally static export if configured). For **build size, chunks, and bundle analysis**, see **`docs/BUILD_DETAILS.md`**.
 - **Static vs dynamic:** App Router pages are server-rendered by default; builder and preview use client components.
 - **Preview routes:** `/preview` — used from builder (split view) or standalone with device/zoom params.
 - **Public vs builder-only:**  
