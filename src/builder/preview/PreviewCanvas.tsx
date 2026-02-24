@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import styled from 'styled-components';
 import { useBuilder } from '@/builder/context/BuilderContext';
+import { BUILDER_UI } from '@/lib/constants/colors';
 import { CONTENT_WIDTH_PX } from '@/lib/constants/layout';
 import { SPACING, SHADOW } from '@/lib/constants/glassUI';
 import { BUILDER_TYPO } from '@/lib/constants/typography';
