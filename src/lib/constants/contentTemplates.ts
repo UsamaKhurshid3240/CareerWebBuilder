@@ -1,5 +1,5 @@
 import type {
-  BuilderState,
+  BuilderPatch,
   ThemeColors,
   TypographySettings,
   ButtonSettings,
@@ -33,7 +33,7 @@ export interface ContentTemplateConfig {
 
 export function contentTemplateToPayload(
   template: ContentTemplateConfig
-): Partial<BuilderState> {
+): BuilderPatch {
   return {
     sectionSettings: template.sectionSettings,
     layout: template.layout,

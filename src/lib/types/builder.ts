@@ -275,3 +275,19 @@ export interface BuilderState {
   activePage: string;
   sectionSettings?: SectionSettingsState;
 }
+
+/**
+ * Patch payload used for incremental builder updates.
+ * Top-level keys are optional and nested setting objects are partial-mergeable.
+ */
+export type BuilderPatch = Omit<
+  Partial<BuilderState>,
+  'colors' | 'typography' | 'buttons' | 'layout' | 'navigation' | 'sectionSettings'
+> & {
+  colors?: Partial<ThemeColors>;
+  typography?: Partial<TypographySettings>;
+  buttons?: Partial<ButtonSettings>;
+  layout?: Partial<LayoutSettings>;
+  navigation?: Partial<NavigationSettings>;
+  sectionSettings?: Partial<SectionSettingsState>;
+};

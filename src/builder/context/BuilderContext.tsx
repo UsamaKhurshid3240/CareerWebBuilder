@@ -13,6 +13,7 @@ import React, {
 import type {
   ThemeColors,
   BuilderState,
+  BuilderPatch,
   TypographySettings,
   ButtonSettings,
   LayoutSettings,
@@ -42,7 +43,7 @@ type HistoryState = {
 
 /* ================= ACTIONS ================= */
 
-type ApplyChangePayload = Partial<BuilderState>;
+type ApplyChangePayload = BuilderPatch;
 
 type BuilderAction =
   | { type: 'APPLY_CHANGE'; payload: ApplyChangePayload }
@@ -358,7 +359,7 @@ type BuilderContextType = {
   sectionSettings?: SectionSettingsState;
   applyTheme: (name: ThemePresetName) => void;
   applyThemeConfig: (preset: ThemePresetConfig) => void;
-  applyTemplatePayload: (payload: Partial<BuilderState>) => void;
+  applyTemplatePayload: (payload: ApplyChangePayload) => void;
   setColors: React.Dispatch<React.SetStateAction<ThemeColors>>;
   setLogo: React.Dispatch<React.SetStateAction<string | null>>;
   setTypography: React.Dispatch<React.SetStateAction<TypographySettings>>;
