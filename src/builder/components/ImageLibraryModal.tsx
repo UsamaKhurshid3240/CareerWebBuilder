@@ -2,9 +2,8 @@
 
 import React, { useState, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import styled, { keyframes, ThemeProvider } from 'styled-components';
+import styled, { keyframes } from 'styled-components';
 import { RADIUS, TRANSITION, SHADOW, BLUR } from '@/lib/constants/glassUI';
-import { builderThemeLight } from '@/lib/constants/builderThemeLight';
 import { MODAL_SPACING } from '@/builder/components/section-settings/SectionSettingsModal';
 import SectionSettingsTabs from '@/builder/components/section-settings/SectionSettingsTabs';
 import { useBuilder } from '@/builder/context/BuilderContext';
@@ -327,9 +326,8 @@ export default function ImageLibraryModal({ onClose }: ImageLibraryModalProps) {
   };
 
   const modalContent = (
-    <ThemeProvider theme={builderThemeLight}>
-      <Overlay onClick={(e) => e.target === e.currentTarget && onClose()}>
-        <Modal onClick={(e) => e.stopPropagation()}>
+    <Overlay onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <Modal onClick={(e) => e.stopPropagation()}>
         <Header>
           <TitleBlock>
             <IconWrap>
@@ -393,7 +391,6 @@ export default function ImageLibraryModal({ onClose }: ImageLibraryModalProps) {
         </Footer>
       </Modal>
     </Overlay>
-    </ThemeProvider>
   );
 
   if (typeof document === 'undefined') return null;

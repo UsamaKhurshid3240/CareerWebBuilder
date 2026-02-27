@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import styled from 'styled-components';
+import styled, { ThemeProvider } from 'styled-components';
 
+import { builderThemeLight } from '@/lib/constants/builderThemeLight';
 import PreviewToolbar from '@/builder/preview/PreviewToolbar';
 import PreviewCanvas from '@/builder/preview/PreviewCanvas';
 
@@ -58,7 +59,9 @@ export default function PreviewPanel({ splitView }: Props) {
         />
 
         <CanvasWrap>
-          <PreviewCanvas device={device} zoom={zoom} />
+          <ThemeProvider theme={builderThemeLight}>
+            <PreviewCanvas device={device} zoom={zoom} />
+          </ThemeProvider>
         </CanvasWrap>
       </PreviewBox>
     </Wrapper>

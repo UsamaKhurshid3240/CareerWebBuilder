@@ -2,7 +2,6 @@
 
 import styled, { keyframes } from 'styled-components';
 import { Formik, Form, Field, FormikHelpers } from 'formik';
-import { BUILDER_UI, SHADES } from '@/lib/constants/colors';
 import { RADIUS, TRANSITION, SHADOW, BLUR } from '@/lib/constants/glassUI';
 import { MODAL_SPACING } from '@/builder/components/section-settings/SectionSettingsModal';
 import { ModalFooter, BtnPrimary, BtnSecondary } from '@/builder/components/section-settings/FormControls';
@@ -75,13 +74,13 @@ const Modal = styled.div`
   max-width: 720px;
   max-height: calc(100vh - 48px);
   min-width: 0;
-  background: linear-gradient(180deg, ${SHADES.white} 0%, rgba(248, 250, 252, 0.98) 100%);
+  background: ${(p) => p.theme.modalFooterBg};
   border-radius: ${RADIUS.xl};
   box-shadow: ${SHADOW.lg}, 0 0 0 1px rgba(0, 0, 0, 0.05);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  border: 1px solid ${BUILDER_UI.panelBorder};
+  border: 1px solid ${(p) => p.theme.panelBorder};
   animation: ${modalEnter} 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 `;
 
@@ -116,7 +115,7 @@ const Icon = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: ${SHADES.bg};
+  background: ${(p) => p.theme.shellBg};
   border-radius: ${RADIUS.md};
   font-size: 22px;
   flex-shrink: 0;
@@ -129,7 +128,7 @@ const Title = styled.h3`
   font-size: 20px;
   font-weight: 600;
   letter-spacing: -0.02em;
-  color: ${BUILDER_UI.heading};
+  color: ${(p) => p.theme.heading};
   overflow: hidden;
   text-overflow: ellipsis;
 `;
@@ -137,7 +136,7 @@ const Title = styled.h3`
 const Subtitle = styled.p`
   margin: 8px 0 0;
   font-size: 14px;
-  color: ${BUILDER_UI.muted};
+  color: ${(p) => p.theme.muted};
   line-height: 1.5;
   overflow-wrap: break-word;
   word-break: break-word;
@@ -149,23 +148,23 @@ const CloseBtn = styled.button`
   display: flex;
   align-items: center;
   justify-content: center;
-  background: ${SHADES.bg};
+  background: ${(p) => p.theme.shellBg};
   border: none;
   border-radius: ${RADIUS.md};
   font-size: 20px;
   line-height: 1;
-  color: ${BUILDER_UI.muted};
+  color: ${(p) => p.theme.muted};
   cursor: pointer;
   flex-shrink: 0;
   transition: background ${TRANSITION.fast}, color ${TRANSITION.fast};
 
   &:hover {
-    background: ${SHADES.border};
-    color: ${BUILDER_UI.heading};
+    background: ${(p) => p.theme.rowHover};
+    color: ${(p) => p.theme.heading};
   }
   &:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 2px ${BUILDER_UI.inputFocus};
+    box-shadow: 0 0 0 2px ${(p) => p.theme.inputFocus};
   }
 `;
 
@@ -191,7 +190,7 @@ const Section = styled.div`
 
 const Divider = styled.div`
   height: 1px;
-  background: ${SHADES.border};
+  background: ${(p) => p.theme.panelBorder};
   margin: 24px 0;
 `;
 
@@ -199,7 +198,7 @@ const SectionTitle = styled.h4`
   margin: 0 0 16px;
   font-size: 15px;
   font-weight: 600;
-  color: ${BUILDER_UI.heading};
+  color: ${(p) => p.theme.heading};
   display: flex;
   align-items: center;
   gap: 8px;
@@ -237,31 +236,31 @@ const FieldWrap = styled.div`
 const Label = styled.label`
   font-size: 13px;
   font-weight: 500;
-  color: ${BUILDER_UI.heading};
+  color: ${(p) => p.theme.heading};
 `;
 
-const focusRing = `0 0 0 3px ${BUILDER_UI.inputFocus}22`;
+const focusRing = '0 0 0 3px rgba(59, 130, 246, 0.2)';
 
 const Input = styled(Field)`
   height: 44px;
   padding: 0 14px;
   border-radius: ${RADIUS.md};
-  border: 1px solid ${BUILDER_UI.inputBorder};
+  border: 1px solid ${(p) => p.theme.inputBorder};
   font-size: 14px;
-  color: ${BUILDER_UI.body};
-  background: ${SHADES.white};
+  color: ${(p) => p.theme.body};
+  background: ${(p) => p.theme.cardBg};
   min-width: 0;
   box-sizing: border-box;
   transition: border-color ${TRANSITION.normal}, box-shadow ${TRANSITION.fast};
 
   &:focus {
     outline: none;
-    border-color: ${BUILDER_UI.inputFocus};
+    border-color: ${(p) => p.theme.inputFocus};
     box-shadow: ${focusRing};
   }
   &:focus-visible {
     outline: none;
-    border-color: ${BUILDER_UI.inputFocus};
+    border-color: ${(p) => p.theme.inputFocus};
     box-shadow: ${focusRing};
   }
 `;
@@ -270,10 +269,10 @@ const Select = styled(Field)`
   height: 44px;
   padding: 0 14px;
   border-radius: ${RADIUS.md};
-  border: 1px solid ${BUILDER_UI.inputBorder};
+  border: 1px solid ${(p) => p.theme.inputBorder};
   font-size: 14px;
-  color: ${BUILDER_UI.body};
-  background: ${SHADES.white};
+  color: ${(p) => p.theme.body};
+  background: ${(p) => p.theme.cardBg};
   cursor: pointer;
   min-width: 0;
   box-sizing: border-box;
@@ -281,12 +280,12 @@ const Select = styled(Field)`
 
   &:focus {
     outline: none;
-    border-color: ${BUILDER_UI.inputFocus};
+    border-color: ${(p) => p.theme.inputFocus};
     box-shadow: ${focusRing};
   }
   &:focus-visible {
     outline: none;
-    border-color: ${BUILDER_UI.inputFocus};
+    border-color: ${(p) => p.theme.inputFocus};
     box-shadow: ${focusRing};
   }
 `;
@@ -303,9 +302,9 @@ const ColorPicker = styled(Field)`
   height: 44px;
   padding: 2px;
   border-radius: ${RADIUS.md};
-  border: 1px solid ${BUILDER_UI.inputBorder};
+  border: 1px solid ${(p) => p.theme.inputBorder};
   cursor: pointer;
-  background: ${SHADES.white};
+  background: ${(p) => p.theme.cardBg};
 
   &:focus-visible {
     outline: none;
@@ -320,26 +319,26 @@ const CheckboxRow = styled.label`
   align-items: center;
   gap: 10px;
   font-size: 14px;
-  color: ${BUILDER_UI.body};
+  color: ${(p) => p.theme.body};
   cursor: pointer;
 `;
 
 /* ================= PREVIEW ================= */
 
 const PreviewBox = styled.div`
-  border: 1px solid ${BUILDER_UI.inputBorder};
+  border: 1px solid ${(p) => p.theme.inputBorder};
   border-radius: ${RADIUS.lg};
   padding: 20px;
   display: flex;
   align-items: center;
   gap: 20px;
-  background: ${SHADES.bg};
+  background: ${(p) => p.theme.shellBg};
   min-width: 0;
 `;
 
 const PreviewText = styled.div`
   font-size: 14px;
-  color: ${BUILDER_UI.body};
+  color: ${(p) => p.theme.body};
   line-height: 1.5;
   min-width: 0;
   overflow: hidden;
@@ -372,8 +371,8 @@ const StyledForm = styled(Form)`
 
 const Footer = styled.div`
   padding: ${MODAL_SPACING.fieldGap}px ${MODAL_SPACING.bodyPadding}px ${MODAL_SPACING.bodyPadding}px;
-  border-top: 1px solid ${SHADES.border};
-  background: rgba(248, 250, 252, 0.95);
+  border-top: 1px solid ${(p) => p.theme.panelBorder};
+  background: ${(p) => p.theme.modalFooterBg};
   flex-shrink: 0;
   min-width: 0;
 `;
@@ -516,7 +515,7 @@ export default function CreateCustomThemeModal({
 
                     <PreviewText>
                       <strong>{values.name}</strong>
-                      <div style={{ color: BUILDER_UI.muted }}>
+                      <div style={{ color: 'inherit', opacity: 0.85 }}>
                         {values.description || 'Theme description'}
                       </div>
                     </PreviewText>

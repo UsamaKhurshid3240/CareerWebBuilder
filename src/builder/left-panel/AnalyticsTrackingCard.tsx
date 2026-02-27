@@ -2,17 +2,16 @@
 
 import { useState } from 'react';
 import styled from 'styled-components';
-import { BUILDER_UI } from '@/lib/constants/colors';
-import { RADIUS, SPACING, GLASS } from '@/lib/constants/glassUI';
+import { RADIUS, SPACING } from '@/lib/constants/glassUI';
 import { Textarea, Toggle } from '@/builder/components/section-settings/FormControls';
 
 const Card = styled.div`
-  ${GLASS.card}
+  ${(p) => p.theme.glass.card}
   border-radius: ${RADIUS.lg};
   padding: 22px;
   margin-bottom: 18px;
   &:hover {
-    ${GLASS.cardHover}
+    ${(p) => p.theme.glass.cardHover}
   }
 `;
 
@@ -30,11 +29,18 @@ const HeaderLeft = styled.div`
   gap: ${SPACING.sm}px;
 `;
 
+const HeaderIconWrap = styled.span`
+  display: flex;
+  align-items: flex-start;
+  margin-top: 2px;
+  color: ${(p) => p.theme.muted};
+`;
+
 const Title = styled.h3`
   margin: 0;
   font-size: 18px;
   font-weight: 600;
-  color: ${BUILDER_UI.heading};
+  color: ${(p) => p.theme.heading};
   line-height: 1.3;
 `;
 
@@ -42,7 +48,7 @@ const Subtitle = styled.p`
   margin: ${SPACING.xs}px 0 0;
   font-size: 14px;
   font-weight: 400;
-  color: ${BUILDER_UI.muted};
+  color: ${(p) => p.theme.muted};
   line-height: 1.5;
 `;
 
@@ -52,7 +58,7 @@ const Subheading = styled.div`
   gap: ${SPACING.xs}px;
   font-size: 14px;
   font-weight: 600;
-  color: ${BUILDER_UI.heading};
+  color: ${(p) => p.theme.heading};
   margin-bottom: ${SPACING.sm}px;
   margin-top: ${SPACING.lg}px;
 `;
@@ -67,7 +73,7 @@ const ScriptTextarea = styled(Textarea)`
 const HelperText = styled.p`
   margin: ${SPACING.sm}px 0 0;
   font-size: 12px;
-  color: ${BUILDER_UI.muted};
+  color: ${(p) => p.theme.muted};
   line-height: 1.5;
 `;
 
@@ -107,9 +113,9 @@ export default function AnalyticsTrackingCard() {
     <Card>
       <HeaderRow>
         <HeaderLeft>
-          <span style={{ display: 'flex', alignItems: 'flex-start', marginTop: 2, color: BUILDER_UI.muted }}>
+          <HeaderIconWrap>
             <ChartIcon size={20} />
-          </span>
+          </HeaderIconWrap>
           <div>
             <Title>Analytics &amp; Tracking</Title>
             <Subtitle>

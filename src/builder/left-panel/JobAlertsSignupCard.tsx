@@ -2,17 +2,16 @@
 
 import { useState } from 'react';
 import styled from 'styled-components';
-import { BUILDER_UI } from '@/lib/constants/colors';
-import { RADIUS, SPACING, GLASS } from '@/lib/constants/glassUI';
+import { RADIUS, SPACING } from '@/lib/constants/glassUI';
 import { Label, Input, Textarea, Select, Toggle } from '@/builder/components/section-settings/FormControls';
 
 const Card = styled.div`
-  ${GLASS.card}
+  ${(p) => p.theme.glass.card}
   border-radius: ${RADIUS.lg};
   padding: 22px;
   margin-bottom: 18px;
   &:hover {
-    ${GLASS.cardHover}
+    ${(p) => p.theme.glass.cardHover}
   }
 `;
 
@@ -33,7 +32,7 @@ const Title = styled.h3`
   margin: 0;
   font-size: 18px;
   font-weight: 600;
-  color: ${BUILDER_UI.heading};
+  color: ${(p) => p.theme.heading};
   line-height: 1.3;
 `;
 
@@ -41,7 +40,7 @@ const Subtitle = styled.p`
   margin: ${SPACING.xs}px 0 0;
   font-size: 14px;
   font-weight: 400;
-  color: ${BUILDER_UI.muted};
+  color: ${(p) => p.theme.muted};
   line-height: 1.5;
 `;
 
@@ -65,12 +64,12 @@ const ToggleLabelBlock = styled.div`
 const ToggleLabelText = styled.div`
   font-size: 14px;
   font-weight: 500;
-  color: ${BUILDER_UI.heading};
+  color: ${(p) => p.theme.heading};
 `;
 
 const ToggleDesc = styled.div`
   font-size: 12px;
-  color: ${BUILDER_UI.muted};
+  color: ${(p) => p.theme.muted};
   margin-top: ${SPACING.xxs}px;
   line-height: 1.4;
 `;

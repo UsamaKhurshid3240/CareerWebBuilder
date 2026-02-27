@@ -22,6 +22,11 @@ import type {
   SectionSettingsState,
 } from '@/lib/types/builder';
 import { THEME_MAP, type ThemePresetName } from '@/lib/constants/themes';
+import {
+  THEME_PRESETS,
+  presetToPayload,
+  type ThemePresetConfig,
+} from '@/lib/constants/themePresets';
 
 const MAX_UNDO = 50;
 
@@ -352,6 +357,8 @@ type BuilderContextType = {
   activePage: string;
   sectionSettings?: SectionSettingsState;
   applyTheme: (name: ThemePresetName) => void;
+  applyThemeConfig: (preset: ThemePresetConfig) => void;
+  applyTemplatePayload: (payload: Partial<BuilderState>) => void;
   setColors: React.Dispatch<React.SetStateAction<ThemeColors>>;
   setLogo: React.Dispatch<React.SetStateAction<string | null>>;
   setTypography: React.Dispatch<React.SetStateAction<TypographySettings>>;
@@ -422,7 +429,17 @@ export function BuilderProvider({
 
   const applyTheme = useCallback(
     (name: ThemePresetName) => {
-      applyChange({ themeName: name, colors: THEME_MAP[name] });
+      // Dispatch the full preset payload atomically — one undo entry covers
+      // colors, typography, buttons, layout, navigation, and multiPageLayout.
+      applyChange(presetToPayload(THEME_PRESETS[name]));
+    },
+    [applyChange]
+  );
+
+  const applyThemeConfig = useCallback(
+    (preset: ThemePresetConfig) => {
+      // One atomic history entry for custom or dynamic presets as well.
+      applyChange(presetToPayload(preset));
     },
     [applyChange]
   );
@@ -591,6 +608,8 @@ export function BuilderProvider({
       activePage: current.activePage,
       sectionSettings: current.sectionSettings,
       applyTheme,
+      applyThemeConfig,
+      applyTemplatePayload: applyChange,
       setColors,
       setLogo,
       setTypography,
@@ -629,6 +648,8 @@ export function BuilderProvider({
       current.activePage,
       current.sectionSettings,
       applyTheme,
+      applyThemeConfig,
+      applyChange,
       setColors,
       setLogo,
       setTypography,

@@ -1,10 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import styled, { ThemeProvider } from 'styled-components';
+import styled from 'styled-components';
 
 import { SHADOW, RADIUS, BLUR } from '@/lib/constants/glassUI';
-import { builderThemeLight } from '@/lib/constants/builderThemeLight';
 import BuilderHeader from '@/builder/header/BuilderHeader';
 import LeftPanel from '@/builder/left-panel/LeftPanel';
 import PreviewPanel from '@/builder/preview/PreviewPanel';
@@ -69,9 +68,7 @@ export default function BuilderShell() {
 
         {splitView && (
           <Right>
-            <ThemeProvider theme={builderThemeLight}>
-              <PreviewPanel splitView={splitView} />
-            </ThemeProvider>
+            <PreviewPanel splitView={splitView} />
           </Right>
         )}
       </Body>

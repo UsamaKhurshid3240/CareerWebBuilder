@@ -23,10 +23,10 @@ function buildGradientCss(
 /* ===== Wrapper ===== */
 
 const Section = styled.div`
-  border: 1px solid #e5e7eb;
+  border: 1px solid ${(p) => p.theme.panelBorder};
   border-radius: 12px;
   padding: 24px;
-  background: #fff;
+  background: ${(p) => p.theme.panelBg};
   margin-bottom: 15px;
 `;
 
@@ -40,12 +40,13 @@ const Header = styled.div`
     display: flex;
     align-items: center;
     gap: 8px;
+    color: ${(p) => p.theme.heading};
   }
 
   p {
     margin-top: 4px;
     font-size: 14px;
-    color: #6b7280;
+    color: ${(p) => p.theme.muted};
   }
 `;
 
@@ -92,20 +93,23 @@ const Field = styled.div`
   label {
     font-size: 14px;
     font-weight: 500;
+    color: ${(p) => p.theme.heading};
   }
 `;
 
 const Select = styled.select`
   height: 40px;
   border-radius: 8px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid ${(p) => p.theme.inputBorder};
+  background: ${(p) => p.theme.cardBg};
+  color: ${(p) => p.theme.body};
   padding: 0 12px;
   font-size: 14px;
 `;
 
 const Slider = styled.input`
   width: 100%;
-  accent-color: #1d3155;
+  accent-color: ${(p) => p.theme.btnPrimary};
 `;
 
 /* ===== Color Stops ===== */
@@ -126,32 +130,32 @@ const RemoveStopBtn = styled.button`
   width: 28px;
   height: 28px;
   border-radius: 6px;
-  border: 1px solid #e5e7eb;
-  background: #fff;
-  color: #6b7280;
+  border: 1px solid ${(p) => p.theme.inputBorder};
+  background: ${(p) => p.theme.cardBg};
+  color: ${(p) => p.theme.muted};
   font-size: 14px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   &:hover {
-    background: #fef2f2;
-    color: #dc2626;
+    background: ${(p) => p.theme.dangerBg};
+    color: ${(p) => p.theme.dangerText};
   }
 `;
 
 const AddStopBtn = styled.button`
   height: 36px;
   border-radius: 8px;
-  border: 1px dashed #e5e7eb;
-  background: #f9fafb;
-  color: #6b7280;
+  border: 1px dashed ${(p) => p.theme.inputBorder};
+  background: ${(p) => p.theme.shellBg};
+  color: ${(p) => p.theme.muted};
   font-size: 13px;
   cursor: pointer;
   margin-top: 4px;
   &:hover {
-    background: #f3f4f6;
-    border-color: #d1d5db;
+    background: ${(p) => p.theme.rowHover};
+    border-color: ${(p) => p.theme.borderMuted};
   }
 `;
 
@@ -159,13 +163,13 @@ const ColorBox = styled.input`
   width: 32px;
   height: 32px;
   border-radius: 6px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid ${(p) => p.theme.inputBorder};
   padding: 0;
 `;
 
 const Percent = styled.span`
   font-size: 12px;
-  color: #6b7280;
+  color: ${(p) => p.theme.muted};
 `;
 
 /* ===== Buttons ===== */
@@ -180,10 +184,14 @@ const GhostButton = styled.button`
   flex: 1;
   height: 40px;
   border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  background: #fff;
+  border: 1px solid ${(p) => p.theme.panelBorder};
+  background: ${(p) => p.theme.panelBg};
+  color: ${(p) => p.theme.body};
   font-size: 14px;
   cursor: pointer;
+  &:hover {
+    background: ${(p) => p.theme.rowHover};
+  }
 `;
 
 const PrimaryButton = styled.button`
@@ -191,10 +199,13 @@ const PrimaryButton = styled.button`
   height: 40px;
   border-radius: 8px;
   border: none;
-  background: #0f172a;
-  color: white;
+  background: ${(p) => p.theme.btnPrimary};
+  color: ${(p) => p.theme.tabActiveText};
   font-size: 14px;
   cursor: pointer;
+  &:hover {
+    background: ${(p) => p.theme.btnPrimaryHover};
+  }
 `;
 
 /* ===== Preset Data ===== */

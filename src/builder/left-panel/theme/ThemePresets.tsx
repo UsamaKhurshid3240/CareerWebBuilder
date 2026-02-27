@@ -1,22 +1,18 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import styled from 'styled-components';
+import { ICON_SIZE } from '@/lib/constants/glassUI';
+import { PaletteIcon } from '@/builder/icons';
 import ThemeCard from './ThemeCard';
 import CreateCustomThemeModal, {
   CustomThemeValues,
 } from './CreateCustomThemeModal';
 import { useBuilder } from '@/builder/context/BuilderContext';
-import type { ThemePresetName } from '@/lib/constants/themes';
-
-/* ================= Types ================= */
-
-interface ThemePreset {
-  title: ThemePresetName;
-  desc: string;
-  colors: string[];
-  fonts?: string[];
-}
+import {
+  THEME_PRESET_LIST,
+  type ThemePresetConfig,
+} from '@/lib/constants/themePresets';
 
 /* ================= Styles ================= */
 
@@ -25,6 +21,16 @@ const Section = styled.div`
   border: 1px solid ${(p) => p.theme.inputBorder};
   border-radius: 12px;
   padding: 16px;
+
+  h3 {
+    margin: 0;
+    color: ${(p) => p.theme.heading};
+  }
+
+  p {
+    margin: 6px 0 14px;
+    color: ${(p) => p.theme.muted};
+  }
 `;
 
 const Grid = styled.div`
@@ -58,58 +64,116 @@ const Note = styled.div`
   gap: 8px;
 `;
 
-/* ================= Data ================= */
+/* ================= Data — from themePresets.ts ================= */
+const CUSTOM_THEME_STORAGE_KEY = 'career-builder-custom-theme-presets';
 
-const PRESETS: ThemePreset[] = [
-  {
-    title: 'Professional',
-    desc: 'Project palette: blue-grey primary, warm accents. Polished and trustworthy.',
-    colors: ['#0d2349', '#25395b', '#367eca'],
-  },
-  {
-    title: 'Modern',
-    desc: 'Clean lines with bold accents. Perfect for tech companies.',
-    colors: ['#2563eb', '#111827', '#60a5fa'],
-  },
-  {
-    title: 'Corporate',
-    desc: 'Professional and trustworthy. Ideal for enterprises.',
-    colors: ['#1e293b', '#334155', '#f97316'],
-    fonts: ['Playfair Display', 'Open Sans'],
-  },
-  {
-    title: 'Creative',
-    desc: 'Bold and expressive. Great for agencies and studios.',
-    colors: ['#8b5cf6', '#111827', '#ec4899'],
-    fonts: ['Space Grotesk', 'DM Sans'],
-  },
-  {
-    title: 'Minimal',
-    desc: 'Less is more. Focused and distraction-free.',
-    colors: ['#000000', '#e5e7eb', '#000000'],
-  },
-  {
-    title: 'Bold',
-    desc: 'High impact with striking contrasts. Stands out.',
-    colors: ['#ef4444', '#111827', '#facc15'],
-    fonts: ['Archivo Black', 'Archivo'],
-  },
-  {
-    title: 'Startup',
-    desc: 'Fresh and energetic. Perfect for growing companies.',
-    colors: ['#10b981', '#064e3b', '#34d399'],
-    fonts: ['Plus Jakarta Sans'],
-  },
-];
+type StoredCustomPreset = ThemePresetConfig & {
+  id: string;
+};
+
+function isStoredCustomPreset(
+  preset: ThemePresetConfig | StoredCustomPreset
+): preset is StoredCustomPreset {
+  return 'id' in preset && typeof preset.id === 'string';
+}
 
 /* ================= Component ================= */
 
 export default function ThemePresets(): JSX.Element {
-  const { themeName, applyTheme } = useBuilder();
+  const {
+    themeName,
+    applyTheme,
+    applyThemeConfig,
+    buttons,
+    layout,
+    navigation,
+    multiPageLayout,
+  } = useBuilder();
   const [showCustomTheme, setShowCustomTheme] = useState<boolean>(false);
+  const [customPresets, setCustomPresets] = useState<StoredCustomPreset[]>([]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    try {
+      const raw = localStorage.getItem(CUSTOM_THEME_STORAGE_KEY);
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as StoredCustomPreset[];
+      if (Array.isArray(parsed)) setCustomPresets(parsed);
+    } catch {
+      // ignore invalid stored custom preset payloads
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    localStorage.setItem(CUSTOM_THEME_STORAGE_KEY, JSON.stringify(customPresets));
+  }, [customPresets]);
+
+  const allPresets = useMemo(
+    () => [...THEME_PRESET_LIST, ...customPresets],
+    [customPresets]
+  );
 
   const handleCreateTheme = (data: CustomThemeValues) => {
-    // later: save theme to context / API
+    const baseName = data.name.trim() || 'Custom Theme';
+    const usedNames = new Set(
+      [...THEME_PRESET_LIST, ...customPresets].map((p) => p.title.toLowerCase())
+    );
+    let uniqueName = baseName;
+    let suffix = 2;
+    while (usedNames.has(uniqueName.toLowerCase())) {
+      uniqueName = `${baseName} ${suffix}`;
+      suffix += 1;
+    }
+
+    const animationMap = {
+      Fade: 'fade',
+      Slide: 'slide',
+      None: 'none',
+    } as const;
+
+    const gradientStops = [
+      { color: data.secondary, pos: 0 },
+      { color: data.primary, pos: 100 },
+    ];
+
+    const customPreset: StoredCustomPreset = {
+      id: `custom-${Date.now()}`,
+      title: uniqueName,
+      desc: data.description.trim() || 'Custom theme created from your brand settings.',
+      swatchColors: [data.primary, data.secondary, data.accent],
+      fontLabels:
+        data.headingFont === data.bodyFont
+          ? [data.headingFont]
+          : [data.headingFont, data.bodyFont],
+      colors: {
+        primary: data.primary,
+        secondary: data.secondary,
+        accent: data.accent,
+        heading: data.heading,
+        text: data.text,
+      },
+      typography: {
+        headingFont: data.headingFont,
+        bodyFont: data.bodyFont,
+        fontScale: 'Medium',
+      },
+      buttons: { ...buttons },
+      layout: {
+        ...layout,
+        sectionAnimation: animationMap[data.animation],
+        hoverEffects: data.hover,
+        heroGradientType: 'linear',
+        heroGradientAngle: 135,
+        heroGradientStops: gradientStops,
+        heroGradient: `linear-gradient(135deg, ${data.secondary} 0%, ${data.primary} 100%)`,
+      },
+      navigation: { ...navigation },
+      multiPageLayout,
+    };
+
+    setCustomPresets((prev) => [...prev, customPreset]);
+    applyThemeConfig(customPreset);
     setShowCustomTheme(false);
   };
 
@@ -119,12 +183,19 @@ export default function ThemePresets(): JSX.Element {
       <p>Choose a pre-built theme or create your own custom theme</p>
 
       <Grid>
-        {PRESETS.map((theme) => (
+        {allPresets.map((preset) => (
           <ThemeCard
-            key={theme.title}
-            {...theme}
-            active={themeName === theme.title}
-            onApply={() => applyTheme(theme.title)}
+            key={isStoredCustomPreset(preset) ? preset.id : preset.title}
+            title={preset.title}
+            desc={preset.desc}
+            colors={preset.swatchColors}
+            fonts={preset.fontLabels}
+            active={themeName === preset.title}
+            onApply={() =>
+              isStoredCustomPreset(preset)
+                ? applyThemeConfig(preset)
+                : applyTheme(preset.title as Parameters<typeof applyTheme>[0])
+            }
           />
         ))}
       </Grid>
@@ -133,12 +204,11 @@ export default function ThemePresets(): JSX.Element {
         ＋ Create Custom Theme
       </CreateBtn>
 
-      {!themeName && (
-        <Note>
-          💡 You're using a custom theme. Select a preset above or continue
-          customizing below.
-        </Note>
-      )}
+      <Note>
+        <PaletteIcon size={ICON_SIZE.lg} />
+        You're using a custom theme. Select a preset above or continue
+        customizing below.
+      </Note>
 
       {showCustomTheme && (
         <CreateCustomThemeModal

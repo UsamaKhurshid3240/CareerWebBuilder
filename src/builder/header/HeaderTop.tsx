@@ -7,6 +7,7 @@ import { BUILDER_TYPO } from '@/lib/constants/typography';
 import { IconImage, IconFileText } from '@/builder/icons';
 import { Toggle } from '@/builder/components/section-settings/FormControls';
 import ImageLibraryModal from '@/builder/components/ImageLibraryModal';
+import ContentTemplatesModal from '@/builder/components/ContentTemplatesModal';
 import ThemeDropdown from '@/builder/header/ThemeDropdown';
 import { BUILDER_UI } from '@/lib/constants/colors';
 
@@ -115,6 +116,7 @@ export default function HeaderTop({
   setSplitView,
 }: HeaderTopProps) {
   const [imageLibraryOpen, setImageLibraryOpen] = useState(false);
+  const [contentTemplatesOpen, setContentTemplatesOpen] = useState(false);
   const theme = useTheme();
   const splitToggleTheme = useMemo(
     () => ({
@@ -138,10 +140,15 @@ export default function HeaderTop({
       <Right>
         <ProductName></ProductName>
         <ThemeDropdown />
-        <Btn type="button"><IconFileText size={ICON_SIZE.sm} /> Content Templates</Btn>
+        <Btn type="button" onClick={() => setContentTemplatesOpen(true)}>
+          <IconFileText size={ICON_SIZE.sm} /> Content Templates
+        </Btn>
         <Btn type="button" onClick={() => setImageLibraryOpen(true)}>
           <IconImage size={ICON_SIZE.sm} /> Image Library
         </Btn>
+        {contentTemplatesOpen && (
+          <ContentTemplatesModal onClose={() => setContentTemplatesOpen(false)} />
+        )}
         {imageLibraryOpen && (
           <ImageLibraryModal onClose={() => setImageLibraryOpen(false)} />
         )}

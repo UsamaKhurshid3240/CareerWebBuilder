@@ -5,8 +5,6 @@ import styled from 'styled-components';
 import { RADIUS, SPACING } from '@/lib/constants/glassUI';
 import { Label, Input, Textarea, HelperText, Select, Toggle } from '@/builder/components/section-settings/FormControls';
 
-const ACCENT = '#1e3356';
-
 const Card = styled.div`
   ${(p) => p.theme.glass.card}
   border-radius: ${RADIUS.lg};
@@ -64,7 +62,7 @@ const CollapsibleHeader = styled.button<{ $open: boolean }>`
   text-align: left;
 
   &:hover {
-    background: rgba(0, 0, 0, 0.03);
+    background: ${(p) => p.theme.rowHover};
   }
 `;
 
@@ -148,8 +146,8 @@ const Badge = styled.span`
   font-weight: 600;
   padding: 2px 8px;
   border-radius: ${RADIUS.full};
-  background: rgba(30, 51, 86, 0.12);
-  color: ${ACCENT};
+  background: ${(p) => p.theme.rowHover};
+  color: ${(p) => p.theme.body};
   margin-left: ${SPACING.xs}px;
 `;
 

@@ -59,7 +59,7 @@ const Tab = styled.button<{ active?: boolean }>`
   transition: background ${TRANSITION.normal}, color ${TRANSITION.normal}, box-shadow ${TRANSITION.normal};
 
   &:hover {
-    color: ${(p) => p.theme.heading};
+    color: ${({ active, theme }) => (active ? theme.tabActiveText : theme.heading)};
   }
   &:active {
     transform: scale(0.99);

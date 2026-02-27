@@ -37,12 +37,14 @@ const Left = styled.div`
   align-items: center;
   gap: 14px;
   font-size: 13px;
+  color: ${(p) => p.theme.body};
 `;
 
 const Right = styled.div`
   display: flex;
   align-items: center;
   gap: 12px;
+  color: ${(p) => p.theme.body};
 `;
 
 const Group = styled.div`
@@ -54,7 +56,7 @@ const Group = styled.div`
 const Divider = styled.div`
   width: 1px;
   height: 22px;
-  background: rgba(0, 0, 0, 0.08);
+  background: ${(p) => p.theme.panelBorder};
   margin: 0 4px;
 `;
 
@@ -67,7 +69,7 @@ const IconBtn = styled.button<{ active?: boolean }>`
   border-radius: ${RADIUS.sm};
   border: 1px solid ${(p) => p.theme.iconBtnBorder};
   background: ${({ active, theme }) => (active ? theme.rowHover : theme.iconBtnBg)};
-  color: ${(p) => p.theme.heading};
+  color: ${(p) => p.theme.body};
   cursor: pointer;
   font-size: 14px;
   transition: background ${TRANSITION.normal}, border-color ${TRANSITION.normal};
@@ -81,7 +83,7 @@ const IconBtn = styled.button<{ active?: boolean }>`
 const ZoomButton = styled.button`
   border: 1px solid ${(p) => p.theme.iconBtnBorder};
   background: ${(p) => p.theme.iconBtnBg};
-  color: ${(p) => p.theme.heading};
+  color: ${(p) => p.theme.body};
   padding: 6px 12px;
   border-radius: ${RADIUS.sm};
   cursor: pointer;
@@ -122,11 +124,26 @@ const Preset = styled.button<{ active?: boolean }>`
   border-radius: ${RADIUS.sm};
   border: 1px solid ${(p) => p.theme.iconBtnBorder};
   background: ${({ active, theme }) => (active ? theme.tabDark : theme.iconBtnBg)};
-  color: ${({ active, theme }) => (active ? theme.tabActiveText : theme.heading)};
+  color: ${({ active, theme }) => (active ? theme.tabActiveText : theme.body)};
   cursor: pointer;
   font-size: 12px;
   font-weight: 500;
   transition: all ${TRANSITION.normal};
+`;
+
+const DeviceLabel = styled.span`
+  color: ${(p) => p.theme.muted};
+`;
+
+const PopoverTitle = styled.strong`
+  font-size: 13px;
+  color: ${(p) => p.theme.body};
+`;
+
+const ZoomRange = styled.input`
+  width: 100%;
+  margin-top: 10px;
+  accent-color: ${(p) => p.theme.btnPrimary};
 `;
 
 /* ================= UTILS ================= */
@@ -209,9 +226,9 @@ export default function PreviewToolbar({
           </IconBtn>
         </Group>
 
-        <span style={{ color: "#6b7280" }}>
+        <DeviceLabel>
           {device.charAt(0).toUpperCase() + device.slice(1)}
-        </span>
+        </DeviceLabel>
       </Left>
 
       {/* RIGHT */}
@@ -239,16 +256,15 @@ export default function PreviewToolbar({
 
       {open && (
         <Popover ref={popoverRef}>
-          <strong style={{ fontSize: 13 }}>Zoom Level</strong>
+          <PopoverTitle>Zoom Level</PopoverTitle>
 
-          <input
+          <ZoomRange
             type="range"
             min={50}
             max={150}
             step={5}
             value={zoomPercent}
             onChange={(e) => setZoomPercent(Number(e.target.value))}
-            style={{ width: "100%", marginTop: 10, accentColor: "#1d3155" }}
           />
 
           <Presets>

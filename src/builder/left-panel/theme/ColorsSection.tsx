@@ -16,12 +16,37 @@ const Section = styled.div`
   border: 1px solid ${(p) => p.theme.inputBorder};
   border-radius: 12px;
   padding: 16px;
+
+  h3,
+  h4,
+  label,
+  strong,
+  small {
+    color: ${(p) => p.theme.heading};
+  }
+
+  p {
+    color: ${(p) => p.theme.body};
+  }
 `;
 
 const Header = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  p {
+    color: ${(p) => p.theme.muted};
+  }
+
+  button {
+    border: 1px solid ${(p) => p.theme.panelBorder};
+    background: ${(p) => p.theme.panelBg};
+    color: ${(p) => p.theme.body};
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+  }
 `;
 
 const Palettes = styled.div`
@@ -103,7 +128,7 @@ const ButtonPreview = styled.button<{ primary: string }>`
 
 const FooterPreview = styled.div<{ secondary: string }>`
   background: ${({ secondary }) => secondary};
-  color: white;
+  color: ${(p) => p.theme.tabActiveText};
   padding: 14px;
   border-radius: 8px;
   text-align: center;

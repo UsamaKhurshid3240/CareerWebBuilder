@@ -2,11 +2,9 @@
 
 import { useState } from 'react';
 import styled from 'styled-components';
-import { ThemeProvider } from 'styled-components';
 
 import { BLUR, SPACING, RADIUS } from '@/lib/constants/glassUI';
 import { BUILDER_TYPO } from '@/lib/constants/typography';
-import { builderThemeLight } from '@/lib/constants/builderThemeLight';
 import Tabs from '@/builder/left-panel/Tabs';
 import FontTab from '@/builder/left-panel/fonts/FontTab';
 import ThemeTab from '@/builder/left-panel/theme/ThemeTab';
@@ -35,6 +33,7 @@ const TabContent = styled.div`
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
+  color: ${(p) => p.theme.body};
 `;
 
 const AdvancedContainer = styled.div`
@@ -64,29 +63,26 @@ export default function LeftPanel() {
     <Wrapper>
       <Tabs activeTab={activeTab} setActiveTab={setActiveTab} />
 
-      {/* Theme/mode applies only to builder layout (shell, header, tabs bar). Inner content always uses light theme. */}
-      <ThemeProvider theme={builderThemeLight}>
-        <TabContent>
-          {activeTab === 'theme' && <ThemeTab />}
+      <TabContent>
+        {activeTab === 'theme' && <ThemeTab />}
 
-          {activeTab === 'fonts' && <FontTab />}
+        {activeTab === 'fonts' && <FontTab />}
 
-          {activeTab === 'layout' && <LayoutTab />}
+        {activeTab === 'layout' && <LayoutTab />}
 
-          {activeTab === 'sections' && (
-            <AdvancedContainer>
-              <CustomDomainCard />
-              <SEOMetaCard />
-              <AnalyticsTrackingCard />
-              <JobAlertsSignupCard />
-              <CustomCSSCard />
-              <SectionsHint>
-                To edit section content and options, use the <strong>Layout</strong> tab → Section order &amp; pages, and click the settings icon next to each section.
-              </SectionsHint>
-            </AdvancedContainer>
-          )}
-        </TabContent>
-      </ThemeProvider>
+        {activeTab === 'sections' && (
+          <AdvancedContainer>
+            <CustomDomainCard />
+            <SEOMetaCard />
+            <AnalyticsTrackingCard />
+            <JobAlertsSignupCard />
+            <CustomCSSCard />
+            <SectionsHint>
+              To edit section content and options, use the <strong>Layout</strong> tab → Section order &amp; pages, and click the settings icon next to each section.
+            </SectionsHint>
+          </AdvancedContainer>
+        )}
+      </TabContent>
     </Wrapper>
   );
 }

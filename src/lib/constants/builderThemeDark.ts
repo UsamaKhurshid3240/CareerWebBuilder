@@ -17,7 +17,7 @@ export const builderThemeDark: BuilderUITheme = {
   headerText: d.lightText,
   headerSubtext: d.primaryText,
   headerAccent: d.secondary,
-  panelBg: d.sideBar,
+  panelBg: d.darkTileBg,
   panelBorder: d.borderColor,
   cardBg: d.darkTileBg,
   cardBorder: d.inputBorder,
@@ -70,7 +70,7 @@ export const builderThemeDark: BuilderUITheme = {
       box-shadow: ${SHADOW_MD};
     `,
     panel: `
-      background: ${d.sideBar};
+      background: ${d.darkTileBg};
       backdrop-filter: blur(${BLUR_LG});
       -webkit-backdrop-filter: blur(${BLUR_LG});
       border: 1px solid ${d.borderColor};

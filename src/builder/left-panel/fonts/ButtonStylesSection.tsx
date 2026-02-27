@@ -9,10 +9,10 @@ import type { ButtonStyle } from '@/lib/types/builder';
 
 const Section = styled.div`
   margin-bottom: 40px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid ${(p) => p.theme.panelBorder};
   border-radius: 12px;
   padding: 20px;
-  background: #fff;
+  background: ${(p) => p.theme.panelBg};
 `;
 
 const Header = styled.div`
@@ -25,12 +25,13 @@ const Header = styled.div`
     display: flex;
     align-items: center;
     gap: 8px;
+    color: ${(p) => p.theme.heading};
   }
 
   p {
     margin: 4px 0 0;
     font-size: 14px;
-    color: #6b7280;
+    color: ${(p) => p.theme.muted};
   }
 `;
 
@@ -38,6 +39,7 @@ const Label = styled.div`
   font-size: 14px;
   font-weight: 500;
   margin-bottom: 12px;
+  color: ${(p) => p.theme.heading};
 `;
 
 const StyleGrid = styled.div`
@@ -50,22 +52,22 @@ const StyleGrid = styled.div`
 const StyleCard = styled.button<{ active?: boolean }>`
   padding: 18px;
   border-radius: 10px;
-  border: 2px solid ${({ active }) =>
-    active ? '#f97316' : '#e5e7eb'};
-  background: #fff;
+  border: 2px solid ${({ active, theme }) =>
+    active ? theme.headerAccent : theme.panelBorder};
+  background: ${(p) => p.theme.panelBg};
   cursor: pointer;
   text-align: center;
   transition: 0.2s;
 
   &:hover {
-    border-color: #f97316;
+    border-color: ${(p) => p.theme.headerAccent};
   }
 
   span {
     display: block;
     margin-top: 10px;
     font-size: 13px;
-    color: #374151;
+    color: ${(p) => p.theme.body};
   }
 `;
 
@@ -75,14 +77,14 @@ const DemoButton = styled.div<{ type: ButtonStyle }>`
   font-size: 13px;
   font-weight: 500;
 
-  background: ${({ type }) =>
-    type === 'outline' ? 'transparent' : '#1f2937'};
+  background: ${({ type, theme }) =>
+    type === 'outline' ? 'transparent' : theme.btnPrimary};
 
-  color: ${({ type }) =>
-    type === 'outline' ? '#1f2937' : '#fff'};
+  color: ${({ type, theme }) =>
+    type === 'outline' ? theme.heading : theme.tabActiveText};
 
-  border: ${({ type }) =>
-    type === 'outline' ? '1px solid #1f2937' : 'none'};
+  border: ${({ type, theme }) =>
+    type === 'outline' ? `1px solid ${theme.heading}` : 'none'};
 
   border-radius: ${({ type }) =>
     type === 'pill'
@@ -102,26 +104,28 @@ const RadiusTop = styled.div`
   justify-content: space-between;
   font-size: 14px;
   margin-bottom: 8px;
+  color: ${(p) => p.theme.heading};
 `;
 
 const Slider = styled.input`
   width: 100%;
-  accent-color: #1d3155;
+  accent-color: ${(p) => p.theme.btnPrimary};
 `;
 
 const RadiusLabels = styled.div`
   display: flex;
   justify-content: space-between;
   font-size: 12px;
-  color: #6b7280;
+  color: ${(p) => p.theme.muted};
   margin-top: 4px;
 `;
 
 const PreviewBox = styled.div`
   margin-top: 20px;
-  border: 1px solid #e5e7eb;
+  border: 1px solid ${(p) => p.theme.panelBorder};
   border-radius: 10px;
   padding: 20px;
+  color: ${(p) => p.theme.heading};
 `;
 
 const PreviewButtons = styled.div`
@@ -135,14 +139,14 @@ const Primary = styled.button<{ radius: number; outline?: boolean }>`
   cursor: pointer;
   border-radius: ${({ radius }) => radius}px;
 
-  border: ${({ outline }) =>
-    outline ? '1px solid #f97316' : 'none'};
+  border: ${({ outline, theme }) =>
+    outline ? `1px solid ${theme.headerAccent}` : 'none'};
 
-  background: ${({ outline }) =>
-    outline ? 'transparent' : '#f97316'};
+  background: ${({ outline, theme }) =>
+    outline ? 'transparent' : theme.headerAccent};
 
-  color: ${({ outline }) =>
-    outline ? '#f97316' : '#fff'};
+  color: ${({ outline, theme }) =>
+    outline ? theme.headerAccent : theme.tabActiveText};
 `;
 
 const Secondary = styled.button<{ radius: number; outline?: boolean }>`
@@ -151,14 +155,14 @@ const Secondary = styled.button<{ radius: number; outline?: boolean }>`
   cursor: pointer;
   border-radius: ${({ radius }) => radius}px;
 
-  border: ${({ outline }) =>
-    outline ? '1px solid #2563eb' : 'none'};
+  border: ${({ outline, theme }) =>
+    outline ? `1px solid ${theme.btnPrimary}` : 'none'};
 
-  background: ${({ outline }) =>
-    outline ? 'transparent' : '#2563eb'};
+  background: ${({ outline, theme }) =>
+    outline ? 'transparent' : theme.btnPrimary};
 
-  color: ${({ outline }) =>
-    outline ? '#2563eb' : '#fff'};
+  color: ${({ outline, theme }) =>
+    outline ? theme.btnPrimary : theme.tabActiveText};
 `;
 
 /* ================= COMPONENT ================= */
